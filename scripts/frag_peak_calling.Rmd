@@ -1,0 +1,139 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(cowplot)
+library(sharpr2)
+
+options(stringsAsFactors = F, scipen = 1000)
+
+data_raw <- read.table('../processed_data/HiDRA_frag_all.txt', header = T) %>% 
+    arrange(start)
+
+data_rep1 <- data_raw %>% 
+    select(start, end, PLASMID =  DNA_1, RNA = RNA_1)
+
+data_rep2 <- data_raw %>% 
+    select(start, end, PLASMID = DNA_2, RNA = RNA_2)
+
+data_avg <- data_raw %>% 
+    select(start, end, PLASMID = DNA_ave, RNA = RNA_exp_ave)
+```
+
+## SHARPR2 ##
+
+"The SHARPR algorithm relies on synthesized oligos that uniformly tile regions at 
+regularly spaced intervals, and thus is not applicable for the random fragmentation
+nature of HiDRA experiments where both the length and the spacing of neighboring 
+fragments can vary. To address this challenge, we developed a new algorithm, 
+SHARPR2, which estimates regulatory scores 230 underlying any set of 
+randomly-positioned and variable-length segments, by appropriately scaling the
+segments by their varying lengths, and enabling inferences at variable-length 
+offsets between them"
+
+```{r}
+ggplot(data_raw, aes(RNA_exp_ave)) + 
+    geom_histogram(binwidth = 0.1) + xlim(c(-1, 100)) + scale_x_log10() +
+    geom_vline(xintercept = 0.05)
+```
+
+```{r}
+ggplot(data_raw, aes(DNA_ave)) + 
+    geom_histogram(binwidth = 0.1) + xlim(c(-1, 100)) + scale_x_log10() +
+    geom_vline(xintercept = 0.10)
+```
+
+Default arguments for sharpr2:
+- `l_min = 150`, fragments less than 150bp not considered
+- `l_max = 499`, fragments longer than 499bp not considered
+- `f_rna = 10`, fragments with RNA count less than 10 not considered.
+- `f_dna = 0`, fragments with DNA count less than 0 not considered
+- `len = FALSE`, An indicator of whether to model log(RNA/PLASMID) of each fragment as the
+average or the sum of the latent regulatory scores. The default is FALSE, which
+is the sum.
+
+```{r}
+data(hidra_ex)
+re <- sharpr2(hidra_ex, l_min = 150, l_max = 600, f_dna = 5, f_rna = 0, 
+              sig=FALSE, verbose = T)
+tiled_ex <- call_tile_reg(hidra_ex)
+```
+
+```{r}
+tiled <- call_tile_reg(data_avg)
+tiles <- data.frame(size = tiled$size)
+```
+
+```{r, eval = F}
+result <- sharpr2(data_avg, f_dna = 0.10, f_rna = 0.05, sig = F, verbose = T, auto = F)
+```
+
+The algorithm was too slow and never finished, so I emailed the other for insights. 
+He responded with: "The problem is that SHARPR2 is designed for human ATAC-seq data, which have typically <100 fragments in a tiled region with a length <2k nt. In your case, the library has 862 tiled regions, but most regions are much larger than those in human ATAC-seq. For example, the first region has a length of ~14k nt and comprises 616 fragments. This involves very large-scale matrix operation, which is quite slow."
+
+He is going to try to optimize this for me, in the meantime I'll try another peak caller.
+
+## ZINBA ##
+ZINBA (Zero-Inflated Negative Binomial Algorithm) identifies genomic regions enriched in a variety of ChIP-seq and related next-generation sequencing experiments (DNA-seq), calling both broad and narrow modes of enrichment across a range of signal-to-noise ratios. ZINBA models and accounts for factors that co-vary with background or experimental signal, such as G/C content, and identifies enrichment in genomes with complex local copy number variations. ZINBA provides a single unified framework for analyzing DNA-seq experiments in challenging genomic contexts.
+
+```{r}
+install.packages(c("R.oo"))
+install.packages(c("R.utils", "quantreg","doParallel","doMC","foreach"))  # for R>3.0
+# only version that works with R 3.0:
+# get it from here: https://code.google.com/p/zinba/issues/detail?id=69
+install.packages("~/Documents/projects/ecoli_promoters/endo/scripts/zinba_2.03.1.tar",
+                 repos=NULL, type='source')
+```
+
+Seems like no one has been able to get this install and is having the same error...
+
+## TSSpredator ##
+
+Same software as in Storz paper which annotated ~14K TSSs. 
+"TSSpredator reads RNA-seq data in the form of simple wiggle files and performs a genome wide comparative prediction of TSS, for example between different growth conditions."
+
+Designed for control condition and test condition, in our case the DNA is the control
+and the RNA is the test condition.
+
+Parameters (full documentation [here](http://it.informatik.uni-tuebingen.de/wp-content/uploads/2014/10/TSSpredator-UserGuide.pdf))
+
+- Using parameter preset of "very sensitive". Enrichment factor, in our case this is
+RNA/DNA, is set to 1.2. Normalization parameters set to zero to disable normalization,
+ours is already normalized for sequencing depth to reads per million.
+- clustering is set to keep candidate with highest expression (other option is one that is
+located most upstream)
+- clustering distance set to 3
+- maximal positional difference of 1bp allowed between replicates
+- UTR length set to 310, maximal upstream distance from start codon of a gene
+
+```{r}
+result <- read.table('../processed_data/tss_predator_results/MasterTable.tsv',
+                     sep = '\t', header = T)
+```
+
+```{r}
+result %>% 
+    gather('type', 'count', Primary:Antisense) %>% 
+    group_by(type) %>% 
+    summarise(total_count = sum(count)) %>% 
+    ggplot(aes(type, total_count)) + geom_bar(stat = 'identity') +
+    labs(x = 'TSS type', y = 'count')
+```
+
+I am unsure of correct parameters to use on our normalized data, so this should be run on raw data. However, this software may not be suited for our data. We do not have high fragment resolution (~10X fragments per nucleotide). Also our signal will likely be highest just upstream of the TSS around the -10 and -35 region so they are not really TSS signals.
+
+## F-Seq (DNase peak caller) ##
+
+From a review [paper](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0096303) of DNase peak callers:
+
+The properties of enriched regions vary greatly between different HTS-based chromatin interrogation technologies. For example, TF-ChIP experiments typically yield very sharp and punctate signals, while histone-ChIP for modifications such as H3K36me3 are much more broadly distributed. Signals from DNase-seq data, in turn, appear neither as sharp as those in TFBS ChIP-seq, nor as broad as in a typical histone modification ChIP. Therefore, peak callers that have been originally developed with ChIP-seq data in mind are usually not recommended for DNase-seq data, at least without additional parameter tuning.
+
+DNase-seq is used to identy locations of regulatory (open) regions across the genome based on the sensitivity to cleavage by DNase I. 
+
+
