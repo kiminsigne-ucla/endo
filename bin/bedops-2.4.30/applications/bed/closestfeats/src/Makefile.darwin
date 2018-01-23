@@ -1,0 +1,73 @@
+MAIN                 = ../../../..
+MAINAPPDIR           = ../..
+HEAD                 = $(MAIN)/interfaces/general-headers
+LIB1                 = $(MAIN)/interfaces/src/data/measurement
+LIB2                 = $(MAIN)/interfaces/src/utility
+LIB3                 = $(MAIN)/interfaces/src/data/starch
+THISDIR              = ${shell pwd}
+PARTY3               = ${THISDIR}/$(MAIN)/third-party
+OBJDIR               = objects_$(ARCH)_${BINARY_TYPE}
+LIBJANSSON           = libjansson.a
+LIBBZIP2             = libbz2.a
+LIBZLIB              = libz.a
+LOCALJANSSONDIR      = ${PARTY3}/darwin_intel_${ARCH}/jansson
+LOCALJANSSONLIBDIR   = ${LOCALJANSSONDIR}/lib
+LOCALJANSSONINCDIR   = ${LOCALJANSSONDIR}/include
+LOCALJANSSONLIB      = ${LOCALJANSSONLIBDIR}/${LIBJANSSON}
+LOCALBZIP2DIR        = ${PARTY3}/darwin_intel_${ARCH}/bzip2
+LOCALBZIP2LIBDIR     = ${LOCALBZIP2DIR}
+LOCALBZIP2LIB        = ${LOCALBZIP2LIBDIR}/${LIBBZIP2}
+LOCALBZIP2INCDIR     = ${LOCALBZIP2DIR}
+LOCALZLIBDIR         = ${PARTY3}/darwin_intel_${ARCH}/zlib
+LOCALZLIBLIBDIR      = ${LOCALZLIBDIR}
+LOCALZLIBLIB         = ${LOCALZLIBLIBDIR}/${LIBZLIB}
+LOCALZLIBINCDIR      = ${LOCALZLIBDIR}
+INCLUDES             = -iquote$(HEAD) -I${LOCALJANSSONINCDIR} -I${LOCALBZIP2INCDIR} -I${LOCALZLIBINCDIR}
+LIBLOCATION          = -L${LOCALJANSSONLIBDIR} -L${LOCALBZIP2LIBDIR} -L${LOCALZLIBDIR}
+LIBRARIES            = ${LOCALJANSSONLIB} ${LOCALBZIP2LIB} ${LOCALZLIBLIB}
+STDFLAGS             = -Wall -pedantic -std=c++11 -stdlib=libc++
+BLDFLAGS             = -O3 ${STDFLAGS}
+
+ifeq ($(BINARY_TYPE),)
+	TFLAG = -DBEDOPS_BINARY_TYPE=0
+else
+	TFLAG = -DBEDOPS_BINARY_TYPE=$(BINARY_TYPE_NUM)
+endif
+
+FLAGS                = ${TFLAG} ${MEGAFLAGS} $(BLDFLAGS) $(OBJDIR)/NaN.o $(OBJDIR)/starchConstants.o $(OBJDIR)/starchFileHelpers.o $(OBJDIR)/starchHelpers.o $(OBJDIR)/starchMetadataHelpers.o $(OBJDIR)/unstarchHelpers.o $(OBJDIR)/starchSha1Digest.o $(OBJDIR)/starchBase64Coding.o ${LIBLOCATION} ${INCLUDES}
+
+DFLAGS               = ${TFLAG} ${MEGAFLAGS} -g -O0 ${STDFLAGS} $(OBJDIR)/NaN.o $(OBJDIR)/starchConstants.o $(OBJDIR)/starchFileHelpers.o $(OBJDIR)/starchHelpers.o $(OBJDIR)/starchMetadataHelpers.o $(OBJDIR)/unstarchHelpers.o $(OBJDIR)/starchSha1Digest.o $(OBJDIR)/starchBase64Coding.o ${LIBLOCATION} ${INCLUDES}
+
+GPROFFLAGS           = ${TFLAG} ${MEGAFLAGS} -O -pg ${STDFLAGS} $(OBJDIR)/NaN.o $(OBJDIR)/starchConstants.o $(OBJDIR)/starchFileHelpers.o $(OBJDIR)/starchHelpers.o $(OBJDIR)/starchMetadataHelpers.o $(OBJDIR)/unstarchHelpers.o $(OBJDIR)/starchSha1Digest.o $(OBJDIR)/starchBase64Coding.o ${LIBLOCATION} ${INCLUDES}
+
+SOURCE1             = ClosestFeature.cpp
+BINDIR              = ../bin
+PROG                = closest-features-${BINARY_TYPE}
+
+build: dependencies
+	$(CXX) -o $(BINDIR)/$(PROG) $(FLAGS) -mmacosx-version-min=$(MIN_OSX_VERSION) -arch $(ARCH) ${LIBRARIES} $(SOURCE1)
+	rm -rf $(OBJDIR)
+
+build_debug: dependencies
+	$(CXX) -o $(BINDIR)/debug.$(PROG) $(DFLAGS) -mmacosx-version-min=$(MIN_OSX_VERSION) -arch $(ARCH) ${LIBRARIES} $(SOURCE1)
+	rm -rf $(OBJDIR)
+
+build_gprof: dependencies
+	$(CXX) -o $(BINDIR)/gprof.$(PROG) $(FLAGS) -mmacosx-version-min=$(MIN_OSX_VERSION) -arch $(ARCH) ${LIBRARIES} $(SOURCE1)
+	rm -rf $(OBJDIR)
+
+dependencies:
+	rm -rf $(OBJDIR)
+	mkdir -p $(OBJDIR)
+	$(CXX) -c $(BLDFLAGS) -mmacosx-version-min=$(MIN_OSX_VERSION) -arch $(ARCH) $(LIB1)/NaN.cpp -o $(OBJDIR)/NaN.o ${INCLUDES}
+	$(CXX) -x c++ -c $(BLDFLAGS) -mmacosx-version-min=$(MIN_OSX_VERSION) -arch $(ARCH) $(LIB3)/starchConstants.c -o $(OBJDIR)/starchConstants.o ${INCLUDES}
+	$(CXX) -x c++ -c $(BLDFLAGS) -mmacosx-version-min=$(MIN_OSX_VERSION) -arch $(ARCH) $(LIB3)/starchFileHelpers.c -o $(OBJDIR)/starchFileHelpers.o ${INCLUDES}
+	$(CXX) -x c++ -c $(BLDFLAGS) -mmacosx-version-min=$(MIN_OSX_VERSION) -arch $(ARCH) $(LIB3)/starchHelpers.c -o $(OBJDIR)/starchHelpers.o ${INCLUDES}
+	$(CXX) -x c++ -c $(BLDFLAGS) -mmacosx-version-min=$(MIN_OSX_VERSION) -arch $(ARCH) $(LIB3)/starchMetadataHelpers.c -o $(OBJDIR)/starchMetadataHelpers.o ${INCLUDES}
+	$(CXX) -x c++ -c $(BLDFLAGS) -mmacosx-version-min=$(MIN_OSX_VERSION) -arch $(ARCH) $(LIB3)/unstarchHelpers.c -o $(OBJDIR)/unstarchHelpers.o ${INCLUDES}
+	${CXX} -x c++ -c ${BLDFLAGS} -mmacosx-version-min=$(MIN_OSX_VERSION) -arch $(ARCH) ${LIB3}/starchSha1Digest.c -o  ${OBJDIR}/starchSha1Digest.o ${INCLUDES}
+	${CXX} -x c++ -c ${BLDFLAGS} -mmacosx-version-min=$(MIN_OSX_VERSION) -arch $(ARCH) ${LIB3}/starchBase64Coding.c -o  ${OBJDIR}/starchBase64Coding.o ${INCLUDES}
+
+clean:
+	rm -rf $(OBJDIR)
+	rm -rf ${BINDIR}
