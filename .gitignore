@@ -1,1 +1,16 @@
-./processed_data/*.wig
+processed_data/norm_count_wig/plus_DNA_Rep2.wig
+processed_data/norm_count_wig/plus_DNA_Rep1.wig
+processed_data/norm_count_wig/minus_RNA_Rep1.wig
+processed_data/norm_count_wig/minus_DNA_Rep2.wig
+processed_data/expn_wig/U00096.2_minus_expression.wig
+processed_data/expn_wig/U00096.2_plus_expression.wig
+processed_data/norm_count_bed/plus_DNA_Rep2.bed
+processed_data/norm_count_bed/plus_DNA_Rep1.bed
+processed_data/norm_count_bed/plus_RNA_Rep2.bed
+processed_data/norm_count_bed/plus_RNA_Rep1.bed
+processed_data/norm_count_bed/minus_DNA_Rep1.bed
+processed_data/norm_count_bed/minus_DNA_Rep2.bed
+processed_data/norm_count_bed/minus_RNA_Rep1.bed
+processed_data/norm_count_bed/minus_RNA_Rep2.bed
+processed_data/expn_bed/U00096.2_minus_expression.bed
+processed_data/expn_bed/U00096.2_plus_expression.bed
