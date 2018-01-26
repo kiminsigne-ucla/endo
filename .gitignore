@@ -14,3 +14,5 @@ processed_data/norm_count_bed/minus_RNA_Rep1.bed
 processed_data/norm_count_bed/minus_RNA_Rep2.bed
 processed_data/expn_bed/U00096.2_minus_expression.bed
 processed_data/expn_bed/U00096.2_plus_expression.bed
+bin/DFilter1.6
+rawdata/
