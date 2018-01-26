@@ -9,7 +9,6 @@ cat $plus_bed $minus_bed > plus_minus.bed
 FASTA="../ref/Escherichia_coli_K-12_MG1655.fasta"
 FAI="../ref/Escherichia_coli_K-12_MG1655.fasta.fai"
 
-
 # Get fasta sequences of peak calls from .bed file
 bedtools getfasta -fi $FASTA -bed plus_minus.bed -fo $output -s
 
