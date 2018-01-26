@@ -1,10 +1,11 @@
-processed_data/all_12mers.fasta
 processed_data/norm_count_wig/plus_DNA_Rep2.wig
 processed_data/norm_count_wig/plus_DNA_Rep1.wig
 processed_data/norm_count_wig/minus_RNA_Rep1.wig
 processed_data/norm_count_wig/minus_DNA_Rep2.wig
 processed_data/expn_wig/U00096.2_minus_expression.wig
 processed_data/expn_wig/U00096.2_plus_expression.wig
+processed_data/gkmsvm_results/all_12mers.fasta
+processed_data/gkmsvm_results/12mer_8ungapped_kernel.out
 processed_data/norm_count_bed/plus_DNA_Rep2.bed
 processed_data/norm_count_bed/plus_DNA_Rep1.bed
 processed_data/norm_count_bed/plus_RNA_Rep2.bed
@@ -19,5 +20,3 @@ rawdata/genome_frag/Minus_DNA.bam
 rawdata/genome_frag/Plus_RNA.bam
 rawdata/genome_frag/Plus_DNA.bam
 rawdata/genome_frag/Minus_RNA.bam
-processed_data/all_12mers.fasta
-processed_data/all_12mers.fasta
