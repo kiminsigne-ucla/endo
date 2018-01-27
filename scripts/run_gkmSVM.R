@@ -1,11 +1,11 @@
-source('https://bioconductor.org/biocLite.R')
-biocLite('GenomicRanges')
-biocLite('rtracklayer')
-biocLite('BSgenome')
-install.packages('ROCR')
-install.packages('kernlab')
-install.packages('seqinr')
-install.packages('gkmSVM')
+# source('https://bioconductor.org/biocLite.R')
+# biocLite('GenomicRanges')
+# biocLite('rtracklayer')
+# biocLite('BSgenome')
+# install.packages('ROCR')
+# install.packages('kernlab')
+# install.packages('seqinr')
+# install.packages('gkmSVM')
 
 library('gkmSVM')
 library('kernlab')
@@ -25,28 +25,32 @@ peaks <- read.fasta('../processed_data/basic_starrseq_results/plus_minus_peaks_t
 peak_names <- paste0('seq', seq(1:length(peaks)))
 # get train index
 train_size = 0.75
-train_index <- sample(seq(1:length(peaks)), size = length(peaks) * train_size, replace = F)
+train_index <- sample(seq(1:length(peaks)), 
+                      size = length(peaks) * train_size, 
+                      replace = F)
 train <- peaks[train_index]
 test <- peaks[-train_index]
 
-write.fasta(train, names = peak_names[train_index],
+write.fasta(train, names = peak_names[train_index], nbchar = 100,
             file.out = '../processed_data/gkmsvm_results/plus_minus_peaks_top5pct_100bp_train.fasta')
 
-write.fasta(test, names = peak_names[-train_index],
+write.fasta(test, names = peak_names[-train_index], nbchar = 100,
             file.out = '../processed_data/gkmsvm_results/plus_minus_peaks_top5pct_100bp_test.fasta')
 
 # read negative and split into train and test
 negatives <- read.fasta('../processed_data/basic_starrseq_results/negative_peak_controls_top5pct.fasta')
 # get train index
 neg_train_size = 0.75
-neg_train_index <- sample(seq(1:length(negatives)), size = length(negatives) * neg_train_size, replace = F)
-neg_train <- peaks[neg_train_index]
-neg_test <- peaks[-neg_train_index]
+neg_train_index <- sample(seq(1:length(negatives)), 
+                          size = length(negatives) * neg_train_size, 
+                          replace = F)
+neg_train <- negatives[neg_train_index]
+neg_test <- negatives[-neg_train_index]
 
-write.fasta(neg_train, names = names(neg_train),
+write.fasta(neg_train, names = names(neg_train), nbchar = 100,
             file.out = '../processed_data/gkmsvm_results/negative_peak_controls_top5pct_train.fasta')
 
-write.fasta(neg_test, names = names(neg_test),
+write.fasta(neg_test, names = names(neg_test), nbchar = 100,
             file.out = '../processed_data/gkmsvm_results/negative_peak_controls_top5pct_test.fasta')
 
 # 12mer, 8ungapped nucleotides

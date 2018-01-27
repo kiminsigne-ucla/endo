@@ -16,3 +16,5 @@ bedtools getfasta -fi $FASTA -bed plus_minus.bed -fo $output -s
 # but with no overlap  (Negative Controls), then convert to fasta
 bedtools shuffle -i plus_minus.bed -g $FAI -seed 123123123 -noOverlapping -excl plus_minus.bed | 
 bedtools getfasta -fi $FASTA -bed - -fo $negative -s
+
+rm plus_minus.bed
