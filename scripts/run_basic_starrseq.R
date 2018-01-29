@@ -2,10 +2,15 @@
 
 #Use starrseq to call peaks from data
 source("https://bioconductor.org/biocLite.R")
-# biocLite("BasicSTARRseq")
+biocLite("BasicSTARRseq")
 library(BasicSTARRseq)
 library(dplyr)
 #install.packages(matricstats))
+
+args <- commandArgs(TRUE)
+peak_width <- as.numeric(args[1])
+quantile <- as.numeric(args[2])
+output_suffix <- as.numeric(args[3])
 
 
 run_basic_starrseq <- function(rna_file, dna_file, peak_width = 100, quantile = 0.90) {
@@ -35,17 +40,24 @@ write_results <- function(peaks_df, new_strand, output_file) {
         write.table(output_file, quote = F, row.names = F, col.names = F, sep = '\t')
 }
 
+# peak_width <- 300
+# quantile <- 0.90
+
 peaks_minus <- run_basic_starrseq("../rawdata/genome_frag/Minus_RNA.bam", 
                                   "../rawdata/genome_frag/Minus_DNA.bam",
-                                  peak_width = 100, quantile = 0.95)
+                                  peak_width = peak_width, quantile = quantile)
 write_results(peaks_minus, 
               new_strand = '-',
-              "../processed_data/basic_starrseq_results/minus_peaks_top5pct_100bp.bed")
+              paste0("../processed_data/basic_starrseq_results/minus_peaks_", 
+                     output_suffix,
+                     ".bed")
 
 peaks_plus <- run_basic_starrseq("../rawdata/genome_frag/Plus_RNA.bam",
                                  "../rawdata/genome_frag/Plus_DNA.bam",
-                                 peak_width = 100, quantile = 0.95) 
+                                 peak_width = peak_width, quantile = quantile) 
 write_results(peaks_plus,
               new_strand = '+',
-              "../processed_data/basic_starrseq_results/plus_peaks_top5pct_100bp.bed")
+              paste0("../processed_data/basic_starrseq_results/plus_peaks_", 
+                     output_suffix,
+                     ".bed"))
 
