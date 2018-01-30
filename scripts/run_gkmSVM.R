@@ -72,6 +72,7 @@ ggsave('../processed_data/gkmsvm_results/300bp_top10pct_12mer_8ungapped_ROC_PR_c
 
 
 # score all 12-mers
+# change
 gkmsvm_classify(seqfile = '../processed_data/gkmsvm_results/all_12mers.fasta',
                 svmfnprfx = '../processed_data/gkmsvm_results/promoter_svm_12mer_8ungapped_top10pct_300bp.out',
                 outfile = '../processed_data/gkmsvm_results/all_12mers_classified_12mer_8ungapped_top10pct_300bp.txt',
