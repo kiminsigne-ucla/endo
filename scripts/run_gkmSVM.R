@@ -70,6 +70,10 @@ gkmsvm_trainCV(kernelfn = '../processed_data/gkmsvm_results/12mer_8ungapped_kern
 
 ggsave('../processed_data/gkmsvm_results/300bp_top10pct_12mer_8ungapped_ROC_PR_curves.png')
 
-# gkmsvm_classify('../processed_data/gkmsvm_results/all_12mers.fasta',
-#                 svmfnprfx = 'promoter_svm.out', 
-#                 './Classifying_mers/12merScoring_L12K8_100bp_.95qt.txt') #Score 10mers
+
+# score all 12-mers
+gkmsvm_classify(seqfile = '../processed_data/gkmsvm_results/all_12mers.fasta',
+                svmfnprfx = '../processed_data/gkmsvm_results/promoter_svm_12mer_8ungapped_top10pct_300bp.out',
+                outfile = '../processed_data/gkmsvm_results/all_12mers_classified_12mer_8ungapped_top10pct_300bp.txt',
+                L = 12, K = 8)
+
