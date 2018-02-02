@@ -53,27 +53,27 @@ write.fasta(neg_train, names = names(neg_train), nbchar = 300,
 write.fasta(neg_test, names = names(neg_test), nbchar = 300,
             file.out = '../processed_data/gkmsvm_results/negative_peaks_controls_top10pct_300bp_test.fasta')
 
-# 12mer, 8ungapped nucleotides
+
 gkmsvm_kernel(posfile = "../processed_data/gkmsvm_results/plus_minus_peaks_top10pct_300bp_train.fasta", 
               negfile = "../processed_data/gkmsvm_results/negative_peaks_controls_top10pct_300bp_train.fasta", 
-              outfile = '../processed_data/gkmsvm_results/12mer_8ungapped_kernel_300bp_top10pct.out', 
-              L = 12, K = 8)
+              outfile = '../processed_data/gkmsvm_results/10mer_8ungapped_kernel_300bp_top10pct.out', 
+              L = 10, K = 8)
 
 # perform SVM training with cross-validation
-gkmsvm_trainCV(kernelfn = '../processed_data/gkmsvm_results/12mer_8ungapped_kernel_300bp_top10pct.out',
+gkmsvm_trainCV(kernelfn = '../processed_data/gkmsvm_results/10mer_8ungapped_kernel_300bp_top10pct.out',
                posfn= "../processed_data/gkmsvm_results/plus_minus_peaks_top10pct_300bp_train.fasta", 
                negfn = "../processed_data/gkmsvm_results/negative_peaks_controls_top10pct_300bp_train.fasta",
-               svmfnprfx='../processed_data/gkmsvm_results/promoter_svm_12mer_8ungapped_top10pct_300bp.out', 
-               outputCVpredfn='../processed_data/gkmsvm_results/promoter_svm_cvpred_12mer_8ungapped_top10pct_300bp.out',
-               outputROCfn='../processed_data/gkmsvm_results/promoter_svm_roc_12mer_8ungapped_top10pct_300bp.out', 
-               L = 12, K = 8)
+               svmfnprfx='../processed_data/gkmsvm_results/promoter_svm_10mer_8ungapped_top10pct_300bp.out', 
+               outputCVpredfn='../processed_data/gkmsvm_results/promoter_svm_cvpred_10mer_8ungapped_top10pct_300bp.out',
+               outputROCfn='../processed_data/gkmsvm_results/promoter_svm_roc_10mer_8ungapped_top10pct_300bp.out', 
+               L = 10, K = 8)
 
-ggsave('../processed_data/gkmsvm_results/300bp_top10pct_12mer_8ungapped_ROC_PR_curves.png')
+ggsave('../processed_data/gkmsvm_results/300bp_top10pct_10mer_8ungapped_ROC_PR_curves.png')
 
 
-# score all 12-mers
-gkmsvm_classify(seqfile = '../processed_data/gkmsvm_results/all_12mers.fasta',
-                svmfnprfx = '../processed_data/gkmsvm_results/promoter_svm_12mer_8ungapped_top10pct_300bp.out',
-                outfile = '../processed_data/gkmsvm_results/all_12mers_classified_12mer_8ungapped_top10pct_300bp.txt',
-                L = 12, K = 8)
+# score all n-mers
+gkmsvm_classify(seqfile = '../processed_data/gkmsvm_results/all_10mers.fasta',
+                svmfnprfx = '../processed_data/gkmsvm_results/promoter_svm_10mer_8ungapped_top10pct_300bp.out',
+                outfile = '../processed_data/gkmsvm_results/all_10mers_classified_12mer_8ungapped_top10pct_300bp.txt',
+                L = 10, K = 8)
 
