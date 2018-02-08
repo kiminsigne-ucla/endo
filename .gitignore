@@ -7,6 +7,7 @@ processed_data/expn_wig/U00096.2_plus_expression_igv.wig
 processed_data/expn_wig/U00096.2_plus_expression.wig
 processed_data/expn_wig/U00096.2_minus_expression_igv.wig
 processed_data/gkmsvm_results/all_12mers.fasta
+processed_data/gkmsvm_results/custom_peaks/10mer_8ungapped_kernel
 processed_data/gkmsvm_results/12mer_8ungapped_kernel.out
 processed_data/norm_count_bed/plus_DNA_Rep2.bed
 processed_data/norm_count_bed/plus_DNA_Rep1.bed

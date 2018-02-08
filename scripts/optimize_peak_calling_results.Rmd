@@ -1,0 +1,88 @@
+---
+title: "Optimizing Peak Caller"
+author: "Kimberly Insigne"
+date: "2/2/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+options(scipen = 1000)
+options(stringsAsFactors = F)
+
+library(dplyr)
+library(tidyr)
+library(cowplot)
+library(ggplot2)
+
+results <- read.table('optimize_peak_call_results.txt', header = T, sep = '\t')
+pos_calls <- read.table('../processed_data/custom_peaks/tss_positives.bed', sep = '\t', header = F)
+neg_calls <- read.table('../processed_data/custom_peaks/tss_negatives.bed', sep = '\t', header = F)
+
+names <- c('chrom', 'start', 'end', 'name', 'expression', 'strand')
+names(pos_calls) <- names
+names(neg_calls) <- names
+```
+
+```{r}
+num_pos_plus <- pos_calls %>% filter(strand == '+') %>% nrow()
+num_pos_minus <- pos_calls %>% filter(strand == '-') %>% nrow()
+
+num_neg_plus <- neg_calls %>% filter(strand == '+') %>% nrow()
+num_neg_minus <- neg_calls %>% filter(strand == '-') %>% nrow()
+
+results <- results %>% 
+    # precision = true positive / predicted positive (all called peaks)
+    mutate(precision = (plus_positive_overlap + minus_positive_overlap) / 
+               (num_peaks_plus + num_peaks_minus),
+    # recall/sensitivity/true positive rate = true positive (peaks overlap with positive TSS) / 
+    # all positives
+           recall = (plus_positive_overlap + minus_positive_overlap) / nrow(pos_calls))
+```
+
+```{r}
+ggplot(results, aes(recall, precision)) + geom_step() +
+    scale_x_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
+    scale_y_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
+    labs(title = 'performance for detecting active TSSs')
+```
+
+
+```{r}
+results <- results %>% 
+    mutate(precision_neg = (plus_negative_overlap + minus_negative_overlap) / 
+               (num_peaks_plus + num_peaks_minus),
+           recall_neg = (plus_negative_overlap + minus_negative_overlap) / nrow(neg_calls))
+```
+
+
+```{r}
+ggplot(results, aes(recall_neg, precision_neg)) + geom_step() +
+    scale_x_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
+    scale_y_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
+    labs(title = 'performance for detecting inactive TSSs',
+         x = 'recall', y = 'precision')
+```
+
+```{r}
+combined <- results %>% 
+    select(precision, recall, threshold) %>% 
+    mutate(type = 'active TSS')
+
+combined <- results %>% 
+    select(precision = precision_neg, recall = recall_neg, threshold) %>% 
+    mutate(type = 'inactive TSS') %>% 
+    bind_rows(combined)
+```
+
+```{r}
+ggplot(combined, aes(recall, precision)) + geom_step(aes(color = type)) +
+    scale_x_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
+    scale_y_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0))
+```
+
+```{r}
+ggplot(combined, aes(reorder(recall, threshold), precision)) + 
+    geom_point(aes(color = type)) +
+    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+```
+

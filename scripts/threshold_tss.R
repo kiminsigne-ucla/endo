@@ -10,8 +10,8 @@ neg_median <- median(subset(Endo2, grepl("neg_control", Endo2$name)) %>% .$RNA_e
 neg_sd <- sd(subset(Endo2, grepl("neg_control", Endo2$name)) %>% .$RNA_exp_average)
 
 # Subset all promoters that are greater than 3sd from the mean
-positive_Endo2 <- filter(Endo2, RNA_exp_average > (neg_median+3*(neg_sd))) # > .7861676 == 2,048
-negative_Endo2 <- filter(Endo2, RNA_exp_average < (neg_median+3*(neg_sd))) # < .7861676 == 15,215
+positive_Endo2 <- filter(Endo2, RNA_exp_average > (neg_median+3*(neg_sd)))
+negative_Endo2 <- filter(Endo2, RNA_exp_average < (neg_median+3*(neg_sd)))
 
 positive_Endo2 %>% 
     separate(name, sep = ',', into = c('source', 'position', 'strand'), remove = F) %>% 
