@@ -60,4 +60,39 @@ negative_avg <- negative_avg %>%
 avg_all <- bind_rows(positive_avg, negative_avg)
 ```
 
+```{r}
+fit <- summary(lm(mean ~ exp, avg_all))$r.squared
+ggplot(avg_all, aes(exp, mean)) + geom_point(alpha = 0.25) +
+    scale_x_log10() + scale_y_log10() + annotation_logticks(sides = 'bl') +
+    annotate('text', x = 75, y = 0.10, parse = T, label = paste('R^2==', signif(fit, 3))) +
+    labs(x = 'TSS library expression',
+         y = 'mean genome frag.')
+```
+
+```{r}
+fit <- summary(lm(mean ~ exp, filter(avg_all, type == 'inactive')))$r.squared
+
+avg_all %>% 
+    filter(type == 'inactive') %>% 
+    ggplot(aes(exp, mean)) + geom_point(alpha = 0.25) +
+        scale_x_log10() + scale_y_log10() + annotation_logticks(sides = 'bl') +
+        annotate('text', x = 1.2, y = 0.10, parse = T, label = paste('R^2==', signif(fit, 3))) +
+        labs(x = 'TSS library expression',
+             y = 'mean genome frag.',
+             title = 'Inactive TSSs')
+```
+
+
+```{r}
+fit <- summary(lm(mean ~ exp, filter(avg_all, type == 'active')))$r.squared
+
+avg_all %>% 
+    filter(type == 'active') %>% 
+    ggplot(aes(exp, mean)) + geom_point(alpha = 0.25) +
+        scale_x_log10() + scale_y_log10() + annotation_logticks(sides = 'bl') +
+        annotate('text', x = 100, y = 0.75, parse = T, label = paste('R^2==', signif(fit, 3))) +
+        labs(x = 'TSS library expression',
+             y = 'mean genome frag.',
+             title = 'Active TSSs')
+```
 
