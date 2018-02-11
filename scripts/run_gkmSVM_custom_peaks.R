@@ -85,22 +85,22 @@ gkmsvm_classify(seqfile = '../processed_data/gkmsvm_results/custom_peaks/negativ
                 outfile = '../processed_data/gkmsvm_results/custom_peaks/custom_peak_svm_negative_test.txt',
                 L = 10, K = 8)
 
-results <- read.table('../processed_data/gkmsvm_results/custom_peaks/custom_peak_svm_test.txt', 
-                      header = F)
-colnames(results) <- c('name', 'score')
-results <- results %>% 
-    mutate(type = 'positive')
-
-neg_results <- read.table('../processed_data/gkmsvm_results/custom_peaks/custom_peak_svm_negative_test.txt',
-                          header = F)
-colnames(neg_results) <- c('name', 'score')
-results <- neg_results %>% 
-    mutate(type = 'negative') %>% 
-    bind_rows(results)
-
-ggplot(results, aes(score)) + geom_histogram(binwidth = 0.10, aes(fill = type))
-
-ggplot(results, aes(score)) + geom_density(aes(color = type))
-
-ggplot(results, aes(score)) + stat_ecdf(aes(color = type)) +
-    labs(x = 'SVM score', y = '', title = 'CDF of SVM scores')
+# results <- read.table('../processed_data/gkmsvm_results/custom_peaks/custom_peak_svm_test.txt', 
+#                       header = F)
+# colnames(results) <- c('name', 'score')
+# results <- results %>% 
+#     mutate(type = 'positive')
+# 
+# neg_results <- read.table('../processed_data/gkmsvm_results/custom_peaks/custom_peak_svm_negative_test.txt',
+#                           header = F)
+# colnames(neg_results) <- c('name', 'score')
+# results <- neg_results %>% 
+#     mutate(type = 'negative') %>% 
+#     bind_rows(results)
+# 
+# ggplot(results, aes(score)) + geom_histogram(binwidth = 0.10, aes(fill = type))
+# 
+# ggplot(results, aes(score)) + geom_density(aes(color = type))
+# 
+# ggplot(results, aes(score)) + stat_ecdf(aes(color = type)) +
+#     labs(x = 'SVM score', y = '', title = 'CDF of SVM scores')

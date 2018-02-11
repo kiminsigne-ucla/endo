@@ -15,8 +15,8 @@ library(cowplot)
 library(ggplot2)
 
 results <- read.table('optimize_peak_call_results.txt', header = T, sep = '\t')
-pos_calls <- read.table('../processed_data/custom_peaks/tss_positives.bed', sep = '\t', header = F)
-neg_calls <- read.table('../processed_data/custom_peaks/tss_negatives.bed', sep = '\t', header = F)
+pos_calls <- read.table('../processed_data/tss_positives.bed', sep = '\t', header = F)
+neg_calls <- read.table('../processed_data/tss_negatives.bed', sep = '\t', header = F)
 
 names <- c('chrom', 'start', 'end', 'name', 'expression', 'strand')
 names(pos_calls) <- names
@@ -84,5 +84,15 @@ ggplot(combined, aes(recall, precision)) + geom_step(aes(color = type)) +
 ggplot(combined, aes(reorder(recall, threshold), precision)) + 
     geom_point(aes(color = type)) +
     theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+```
+
+```{r}
+results %>% 
+    mutate(num_peaks = num_peaks_minus + num_peaks_plus) %>% 
+    ggplot(aes(recall, recall_neg)) + geom_point(aes(color = num_peaks)) +
+        viridis::scale_color_viridis() +
+        labs(x = 'active TSS recall', y = 'inactive TSS recall') +
+        scale_x_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1)) +
+        scale_y_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1))
 ```
 
