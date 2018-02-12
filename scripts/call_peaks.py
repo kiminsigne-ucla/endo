@@ -60,16 +60,24 @@ def main(infile, threshold, merge_dist, min_width, strand, outfile):
 		if start is None:
 			# initialize start of new region to current position
 			start = position
-		if value >= threshold: # value exceeds threshold, continue region
-			total_exp += value
-			end = position
-		elif value < threshold or value is None: 
+		if value is None:
 			if total_exp > 0: # if a region already exists, end it
 				called_regions.append((start, end, total_exp))
 			# reset start, end, and total_exp
 			start = None
 			end = None
 			total_exp = 0
+		elif value < threshold: 
+			if total_exp > 0: # if a region already exists, end it
+				called_regions.append((start, end, total_exp))
+			# reset start, end, and total_exp
+			start = None
+			end = None
+			total_exp = 0
+		elif value >= threshold: # value exceeds threshold, continue region
+			total_exp += value
+			end = position
+		
 
 	if total_exp != 0: # finished iterating but one last region
 		called_regions.append((start, end, total_exp))
