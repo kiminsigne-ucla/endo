@@ -4,13 +4,32 @@ import call_peaks
 import numpy as np
 
 
-def count_overlap(file1, file2):
+def count_overlap(tss_file, peak_file):
 	# by default, if an overlap is found, reports shared interval between two
 	# overlapping features
-	cmd = 'bedtools intersect -a ' + file1 + ' -b ' + file2 + ' > overlap.bed'
+	# write original entry in B for each overlap
+	cmd = 'bedtools intersect -wb -a ' + tss_file + ' -b ' + peak_file + ' > overlap.bed'
 	os.system(cmd)
-	# count overlap
-	num_overlap = sum(1 for line in open('overlap.bed'))
+	# get unique peak overlaps (unique B entries)
+	cmd = 'cut -f 7-12 overlap.bed | sort | uniq > overlap_unique.bed'
+	os.system(cmd)
+	num_overlap = sum(1 for line in open('overlap_unique.bed'))
+	return num_overlap
+
+
+def count_overlap_negative(neg_file, peak_file, pos_file):
+	# for negatives, do not count as negative if it overlaps with at least one 
+	# positive
+	cmd = 'bedtools intersect -wb -a ' + neg_file + ' -b ' + peak_file + ' > overlap_negative.bed'
+	os.system(cmd)
+	# get unique peak overlaps (unique B entries)
+	cmd = 'cut -f 7-12 overlap_negative.bed | sort | uniq > overlap_negative_unique.bed'
+	os.system(cmd)
+	# overlap with positive, get unique
+	cmd = 'bedtools intersect -wb -a ' + pos_file + ' -b overlap_negative_unique.bed | cut -f 7-12 | sort | uniq > overlap_negative_unique_pos.bed'
+	os.system(cmd)
+	# do not count peaks that overlap with positives as negatives
+	num_overlap = sum(1 for line in open('overlap_negative_unique.bed')) - sum(1 for line in open('overlap_negative_unique_pos.bed'))
 	return num_overlap
 
 
@@ -51,7 +70,8 @@ if __name__ == '__main__':
 	outfile = open('optimize_peak_call_results.txt', 'w')
 	# write header
 	outfile.write('\t'.join(['threshold', 'merge_dist', 'min_width', 
-		'num_peaks_plus', 'num_peaks_minus'.
+		'num_peaks_tss_overlap_plus', 'num_peaks_tss_overlap_minus',
+		'num_peaks_plus', 'num_peaks_minus',
 		'plus_positive_overlap', 'plus_negative_overlap',
 		'minus_positive_overlap', 'minus_negative_overlap', ]) + '\n')
 
@@ -67,12 +87,17 @@ if __name__ == '__main__':
 
 		# calculate overlap between peak calls and TSSs
 		plus_positive_overlap = count_overlap('pos_file_plus.bed', 'tmp_plus_peaks.bed')
-		plus_negative_overlap = count_overlap('neg_file_plus.bed', 'tmp_plus_peaks.bed')
+		plus_negative_overlap = count_overlap_negative('neg_file_plus.bed', 'tmp_plus_peaks.bed', 'pos_file_plus.bed')
 
 		minus_positive_overlap = count_overlap('pos_file_minus.bed', 'tmp_minus_peaks.bed')
-		minus_negative_overlap = count_overlap('neg_file_minus.bed', 'tmp_minus_peaks.bed')
+		minus_negative_overlap = count_overlap_negative('neg_file_minus.bed', 'tmp_minus_peaks.bed', 'pos_file_minus.bed')
 
-		info = [threshold, merge_dist, min_width, num_peaks_plus, num_peaks_minus,
+		num_peaks_tss_overlap_plus = plus_positive_overlap + plus_negative_overlap
+		num_peaks_tss_overlap_minus = minus_positive_overlap + minus_negative_overlap
+
+		info = [threshold, merge_dist, min_width,
+		num_peaks_tss_overlap_plus, num_peaks_tss_overlap_minus,
+		num_peaks_plus, num_peaks_minus,
 		plus_positive_overlap, plus_negative_overlap, minus_positive_overlap, minus_negative_overlap]
 		info = map(str, info)
 
@@ -80,3 +105,5 @@ if __name__ == '__main__':
 
 
 	outfile.close()
+	# cmd = 'rm -f tmp_plus_peaks.bed tmp_minus_peaks.bed pos_file_plus.bed pos_file_minus.bed neg_file_plus.bed neg_file_minus.bed overlap*.bed'
+	# os.system(cmd)

@@ -32,35 +32,46 @@ num_neg_minus <- neg_calls %>% filter(strand == '-') %>% nrow()
 
 results <- results %>% 
     # precision = true positive / predicted positive (all called peaks)
-    mutate(precision = (plus_positive_overlap + minus_positive_overlap) / 
-               (num_peaks_plus + num_peaks_minus),
+    mutate(precision = (plus_positive_overlap + minus_positive_overlap) /
+               (num_peaks_tss_overlap_plus + num_peaks_tss_overlap_minus),
     # recall/sensitivity/true positive rate = true positive (peaks overlap with positive TSS) / 
     # all positives
            recall = (plus_positive_overlap + minus_positive_overlap) / nrow(pos_calls))
 ```
 
 ```{r}
-ggplot(results, aes(recall, precision)) + geom_step() +
-    scale_x_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
-    scale_y_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
-    labs(title = 'performance for detecting active TSSs')
+results %>% 
+    mutate(num_overlap = num_peaks_tss_overlap_minus + num_peaks_tss_overlap_plus) %>% 
+    ggplot(aes(threshold, num_overlap)) + geom_point() +
+    labs(y = 'number of peaks overlapping a TSS')
+```
+
+```{r}
+results %>% 
+    filter(threshold >= 0.90) %>% 
+    ggplot(aes(recall, precision)) + geom_step() +
+        scale_x_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
+        scale_y_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
+        labs(title = 'performance for detecting active TSSs')
 ```
 
 
 ```{r}
 results <- results %>% 
     mutate(precision_neg = (plus_negative_overlap + minus_negative_overlap) / 
-               (num_peaks_plus + num_peaks_minus),
+               (num_peaks_tss_overlap_plus + num_peaks_tss_overlap_minus),
            recall_neg = (plus_negative_overlap + minus_negative_overlap) / nrow(neg_calls))
 ```
 
 
 ```{r}
-ggplot(results, aes(recall_neg, precision_neg)) + geom_step() +
-    scale_x_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
-    scale_y_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
-    labs(title = 'performance for detecting inactive TSSs',
-         x = 'recall', y = 'precision')
+results %>% 
+    filter(threshold >= 0.90) %>% 
+    ggplot(aes(recall_neg, precision_neg)) + geom_step() +
+        scale_x_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
+        scale_y_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
+        labs(title = 'performance for detecting inactive TSSs',
+             x = 'recall', y = 'precision')
 ```
 
 ```{r}
@@ -75,23 +86,22 @@ combined <- results %>%
 ```
 
 ```{r}
-ggplot(combined, aes(recall, precision)) + geom_step(aes(color = type)) +
-    scale_x_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
-    scale_y_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0))
+combined %>% 
+    filter(threshold >= 0.90) %>% 
+    ggplot(aes(recall, precision)) + geom_step(aes(color = type)) +
+        scale_x_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +
+        scale_y_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0))
 ```
 
-```{r}
-ggplot(combined, aes(reorder(recall, threshold), precision)) + 
-    geom_point(aes(color = type)) +
-    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
-```
 
 ```{r}
 results %>% 
-    mutate(num_peaks = num_peaks_minus + num_peaks_plus) %>% 
-    ggplot(aes(recall, recall_neg)) + geom_point(aes(color = num_peaks)) +
+    filter(threshold >= 0.90) %>% 
+    mutate(num_peaks = num_peaks_tss_overlap_plus + num_peaks_tss_overlap_minus) %>% 
+    ggplot(aes(recall, recall_neg)) + geom_point(aes(color = log10(num_peaks))) +
         viridis::scale_color_viridis() +
-        labs(x = 'active TSS recall', y = 'inactive TSS recall') +
+        labs(x = 'active TSS recall', y = 'inactive TSS recall', 
+             color = 'log10(number of peaks\noverlapping TSS)') +
         scale_x_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1)) +
         scale_y_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1))
 ```

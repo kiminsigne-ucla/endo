@@ -41,7 +41,8 @@ def write_bed(called_regions, strand, outfile):
 	with open(outfile, 'w') as output:
 		for x in called_regions:
 			# format: chrom, start, end, name, score
-			output.write('\t'.join([chrom, str(x[0]), str(x[1]), '', str(x[2]), strand]))
+			name = '_'.join([str(x[0]), str(x[1]), strand])
+			output.write('\t'.join([chrom, str(x[0]), str(x[1]), name, str(x[2]), strand]))
 			output.write('\n')
 
 
