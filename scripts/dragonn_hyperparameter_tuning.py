@@ -38,12 +38,12 @@ if __name__ == '__main__':
 
 	# read in sequences and labels
 	print("loading sequence data...")
-    X_pos = encode_fasta_sequences(pos_sequences)
-    y_pos = np.array([[True]]*len(X_pos))
-    X_neg = encode_fasta_sequences(neg_sequences)
-    y_neg = np.array([[False]]*len(X_neg))
-    X = np.concatenate((X_pos, X_neg))
-    y = np.concatenate((y_pos, y_neg))
+	X_pos = encode_fasta_sequences(pos_sequences)
+	y_pos = np.array([[True]]*len(X_pos))
+	X_neg = encode_fasta_sequences(neg_sequences)
+	y_neg = np.array([[False]]*len(X_neg))
+	X = np.concatenate((X_pos, X_neg))
+	y = np.concatenate((y_pos, y_neg))
 
 	print('Partitioning data into training, validation and test sets...')
 	X_train, X_test, y_train, y_test = train_test_split(encoded_sequences, 
