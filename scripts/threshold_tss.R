@@ -13,6 +13,10 @@ ref <- read.table('../ref/endo_lib_2016_controls_clean.txt', header = F,
 
 Endo2 <- left_join(Endo2, ref, by = 'name')
 
+# remove primers
+Endo2 <- Endo2 %>% 
+    mutate(trimmed_seq = substring(seq, 25, 174))
+
 # identify 3standard deviations greater than median of negatives
 neg_median <- median(subset(Endo2, grepl("neg_control", Endo2$name)) %>% .$RNA_exp_average)
 neg_sd <- sd(subset(Endo2, grepl("neg_control", Endo2$name)) %>% .$RNA_exp_average)
@@ -44,10 +48,10 @@ negative_Endo2 %>%
                 col.names = F, row.names = F, quote = F)
 
 # write fasta
-write.fasta(sequences = as.list(positive_Endo2$seq),
+write.fasta(sequences = as.list(positive_Endo2$trimmed_seq),
             names = positive_Endo2$name, nbchar = 200, as.string = T, open = 'w',
-            file.out = '../processed_data/dragonn_output/tss_positives.fasta')
+            file.out = '../processed_data/tss_positives.fasta')
 
-write.fasta(sequences = as.list(negative_Endo2$seq),
+write.fasta(sequences = as.list(negative_Endo2$trimmed_seq),
             names = negative_Endo2$name, nbchar = 200, as.string = T, open = 'w',
-            file.out = '../processed_data/dragonn_output/tss_negatives.fasta')
+            file.out = '../processed_data/tss_negatives.fasta')
