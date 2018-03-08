@@ -13,16 +13,17 @@ except ImportError:
 import sys
 import argparse
 
-test_fraction = 0.2
-validation_fraction = 0.2
+# test_fraction = 0.2
+# validation_fraction = 0.2
 num_epochs = 100
 
 if __name__ == '__main__':
 
-	parser = ArgumentParser()
+	parser = argparse.ArgumentParser()
 	parser.add_argument('positives', help='fasta file of positive sequences')
 	parser.add_argument('negatives', help='fasta file of negative sequences')
 	parser.add_argument('seq_length', type=int, help='length of input sequences')
+	parser.add_argument('num_layers', type=int, help='number of convolutional layers')
 	parser.add_argument('test_fraction', type=float)
 	parser.add_argument('validation_fraction', type=float)
 	parser.add_argument('num_trials', type=int, 
@@ -32,6 +33,7 @@ if __name__ == '__main__':
 	pos_sequences = args.positives
 	neg_sequences = args.negatives
 	seq_length = args.seq_length
+	num_layers = args.num_layers
 	test_fraction = args.test_fraction
 	validation_fraction = args.validation_fraction
 	num_hyperparameter_trials = args.num_trials
@@ -46,8 +48,8 @@ if __name__ == '__main__':
 	y = np.concatenate((y_pos, y_neg))
 
 	print('Partitioning data into training, validation and test sets...')
-	X_train, X_test, y_train, y_test = train_test_split(encoded_sequences, 
-		labels, test_size=test_fraction)
+	X_train, X_test, y_train, y_test = train_test_split(X, y, 
+		test_size=test_fraction)
 	X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, 
 		test_size=validation_fraction)
 
@@ -71,21 +73,19 @@ if __name__ == '__main__':
 	        'dropout': (min_dropout, max_dropout)}
 
 	# number of convolutional layers        
-	for num_layers in range(min_layer, max_layer + 1):
-		print "Number of convolutional layers: ", num_layers
-		filters = tuple([(min_filter, max_filter)] * num_layers)
-		conv_widths = tuple([(min_conv_width, max_conv_width)] * num_layers)
-	    grid.update({'num_filters': filters),
-	                 'conv_width': conv_widths})
+	print("Number of convolutional layers: ", num_layers)
+	filters = tuple([(min_filter, max_filter)] * num_layers)
+	conv_widths = tuple([(min_conv_width, max_conv_width)] * num_layers)
+	grid.update({'num_filters': filters, 'conv_width': conv_widths})
 
-		# Backend is RandomSearch; if using Python 2, can also specify MOESearch
-		# (requires separate installation)
-		searcher = HyperparameterSearcher(SequenceDNN, fixed_hyperparameters, grid, 
-			X_train, y_train, validation_data=(X_valid, y_valid), backend=RandomSearch)
-		searcher.search(num_hyperparameter_trials)
-		print('Best hyperparameters: {}'.format(searcher.best_hyperparameters))
-		model = searcher.best_model
-		# Test model
-		print('Test results: {}'.format(model.test(X_test, y_test)))
+	# Backend is RandomSearch; if using Python 2, can also specify MOESearch
+	# (requires separate installation)
+	searcher = HyperparameterSearcher(SequenceDNN, fixed_hyperparameters, grid, 
+		X_train, y_train, validation_data=(X_valid, y_valid), backend=RandomSearch)
+	searcher.search(num_hyperparameter_trials)
+	print('Best hyperparameters: {}'.format(searcher.best_hyperparameters))
+	model = searcher.best_model
+	# Test model
+	print('Test results: {}'.format(model.test(X_test, y_test)))
 
 
