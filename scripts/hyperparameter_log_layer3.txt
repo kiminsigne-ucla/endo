@@ -1,0 +1,66 @@
+loading sequence data...
+Partitioning data into training, validation and test sets...
+Adding reverse complements...
+Starting hyperparameter search...
+Number of convolutional layers:  3
+Training model (* indicates new best result)...
+Epoch 1:
+Train Loss: 4.2343	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.561
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2728	 Num Negatives: 19524
+Valid Loss: 3.9604	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.557
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 319	 Num Negatives: 2463 *
+Epoch 2:
+Train Loss: 4.2343	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.561
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2728	 Num Negatives: 19524
+Valid Loss: 3.9604	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.557
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 319	 Num Negatives: 2463 *
+Epoch 3:
+Train Loss: 4.2343	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.561
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2728	 Num Negatives: 19524
+Valid Loss: 3.9604	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.557
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 319	 Num Negatives: 2463 *
+Epoch 4:
+Train Loss: 4.2343	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.561
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2728	 Num Negatives: 19524
+Valid Loss: 3.9604	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.557
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 319	 Num Negatives: 2463 *
+Epoch 5:
+Train Loss: 4.2343	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.561
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2728	 Num Negatives: 19524
+Valid Loss: 3.9604	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.557
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 319	 Num Negatives: 2463 *
+Epoch 6:
+Train Loss: 4.2343	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.561
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2728	 Num Negatives: 19524
+Valid Loss: 3.9604	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.557
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 319	 Num Negatives: 2463 *
+Epoch 7:
+Train Loss: 4.2343	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.561
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2728	 Num Negatives: 19524
+Valid Loss: 3.9604	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.557
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 319	 Num Negatives: 2463 *
+Epoch 8:
+Train Loss: 4.2343	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.561
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2728	 Num Negatives: 19524
+Valid Loss: 3.9604	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.557
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 319	 Num Negatives: 2463 *
+Epoch 9:
+Train Loss: 4.2343	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.561
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2728	 Num Negatives: 19524
+Valid Loss: 3.9604	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.557
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 319	 Num Negatives: 2463 *
+Epoch 10:
+Train Loss: 4.2343	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.561
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2728	 Num Negatives: 19524
+Valid Loss: 3.9604	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.557
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 319	 Num Negatives: 2463 *
+Epoch 11:
+Train Loss: 4.2343	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.561
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2728	 Num Negatives: 19524
+Valid Loss: 3.9604	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.557
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 319	 Num Negatives: 2463 *
+Epoch 12:
+Train Loss: 4.2343	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.561
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2728	 Num Negatives: 19524
+Valid Loss: 3.9604	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.557
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Nu

@@ -54,8 +54,8 @@ if __name__ == '__main__':
 		test_size=validation_fraction)
 
 	print('Adding reverse complements...')
-	X_train = np.concatenate((X_train, reverse_complement(X_train)))
-	y_train = np.concatenate((y_train, y_train))
+	# X_train = np.concatenate((X_train, reverse_complement(X_train)))
+	# y_train = np.concatenate((y_train, y_train))
 
 	print('Starting hyperparameter search...')
 	min_layer = 1
