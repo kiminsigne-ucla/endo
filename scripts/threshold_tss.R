@@ -17,41 +17,70 @@ Endo2 <- left_join(Endo2, ref, by = 'name')
 Endo2 <- Endo2 %>% 
     mutate(trimmed_seq = substring(seq, 25, 174))
 
+# separate name into fields
+Endo2 <- Endo2 %>% 
+    separate(name, into = c('source', 'tss_pos', 'strand'), sep = ',', remove = F)
+
+Endo2 <- Endo2 %>% 
+    mutate(tss_pos = as.numeric(tss_pos),
+           strand = ifelse(is.na(strand), '+', strand))
+
 # identify 3standard deviations greater than median of negatives
 neg_median <- median(subset(Endo2, grepl("neg_control", Endo2$name)) %>% .$RNA_exp_average)
 neg_sd <- sd(subset(Endo2, grepl("neg_control", Endo2$name)) %>% .$RNA_exp_average)
+
+# create accurate var start and end from TSS position
+Endo2 <- Endo2 %>% 
+    mutate(start = ifelse(strand == '+', tss_pos - 120, tss_pos - 30),
+           end = ifelse(strand == '+', tss_pos + 30, tss_pos + 120)) %>% 
+    mutate(start = ifelse(grepl('neg', name), var_start, start),
+           end = ifelse(grepl('neg', name), var_end, end))
 
 # Subset all promoters that are greater than 3sd from the mean
 positive_Endo2 <- filter(Endo2, RNA_exp_average > (neg_median+3*(neg_sd)))
 negative_Endo2 <- filter(Endo2, RNA_exp_average < (neg_median+3*(neg_sd)))
 
-positive_Endo2 %>% 
-    separate(name, sep = ',', into = c('source', 'position', 'strand'), remove = F) %>% 
-    mutate(chrom = 'U00096.2',
-           start = as.numeric(position), 
-           end = start + 1) %>% 
-    select(chrom, start, end, name, RNA_exp_average, strand) %>% 
-    mutate(strand = ifelse(grepl('neg', name), '+', strand)) %>% 
-    filter(!is.na(start)) %>% 
-    write.table('../processed_data/tss_positives.bed', sep = '\t', 
+# positive_Endo2 %>% 
+#     separate(name, sep = ',', into = c('source', 'position', 'strand'), remove = F) %>% 
+#     mutate(chrom = 'U00096.2',
+#            start = as.numeric(position), 
+#            end = start + 1) %>% 
+#     select(chrom, start, end, name, RNA_exp_average, strand) %>% 
+#     mutate(strand = ifelse(grepl('neg', name), '+', strand)) %>% 
+#     filter(!is.na(start)) %>% 
+#     write.table('../processed_data/tss_positives.bed', sep = '\t', 
+#                 col.names = F, row.names = F, quote = F)
+
+positive_Endo2 %>%
+    mutate(chrom = 'U00096.2') %>%
+    select(chrom, start, end, name, RNA_exp_average, strand) %>%
+    filter(start > 0) %>%
+    write.table('../processed_data/tss_positives.bed', sep = '\t',
                 col.names = F, row.names = F, quote = F)
 
-negative_Endo2 %>% 
-    separate(name, sep = ',', into = c('source', 'position', 'strand'), remove = F) %>% 
-    mutate(chrom = 'U00096.2',
-           start = ifelse(grepl('neg', name), var_start, as.numeric(position)), 
-           end = ifelse(grepl('neg', name), var_end, start + 1)) %>% 
-    select(chrom, start, end, name, RNA_exp_average, strand) %>% 
-    mutate(strand = ifelse(grepl('neg', name), '+', strand)) %>% 
-    filter(!is.na(start)) %>% 
-    write.table('../processed_data/tss_negatives.bed', sep = '\t', 
+# negative_Endo2 %>% 
+#     separate(name, sep = ',', into = c('source', 'position', 'strand'), remove = F) %>% 
+#     mutate(chrom = 'U00096.2',
+#            start = ifelse(grepl('neg', name), var_start, as.numeric(position)), 
+#            end = ifelse(grepl('neg', name), var_end, start + 1)) %>% 
+#     select(chrom, start, end, name, RNA_exp_average, strand) %>% 
+#     mutate(strand = ifelse(grepl('neg', name), '+', strand)) %>% 
+#     filter(!is.na(start)) %>% 
+#     write.table('../processed_data/tss_negatives.bed', sep = '\t', 
+#                 col.names = F, row.names = F, quote = F)
+
+negative_Endo2 %>%
+    mutate(chrom = 'U00096.2') %>%
+    select(chrom, start, end, name, RNA_exp_average, strand) %>%
+    filter(start > 0) %>%
+    write.table('../processed_data/tss_negatives.bed', sep = '\t',
                 col.names = F, row.names = F, quote = F)
 
-# write fasta
-write.fasta(sequences = as.list(positive_Endo2$trimmed_seq),
-            names = positive_Endo2$name, nbchar = 200, as.string = T, open = 'w',
-            file.out = '../processed_data/tss_positives.fasta')
-
-write.fasta(sequences = as.list(negative_Endo2$trimmed_seq),
-            names = negative_Endo2$name, nbchar = 200, as.string = T, open = 'w',
-            file.out = '../processed_data/tss_negatives.fasta')
+# # write fasta
+# write.fasta(sequences = as.list(positive_Endo2$trimmed_seq),
+#             names = positive_Endo2$name, nbchar = 200, as.string = T, open = 'w',
+#             file.out = '../processed_data/tss_positives.fasta')
+# 
+# write.fasta(sequences = as.list(negative_Endo2$trimmed_seq),
+#             names = negative_Endo2$name, nbchar = 200, as.string = T, open = 'w',
+#             file.out = '../processed_data/tss_negatives.fasta')
