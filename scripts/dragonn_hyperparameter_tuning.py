@@ -24,6 +24,8 @@ if __name__ == '__main__':
 	parser.add_argument('negatives', help='fasta file of negative sequences')
 	parser.add_argument('seq_length', type=int, help='length of input sequences')
 	parser.add_argument('num_layers', type=int, help='number of convolutional layers')
+	parser.add_argument('min_filter', type=int, help='minimum number of filters')
+	parser.add_argument('max_filter', type=int, help='maximum number of filters')
 	parser.add_argument('test_fraction', type=float)
 	parser.add_argument('validation_fraction', type=float)
 	parser.add_argument('num_trials', type=int, 
@@ -34,6 +36,8 @@ if __name__ == '__main__':
 	neg_sequences = args.negatives
 	seq_length = args.seq_length
 	num_layers = args.num_layers
+	min_filter = args.min_filter
+	max_filter = args.max_filter
 	test_fraction = args.test_fraction
 	validation_fraction = args.validation_fraction
 	num_hyperparameter_trials = args.num_trials
@@ -60,8 +64,8 @@ if __name__ == '__main__':
 	print('Starting hyperparameter search...')
 	min_layer = 1
 	max_layer = 4
-	min_filter = 5
-	max_filter = 100
+	# min_filter = 5
+	# max_filter = 100
 	min_conv_width = 6
 	max_conv_width = 30
 	min_dropout = 0.1
