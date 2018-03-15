@@ -1,0 +1,13 @@
+[global]
+floatX = float32
+device = cuda
+force_device = True
+
+[lib]
+cnmem = 0.9
+
+[dnn]
+enabled = True
+
+[nvcc]
+flags = -D_FORCE_INLINES
