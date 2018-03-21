@@ -135,9 +135,9 @@ class SequenceDNN(Model):
         # print('Test loss:', score[0])
         # print('Test accuracy:', score[1])
         for epoch in range(1, self.num_epochs + 1):
-            self.model.fit(X, y, batch_size=128, epochs=1, verbose= self.verbose >= 2)
-            epoch_train_metrics = self.model.evaluate(X, y)
-            epoch_valid_metrics = self.model.evaluate(X_valid, y_valid)
+            self.model.fit(X, y, batch_size=128, epochs=1, verbose=0)
+            epoch_train_metrics = self.model.evaluate(X, y, verbose=0)
+            epoch_valid_metrics = self.model.evaluate(X_valid, y_valid, verbose=0)
             self.train_metrics.append(epoch_train_metrics)
             self.valid_metrics.append(epoch_valid_metrics)
             if self.verbose >= 1:
