@@ -72,7 +72,7 @@ class SequenceDNN(Model):
                  use_RNN=False, num_tasks=1,
                  num_filters=(15, 15, 15), conv_width=(15, 15, 15),
                  pool_width=35, GRU_size=35, TDD_size=15,
-                 L1=0, dropout=0.0, num_epochs=100, verbose=2):
+                 L1=0, dropout=0.0, num_epochs=100, verbose=1):
         from keras.models import Sequential
         from keras.layers.core import (
             Activation, Dense, Dropout, Flatten,
@@ -135,7 +135,7 @@ class SequenceDNN(Model):
         # print('Test loss:', score[0])
         # print('Test accuracy:', score[1])
         for epoch in range(1, self.num_epochs + 1):
-            self.model.fit(X, y, batch_size=128, epochs=1, verbose=0)
+            self.model.fit(X, y, batch_size=128, epochs=1, self.verbose >= 2)
             epoch_train_metrics = self.model.evaluate(X, y)
             epoch_valid_metrics = self.model.evaluate(X_valid, y_valid)
             self.train_metrics.append(epoch_train_metrics)
