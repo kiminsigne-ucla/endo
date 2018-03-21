@@ -40,6 +40,14 @@ Endo2 <- Endo2 %>%
 positive_Endo2 <- filter(Endo2, RNA_exp_average > (neg_median+3*(neg_sd)))
 negative_Endo2 <- filter(Endo2, RNA_exp_average < (neg_median+3*(neg_sd)))
 
+false_negatives <- read.table('../processed_data/tss_false_negative.bed', sep='\t',
+                              col.names = c('chrom', 'start', 'end', 'name'))
+
+pos_with_false_neg <- bind_rows(positive_Endo2, 
+                                semi_join(Endo2, false_negatives, by = 'name'))
+
+neg_without_false_neg <- anti_join(negative_Endo2, false_negatives, by = 'name')
+
 # positive_Endo2 %>% 
 #     separate(name, sep = ',', into = c('source', 'position', 'strand'), remove = F) %>% 
 #     mutate(chrom = 'U00096.2',
@@ -56,6 +64,13 @@ positive_Endo2 %>%
     select(chrom, start, end, name, RNA_exp_average, strand) %>%
     filter(start > 0) %>%
     write.table('../processed_data/tss_positives.bed', sep = '\t',
+                col.names = F, row.names = F, quote = F)
+
+pos_with_false_neg %>%
+    mutate(chrom = 'U00096.2') %>%
+    select(chrom, start, end, name, RNA_exp_average, strand) %>%
+    filter(start > 0) %>%
+    write.table('../processed_data/tss_positives_with_false_neg.bed', sep = '\t',
                 col.names = F, row.names = F, quote = F)
 
 # negative_Endo2 %>% 
@@ -76,6 +91,13 @@ negative_Endo2 %>%
     write.table('../processed_data/tss_negatives.bed', sep = '\t',
                 col.names = F, row.names = F, quote = F)
 
+neg_without_false_neg %>%
+    mutate(chrom = 'U00096.2') %>%
+    select(chrom, start, end, name, RNA_exp_average, strand) %>%
+    filter(start > 0) %>%
+    write.table('../processed_data/tss_negatives_without_false_neg.bed', sep = '\t',
+                col.names = F, row.names = F, quote = F)
+
 # # write fasta
 # write.fasta(sequences = as.list(positive_Endo2$trimmed_seq),
 #             names = positive_Endo2$name, nbchar = 200, as.string = T, open = 'w',
@@ -84,3 +106,10 @@ negative_Endo2 %>%
 # write.fasta(sequences = as.list(negative_Endo2$trimmed_seq),
 #             names = negative_Endo2$name, nbchar = 200, as.string = T, open = 'w',
 #             file.out = '../processed_data/tss_negatives.fasta')
+
+Endo2 %>% 
+    left_join(seqs, by = 'name') %>% 
+    select(original_seq, RNA_exp_average) %>% 
+    write.table(file = '../processed_data/tss_all.txt', sep = '\t', 
+                col.names = F, row.names = F, quote = F)
+
