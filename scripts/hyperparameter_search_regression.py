@@ -117,7 +117,7 @@ class HyperparameterSearcher(object):
             # task_scores = model.score(self.validation_data[0], self.validation_data[1], self.metric)
             # score = task_scores.mean()  # mean across tasks
             # score = np.corrcoef(np.squeeze(model.predict(X_valid)), y_valid)[0,1]
-            score = model.score(X_valid, y_valid)
+            score = model.score(self.validation_data[0], self.validation_data[1])
             print("Valid: correlation between predicted and observed:", score)
 
             # Record hyperparameters and validation loss
