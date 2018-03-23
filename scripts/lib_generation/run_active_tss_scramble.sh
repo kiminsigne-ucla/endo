@@ -1,0 +1,1 @@
+python scramble_tiling.py ../../processed_data/tss_positives.fasta 10 20180323_active_tss_scrambled.txt
