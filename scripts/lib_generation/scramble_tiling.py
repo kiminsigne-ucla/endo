@@ -68,12 +68,14 @@ if __name__ == '__main__':
 	parser.add_argument('sequences', help='filename of input sequences, FASTA format')
 	# parser.add_argument('neg_sequences', help='file of negative controls (more than 200bp from TSS either strand), used to pad shorter sequences, tab format')
 	parser.add_argument('scramble_len', type=int, help='length of scrambled segments')
+	parser.add_argument('stride_len', type=int, help='step length between scrambled segments')
 	parser.add_argument('output_name', help='name of output file')
 
 	args = parser.parse_args()
 	sequences = fasta_reader(args.sequences)
 	# stuffer_sequences = tab_reader(args.neg_sequences)
 	scramble_len = args.scramble_len
+	stride_len = args.stride_len
 	output_name = args.output_name
 
 	# skpp-100-F sk20mer-20955
@@ -84,7 +86,7 @@ if __name__ == '__main__':
 	tiles = {}
 
 	for name, seq in sequences.items():
-		for i in range(0, len(seq), scramble_len)
+		for i in range(0, len(seq), stride_len):
 			scrambled = list(seq[i:i+scramble_len])
 			random.shuffle(scrambled)
 			tile = seq[:i] + ''.join(scrambled).lower() + seq[i+scramble_len:]
