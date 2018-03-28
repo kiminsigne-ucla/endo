@@ -84,7 +84,7 @@ if __name__ == '__main__':
 	tiles = {}
 
 	for name, seq in sequences.items():
-		for i in range(0, len(seq) - scramble_len, scramble_len):
+		for i in range(0, len(seq), scramble_len)
 			scrambled = list(seq[i:i+scramble_len])
 			random.shuffle(scrambled)
 			tile = seq[:i] + ''.join(scrambled).lower() + seq[i+scramble_len:]

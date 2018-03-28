@@ -121,7 +121,10 @@ if __name__ == '__main__':
 			stuffer, payload = tile
 			# stuffed sequence, only use first 20bp of fwd primer, subtract 2bp from stuffer,
 			# then add the full 6bp of RE (no overlap between primer and RE anymore)
-			full_tile = fwd_primer + stuffer[:-2] + xhoI + payload + rev_primer
+			full_tile = fwd_primer[:20] + stuffer[:-2] + xhoI + payload + rev_primer
+			# 149bp peaks end up being 1bp too long, remove bp from rev primer
+			if len(full_tile) == 199:
+				full_tile = fwd_primer[:20] + stuffer[:-2] + xhoI + payload + rev_primer[:23]
 		else:
 			full_tile = fwd_primer + tile + rev_primer
 
