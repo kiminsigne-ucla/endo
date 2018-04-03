@@ -5,13 +5,54 @@ random.seed(1)
 from dragonn.models import SequenceDNN
 from dragonn.hyperparameter_search import HyperparameterSearcher, RandomSearch
 # from simdna.simulations import simulate_single_motif_detection
-from dragonn.utils import one_hot_encode, encode_fasta_sequences, reverse_complement
+from dragonn.utils import one_hot_encode, reverse_complement
 try:
     from sklearn.model_selection import train_test_split  # sklearn >= 0.18
 except ImportError:
     from sklearn.cross_validation import train_test_split  # sklearn < 0.18
 import sys
 import argparse
+
+
+def encode_trim_pad_fasta_sequences(fname, max_length):
+    """
+    One hot encodes sequences in fasta file. If sequences are too long, they will
+    be trimmed to the center. If too short, they will be padded with Ns
+    """
+    name, seq_chars = None, []
+    sequences = []
+    with open(fname) as fp:
+        for line in fp:
+            line = line.rstrip()
+            if line.startswith(">"):
+                if name:
+                	seq = ''.join(seq_chars).upper()
+                	# this will center the string, and pad with Ns
+                	if len(seq) > max_length:
+                		diff = len(seq) - max_length
+                		# diff%2 returns 1 if odd
+                		trim_length = int(diff / 2)
+                		seq = seq[trim_length : -(trim_length + diff%2)]
+                	else:
+                		seq = seq.center(max_length, 'N')
+                	sequences.append(seq)
+                name, seq_chars = line, []
+            else:
+                seq_chars.append(line)
+    if name is not None:
+    	seq = ''.join(seq_chars).upper()
+    	# this will center the string, and pad with Ns
+    	if len(seq) > max_length:
+    		diff = len(seq) - max_length
+    		# diff%2 returns 1 if odd
+    		trim_length = int(diff / 2)
+    		seq = seq[trim_length : -(trim_length + diff%2)]
+    	else:
+    		seq = seq.center(max_length, 'N')
+        sequences.append(seq)
+
+    return one_hot_encode(np.array(sequences))
+
 
 # test_fraction = 0.2
 # validation_fraction = 0.2
@@ -22,7 +63,7 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('positives', help='fasta file of positive sequences')
 	parser.add_argument('negatives', help='fasta file of negative sequences')
-	parser.add_argument('seq_length', type=int, help='length of input sequences')
+	parser.add_argument('seq_length', type=int, help='length of input sequences, or max length for trimming/padding sequences')
 	parser.add_argument('num_layers', type=int, help='number of convolutional layers')
 	parser.add_argument('min_filter', type=int, help='minimum number of filters')
 	parser.add_argument('max_filter', type=int, help='maximum number of filters')
@@ -44,9 +85,9 @@ if __name__ == '__main__':
 
 	# read in sequences and labels
 	print("loading sequence data...")
-	X_pos = encode_fasta_sequences(pos_sequences)
+	X_pos = encode_trim_pad_fasta_sequences(pos_sequences, seq_length)
 	y_pos = np.array([[True]]*len(X_pos))
-	X_neg = encode_fasta_sequences(neg_sequences)
+	X_neg = encode_trim_pad_fasta_sequences(neg_sequences, seq_length)
 	y_neg = np.array([[False]]*len(X_neg))
 	X = np.concatenate((X_pos, X_neg))
 	y = np.concatenate((y_pos, y_neg))
@@ -62,8 +103,6 @@ if __name__ == '__main__':
 	# y_train = np.concatenate((y_train, y_train))
 
 	print('Starting hyperparameter search...')
-	min_layer = 1
-	max_layer = 4
 	# min_filter = 5
 	# max_filter = 100
 	min_conv_width = 6

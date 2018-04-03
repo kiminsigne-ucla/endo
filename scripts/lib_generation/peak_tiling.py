@@ -2,7 +2,7 @@ import argparse
 from itertools import islice
 import string
 import numpy as np
-
+import re
 
 
 def fasta_reader(filename):
@@ -36,6 +36,38 @@ def tab_reader(filename):
 	return seqs
 
 
+def parse_controls(filename):
+	'''
+	Extract promoters from CSV file. There are weird quotation marks and spaces
+	so have to do some regex stuff
+	'''
+
+	infile = open(filename, 'r')
+
+	syn_promoters = {}
+
+	# read through header
+	infile.readline()
+
+	for line in infile.readlines():
+		fields = line.strip().split(',')
+		name = fields[0]
+		seq = fields[9]
+
+		# remove white space from seq
+		seq = ''.join(seq.split())
+		# remove quotations
+		match = re.search('[ACGT]{1,}', seq)
+		clean_seq = match.group(0)
+
+		# remove quotations from name, always first and last characters
+		clean_name = name.replace('\"', '')
+
+		syn_promoters['pos_control_'+clean_name] = clean_seq
+
+	return syn_promoters
+
+
 def best_A_content(oligo):
 	'''
 	Choose the strand with the lowest A content because A's are harder to
@@ -63,17 +95,26 @@ def reverse_complement(sequence):
     return ''.join(letters) 
 
 
+def add_stuffer(sequence, stuffer, tile_len):
+	# store as tuple so we can easily insert the restriction site in between the
+	# stuffer and tile
+	stuffer = (stuffer[:(tile_len - len(sequence))], sequence)
+	return stuffer
+
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser("script to generate tiled regions of peak calls")
 	parser.add_argument('sequences', help='filename of input sequences, FASTA format')
-	# parser.add_argument('neg_sequences', help='file of negative controls (more than 200bp from TSS either strand), used to pad shorter sequences, tab format')
+	parser.add_argument('neg_controls', help='fasta file of negative controls (more than 200bp from TSS either strand)')
+	parser.add_argument('pos_controls', help='fasta file of positive controls')
 	parser.add_argument('stride', type=int, help='distance between consecutive tiles')
 	parser.add_argument('tile_len', type=int, help='tile length')
 	parser.add_argument('output_name', help='name of output file')
 
 	args = parser.parse_args()
 	sequences = fasta_reader(args.sequences)
-	# stuffer_sequences = tab_reader(args.neg_sequences)
+	neg_controls = tab_reader(args.neg_controls)
+	pos_controls = parse_controls(args.pos_controls)
 	stride = args.stride
 	tile_len = args.tile_len
 	output_name = args.output_name
@@ -95,7 +136,7 @@ if __name__ == '__main__':
 		if len(seq) < tile_len:
 			# store as tuple so we can easily insert the restriction site
 			# in between the stuffer and tile
-			tile = (stuffer[:(tile_len - len(seq))], seq)
+			tile = add_stuffer(seq, stuffer, tile_len)
 			tile_name = name + '_pos0-' + str(len(seq))
 			tiles[tile_name] = tile
 		else:
@@ -112,6 +153,16 @@ if __name__ == '__main__':
 				tile_name = name + '_pos' + str(start) + '-' + str(end)
 				tiles[tile_name] = tile
 
+	# add controls to tiles
+	tiles.update(neg_controls)
+	# positive controls are shorter, need to stuff
+	for name, seq in pos_controls.items():
+		name = 'pos_control_' + name
+		if len(seq) < tile_len:
+			tiles[name] = add_stuffer(seq, stuffer, tile_len)
+		else:
+			tiles[name] = seq
+
 
 	outfile = open(output_name, 'w')			
 	# add restriction sites and primer
@@ -122,11 +173,12 @@ if __name__ == '__main__':
 			# stuffed sequence, only use first 20bp of fwd primer, subtract 2bp from stuffer,
 			# then add the full 6bp of RE (no overlap between primer and RE anymore)
 			full_tile = fwd_primer[:20] + stuffer[:-2] + xhoI + payload + rev_primer
-			# 149bp peaks end up being 1bp too long, remove bp from rev primer
-			if len(full_tile) == 199:
-				full_tile = fwd_primer[:20] + stuffer[:-2] + xhoI + payload + rev_primer[:23]
 		else:
 			full_tile = fwd_primer + tile + rev_primer
+
+		# 149bp peaks end up being 1bp too long, remove bp from rev primer
+		if len(full_tile) == 199:
+			full_tile = fwd_primer[:20] + stuffer[:-2] + xhoI + payload + rev_primer[:23]
 
 		reverse = best_A_content(full_tile)
 		if reverse:

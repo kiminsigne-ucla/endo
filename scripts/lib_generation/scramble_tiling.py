@@ -3,6 +3,7 @@ from itertools import islice
 import string
 import numpy as np
 import random
+import re
 
 
 def fasta_reader(filename):
@@ -30,10 +31,43 @@ def tab_reader(filename):
 
 	for line in infile:
 		name, seq = line.strip().split('\t')
-		seqs[name] = seq
+		# remove leading '>' from fasta-style header if present
+		name = name.replace('>', '')
 		seqs[name] = seq
 
 	return seqs
+
+
+def parse_controls(filename):
+	'''
+	Extract promoters from CSV file. There are weird quotation marks and spaces
+	so have to do some regex stuff
+	'''
+
+	infile = open(filename, 'r')
+
+	syn_promoters = {}
+
+	# read through header
+	infile.readline()
+
+	for line in infile.readlines():
+		fields = line.strip().split(',')
+		name = fields[0]
+		seq = fields[9]
+
+		# remove white space from seq
+		seq = ''.join(seq.split())
+		# remove quotations
+		match = re.search('[ACGT]{1,}', seq)
+		clean_seq = match.group(0)
+
+		# remove quotations from name, always first and last characters
+		clean_name = name.replace('\"', '')
+
+		syn_promoters['pos_control_'+clean_name] = clean_seq
+
+	return syn_promoters
 
 
 def best_A_content(oligo):
@@ -63,29 +97,48 @@ def reverse_complement(sequence):
     return ''.join(letters) 
 
 
+def add_stuffer(sequence, stuffer, tile_len):
+	# store as tuple so we can easily insert the restriction site in between the
+	# stuffer and tile
+	stuffer = (stuffer[:(tile_len - len(sequence))], sequence)
+	return stuffer
+
+
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser("script to generate scrambled regions tiling input sequences")
 	parser.add_argument('sequences', help='filename of input sequences, FASTA format')
-	# parser.add_argument('neg_sequences', help='file of negative controls (more than 200bp from TSS either strand), used to pad shorter sequences, tab format')
+	parser.add_argument('neg_controls', help='fasta file of negative controls (more than 200bp from TSS either strand)')
+	parser.add_argument('pos_controls', help='fasta file of positive controls')
 	parser.add_argument('scramble_len', type=int, help='length of scrambled segments')
 	parser.add_argument('stride_len', type=int, help='step length between scrambled segments')
 	parser.add_argument('output_name', help='name of output file')
 
 	args = parser.parse_args()
 	sequences = fasta_reader(args.sequences)
-	# stuffer_sequences = tab_reader(args.neg_sequences)
+	neg_controls = tab_reader(args.neg_controls)
+	pos_controls = parse_controls(args.pos_controls)
 	scramble_len = args.scramble_len
 	stride_len = args.stride_len
 	output_name = args.output_name
+
+	# just grab length of input sequence
+	tile_len = len(sequences.values()[0])
+	# T is easiest to synthesize, won't have secondary structure
+	stuffer = 'T' * tile_len
 
 	# skpp-100-F sk20mer-20955
 	fwd_primer = 'ACCTGTAATTCCAAGCGTCTCGAG'
 	# skpp-155-R sk20mer-121927
 	rev_primer = 'GCTAGCGGTGTTTAGTTAGCATCC'
+	xhoI = 'CTCGAG'
 
 	tiles = {}
 
 	for name, seq in sequences.items():
+		# add unscrambled
+		tile_name = name + '_unscrambled'
+		tiles[tile_name] = seq
 		for i in range(0, len(seq), stride_len):
 			scrambled = list(seq[i:i+scramble_len])
 			random.shuffle(scrambled)
@@ -94,14 +147,37 @@ if __name__ == '__main__':
 			tile_name = name + '_scrambled' + str(i) + '-' + str(i+scramble_len)
 			tiles[tile_name] = tile
 
+	# add controls to tiles
+	tiles.update(neg_controls)
+	# positive controls are shorter, need to stuff
+	for name, seq in pos_controls.items():
+		name = 'pos_control_' + name
+		if len(seq) < tile_len:
+			tiles[name] = add_stuffer(seq, stuffer, tile_len)
+		else:
+			tiles[name] = seq
+
 	with open(output_name, 'w') as outfile:
 		for tile_name in sorted(tiles.keys()):
 			tile = tiles[tile_name]
-			full_tile = fwd_primer + tile + rev_primer
+
+			if len(tile) == 2:
+				stuffer, payload = tile
+				# stuffed sequence, only use first 20bp of fwd primer, subtract 2bp from stuffer,
+				# then add the full 6bp of RE (no overlap between primer and RE anymore)
+				full_tile = fwd_primer[:20] + stuffer[:-2] + xhoI + payload + rev_primer
+			else:
+				full_tile = fwd_primer + tile + rev_primer
+
+				# 149bp peaks end up being 1bp too long, remove bp from rev primer
+			if len(full_tile) == 199:
+				full_tile = fwd_primer[:20] + stuffer[:-2] + xhoI + payload + rev_primer[:23]
+			
 			reverse = best_A_content(full_tile)
 			if reverse:
 				tile_name += '_flipped'
 				full_tile = reverse_complement(full_tile)
-			outfile.write(tile_name + '\t' + tile + '\n')
+
+			outfile.write(tile_name + '\t' + full_tile + '\n')
 
 

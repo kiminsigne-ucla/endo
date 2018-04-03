@@ -43,6 +43,7 @@ if __name__ == '__main__':
 		help='number of filters in each layer, comma separated string, one value for each layer')
 	parser.add_argument('test_fraction', type=float, default=0.2, help='fraction used for testing')
 	parser.add_argument('validation_fraction', type=float, default=0.2, help='fraction used for valdation')
+	parser.add_argument('output_name', help='name of output graph')
 	args = parser.parse_args()
  	
  	sequences = arg.sequences
@@ -52,6 +53,7 @@ if __name__ == '__main__':
 	pool_width = args.pool_width
 	conv_width = map(int, args.conv_width.split(','))
 	num_filters = map(int, args.num_filters.split(','))
+	output_name = args.output_name
 
 	print("loading sequence data...")
 	seqs = [line.split('\t')[0] for line in open(sequences)]
@@ -76,7 +78,7 @@ if __name__ == '__main__':
 
 	corr = model.score(X_test, y_test)
 	print('Test results: {}'.format(corr))
-	model.save('trained_model')
+	model.save(output_name + 'trained_model')
 
 	predictions = np.squeeze(model.predict(X_test))
 	corr_text = 'r = ' + str(round(corr, 3))
@@ -88,7 +90,7 @@ if __name__ == '__main__':
 	plt.title('Neural net predictions for held-out test set (n = ' + str(len(y_test)) + ')')
 	plt.xlabel('observed')
 	plt.ylabel('predicted')
-	plt.savefig('nn_test_results.png')
+	plt.savefig(output_name)
 
 
 
