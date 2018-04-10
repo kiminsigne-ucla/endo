@@ -5,8 +5,8 @@ import os
 import subprocess
 import sys
 import tempfile
-matplotlib.use('pdf')
-import matplotlib.pyplot as plt
+# matplotlib.use('pdf')
+# import matplotlib.pyplot as plt
 from abc import abstractmethod, ABCMeta
 from sklearn.svm import SVR as scikit_SVR
 # from sklearn.tree import DecisionTreeClassifier as scikit_DecisionTree
