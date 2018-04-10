@@ -2,3 +2,4 @@ git+git://github.com/Theano/Theano.git
 git+git://github.com/cartopy/keras-0.3.3.git
 pyprg
 cython
+shapely

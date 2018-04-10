@@ -151,7 +151,6 @@ if __name__ == '__main__':
 	tiles.update(neg_controls)
 	# positive controls are shorter, need to stuff
 	for name, seq in pos_controls.items():
-		name = 'pos_control_' + name
 		if len(seq) < tile_len:
 			tiles[name] = add_stuffer(seq, stuffer, tile_len)
 		else:

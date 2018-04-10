@@ -8,10 +8,9 @@ import tempfile
 matplotlib.use('pdf')
 import matplotlib.pyplot as plt
 from abc import abstractmethod, ABCMeta
-from sklearn.metrics import accuracy_score
-from sklearn.svm import SVC as scikit_SVC
-from sklearn.tree import DecisionTreeClassifier as scikit_DecisionTree
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVR as scikit_SVR
+# from sklearn.tree import DecisionTreeClassifier as scikit_DecisionTree
+from sklearn.ensemble import RandomForestRegressor
 from keras.wrappers.scikit_learn import KerasRegressor
 
 
@@ -179,3 +178,27 @@ class SequenceDNN(Model):
         weights_fname = save_best_model_to_prefix + '.weights.h5'
         open(arch_fname, 'w').write(self.model.to_json())
         self.model.save_weights(weights_fname, overwrite=True)
+
+
+class SVR(Model):
+
+    def __init__(self):
+        self.regressor = scikit_SVR(kernel='linear')
+
+    def train(self, X, y, validation_data=None):
+        self.regressor.fit(X, y)
+
+    def predict(self, X):
+        return self.regressor.predict(X)[:, 1:]
+
+
+class RandomForestRegression(DecisionTree):
+
+    def __init__(self):
+        self.regressor = RandomForestRegressor(n_estimators=100)
+
+    def train(self, X, y, validation_data=None):
+        self.regressor.fit(X, y)
+
+    def predict(self, X):
+        return self.regressor.predict(X)[:, 1:]
