@@ -9,7 +9,7 @@ import tempfile
 # import matplotlib.pyplot as plt
 from abc import abstractmethod, ABCMeta
 from sklearn.svm import SVR as scikit_SVR
-# from sklearn.tree import DecisionTreeClassifier as scikit_DecisionTree
+from sklearn.tree import DecisionTreeClassifier as scikit_DecisionTree
 from sklearn.ensemble import RandomForestRegressor
 from keras.wrappers.scikit_learn import KerasRegressor
 
@@ -190,6 +190,23 @@ class SVR(Model):
 
     def predict(self, X):
         return self.regressor.predict(X)[:, 1:]
+
+
+class DecisionTree(Model):
+
+    def __init__(self):
+        self.classifier = scikit_DecisionTree()
+
+    def train(self, X, y, validation_data=None):
+        self.classifier.fit(X, y)
+
+    def predict(self, X):
+        predictions = np.asarray(self.classifier.predict_proba(X))[..., 1]
+        if len(predictions.shape) == 2:  # multitask
+            predictions = predictions.T
+        else:  # single-task
+            predictions = np.expand_dims(predictions, 1)
+        return predictions
 
 
 class RandomForestRegression(DecisionTree):
