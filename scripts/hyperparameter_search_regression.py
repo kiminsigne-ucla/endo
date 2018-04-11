@@ -89,6 +89,7 @@ class HyperparameterSearcher(object):
 
     def search(self, num_hyperparameter_trials):
         for trial in range(num_hyperparameter_trials):
+            print("Trial ", trial)
             # Select next hyperparameters with MOE, rounding hyperparameters that are integers
             # and re-packing multi-element hyperparameters
             raw_hyperparameters = self.backend.get_next_hyperparameters()
