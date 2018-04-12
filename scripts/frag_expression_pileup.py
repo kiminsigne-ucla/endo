@@ -19,7 +19,8 @@ def pileup(frags, start_position, end_position):
 			# fragment coordinates are 1-based
 			overlap = in_range(i + 1, frag[1], frag[2])
 			if overlap:
-				current_frags.append(frags.pop(0))
+				current_frags.append(frags[0])
+                        if not overlap and i > frags[2]: # current position past fragment
 
 			if len(frags) == 0:
 				break
@@ -76,12 +77,12 @@ if __name__ == '__main__':
 	minus_pileup = pileup(minus_frags, 1, 4639310)
 
 	print "Printing results..."
-	with open('plus_' + prefix) as outfile1:
+	with open('plus_' + prefix, 'w') as outfile1:
 		for i in range(len(plus_pileup)):
 			position, avg = plus_pileup[i]
 			outfile1.write(str(position) + '\t' + str(avg) + '\n')
 
-	with open('minus_' + prefix) as outfile2:
+	with open('minus_' + prefix, 'w') as outfile2:
 		for i in range(len(minus_pileup)):
 			position, avg = minus_pileup[i]
 			outfile2.write(str(position) + '\t' + str(avg) + '\n')
