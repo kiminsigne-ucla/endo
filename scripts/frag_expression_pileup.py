@@ -58,17 +58,17 @@ if __name__ == '__main__':
 	with open(args.infile) as infile:
 		# read through header
 		infile.readline()
-	for line in infile:
-		fields = line.strip().split()
-		expression = float(fields[3])
-		start = int(fields[9])
-		end = int(fields[10])
-		strand = fields[11]
-		if strand == '+':
-			plus_frags.append((expression, start, end, strand))
-		else:
-			# switch start and end so start is always less than end
-			minus_frags.append((expression, end, start, strand))
+		for line in infile:
+			fields = line.strip().split()
+			expression = float(fields[3])
+			start = int(fields[9])
+			end = int(fields[10])
+			strand = fields[11]
+			if strand == '+':
+				plus_frags.append((expression, start, end, strand))
+			else:
+				# switch start and end so start is always less than end
+				minus_frags.append((expression, end, start, strand))
 
 	print "Plus strand pileup..."
 	plus_pileup = pileup(plus_frags, 1, 4639310)
