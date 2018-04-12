@@ -16,12 +16,17 @@ def pileup(frags, start_position, end_position):
 		overlap = True
 		while overlap: # this will continue to grab overlapping fragments
 			frag = frags[0]
+			start = frag[1]
+			end = frag[2]
 			# fragment coordinates are 1-based
-			overlap = in_range(i + 1, frag[1], frag[2])
+			overlap = in_range(i + 1, start, end)
 			if overlap:
 				current_frags.append(frags[0])
-                        if not overlap and i > frags[2]: # current position past fragment
-
+            
+            # don't remove fragment until current position past fragment
+            if i > end: 
+            	frags.pop(0)
+            	
 			if len(frags) == 0:
 				break
 		
