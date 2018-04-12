@@ -9,27 +9,24 @@ def in_range(x, start, end):
 
 
 def pileup(frags, start_position, end_position, outfile_name):
+	# frags must be sorted
 	outfile = open(outfile_name, 'w')
 	current_frags = []
 	# frag_pileup = []
 	for i in range(start_position, end_position):
-		# reset flag so we will search for overlaps at each new position
-		overlap = True
-		while overlap: # this will continue to grab overlapping fragments
-			frag = frags[0]
+		for frag in frags:
 			start = frag[1]
 			end = frag[2]
 			# fragment coordinates are 1-based
 			overlap = in_range(i + 1, start, end)
 			if overlap:
 				current_frags.append(frags[0])
-            
-            # don't remove fragment until current position past fragment
-			if i > end: 
-				frags.pop(0)
+            else:
+            	break
 
-			if len(frags) == 0:
-				break
+        # don't remove fragment until current position past fragment
+		if i > end: 
+			frags.pop(0)
 		
 		if len(current_frags) == 0:
 			mean_exp = None
