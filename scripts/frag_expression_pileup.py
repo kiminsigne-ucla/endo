@@ -31,7 +31,7 @@ def pileup(frags, start_position, end_position, outfile_name):
 			frags.pop(0)
 		
 		if len(current_frags) == 0:
-			mean_exp = None
+			mean_exp = 0
 
 		else:
 			# take average expression of all overlapping frags
