@@ -23,8 +23,8 @@ def pileup(frags, start_position, end_position, outfile_name):
 			overlap = in_range(i + 1, start, end)
 			if overlap:
 				current_frags.append(frags[0])
-            else:
-            	break
+			else:
+				break
 
         # don't remove fragment until current position past fragment
 		if i > end: 
