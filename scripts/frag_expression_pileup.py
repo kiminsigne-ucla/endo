@@ -8,9 +8,10 @@ def in_range(x, start, end):
 		return False
 
 
-def pileup(frags, start_position, end_position):
+def pileup(frags, start_position, end_position, outfile_name):
+	outfile = open(outfile_name, 'w')
 	current_frags = []
-	frag_pileup = []
+	# frag_pileup = []
 	for i in range(start_position, end_position):
 		# reset flag so we will search for overlaps at each new position
 		overlap = True
@@ -37,7 +38,9 @@ def pileup(frags, start_position, end_position):
 			# take average expression of all overlapping frags
 			mean_exp = np.mean([frag[0] for frag in current_frags])
 
-		frag_pileup.append((i, mean_exp))
+
+		# frag_pileup.append((i, mean_exp))
+		outfile.write(str(i) + '\t' + str(mean_exp) + '\n')
 
 		# reset list
 		current_frags = []
@@ -45,7 +48,7 @@ def pileup(frags, start_position, end_position):
 		if len(frags) == 0:
 			break
 
-	return frag_pileup
+	outfile.close()
 
 
 
@@ -77,19 +80,19 @@ if __name__ == '__main__':
 				minus_frags.append((expression, end, start, strand))
 
 	print "Plus strand pileup..."
-	plus_pileup = pileup(plus_frags, 1, 4639310)
+	pileup(plus_frags, 1, 4639310, 'plus_' + prefix)
 	print "Minus strand pileup..."
-	minus_pileup = pileup(minus_frags, 1, 4639310)
+	pileup(minus_frags, 1, 4639310, 'minus_' + prefix)
 
-	print "Printing results..."
-	with open('plus_' + prefix, 'w') as outfile1:
-		for i in range(len(plus_pileup)):
-			position, avg = plus_pileup[i]
-			outfile1.write(str(position) + '\t' + str(avg) + '\n')
+	# print "Printing results..."
+	# with open('plus_' + prefix, 'w') as outfile1:
+	# 	for i in range(len(plus_pileup)):
+	# 		position, avg = plus_pileup[i]
+	# 		outfile1.write(str(position) + '\t' + str(avg) + '\n')
 
-	with open('minus_' + prefix, 'w') as outfile2:
-		for i in range(len(minus_pileup)):
-			position, avg = minus_pileup[i]
-			outfile2.write(str(position) + '\t' + str(avg) + '\n')
+	# with open('minus_' + prefix, 'w') as outfile2:
+	# 	for i in range(len(minus_pileup)):
+	# 		position, avg = minus_pileup[i]
+	# 		outfile2.write(str(position) + '\t' + str(avg) + '\n')
 
 
