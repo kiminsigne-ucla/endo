@@ -14,6 +14,8 @@ def pileup(frags, start_position, end_position, outfile_name):
 	current_frags = []
 	# frag_pileup = []
 	for i in range(start_position, end_position):
+		if i % 50000 == 0:
+			print "Position ", i, "..."
 		for frag in frags:
 			start = frag[1]
 			end = frag[2]
