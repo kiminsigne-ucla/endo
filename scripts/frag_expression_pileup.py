@@ -48,7 +48,7 @@ if __name__ == '__main__':
 	parser.add_argument('infile', help='tab-separated file of fragment expression data. \
 		File must be sorted by start position and have a header.\
 		4th field is expression, 10th field is start, 11th is end, 12th is strand')
-	parser.add_argument('outfile', help='name of output file prefix')
+	parser.add_argument('outfile', help='name of output file')
 
 	args = parser.parse_args()
 	prefix = args.outfile
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 	with open(args.infile) as infile:
 		# read through header
 		infile.readline()
-	for line in lines:
+	for line in infile:
 		fields = line.strip().split()
 		expression = float(fields[3])
 		start = int(fields[9])
