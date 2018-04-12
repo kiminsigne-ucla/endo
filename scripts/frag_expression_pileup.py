@@ -24,9 +24,9 @@ def pileup(frags, start_position, end_position):
 				current_frags.append(frags[0])
             
             # don't remove fragment until current position past fragment
-            if i > end: 
+			if i > end: 
             	frags.pop(0)
-            	
+
 			if len(frags) == 0:
 				break
 		
