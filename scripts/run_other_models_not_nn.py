@@ -99,6 +99,8 @@ if __name__ == '__main__':
 		test_size=validation_fraction)
 
 	svm = SVC()
+	print("Training SVM...")
 	svm.train(X_train, y_train)
-	svm.test(X_test, y_test)
+	test = svm.test(X_test, y_test)
+	print("Test:", test)
 
