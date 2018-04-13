@@ -4,6 +4,7 @@ np.random.seed(1)
 random.seed(1)
 from dragonn.models import SVC, RandomForest, DecisionTree
 from dragonn.utils import reverse_complement
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 try:
     from sklearn.model_selection import train_test_split  # sklearn >= 0.18
 except ImportError:
