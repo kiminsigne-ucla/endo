@@ -74,6 +74,7 @@ if __name__ == '__main__':
 	X_train2d, X_valid2d, y_train, y_valid = train_test_split(X_train2d, y_train, 
 		test_size=validation_fraction)
 
+	print("Training SVR...")
 	svr = SVR()
 	svr.train(X_train2d, y_train)
 
