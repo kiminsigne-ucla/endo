@@ -45,7 +45,6 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('sequences', help='tab-separated, two columns. First is sequence, second is continuous value')
 	parser.add_argument('seq_length', type=int, help='length of input sequences')
-	parser.add_argument('max_filter', type=int, help='maximum number of filters')
 	parser.add_argument('test_fraction', type=float)
 	parser.add_argument('validation_fraction', type=float)
 	args = parser.parse_args()
@@ -72,7 +71,7 @@ if __name__ == '__main__':
 
 	X_train2d, X_test2d, y_train, y_test = train_test_split(X_2d, y, 
 		test_size=test_fraction)
-	X_train2d, X_valid2d, y_train, y_valid = train_test_split(X_train_2d, y_train, 
+	X_train2d, X_valid2d, y_train, y_valid = train_test_split(X_train2d, y_train, 
 		test_size=validation_fraction)
 
 	svr = SVR()
