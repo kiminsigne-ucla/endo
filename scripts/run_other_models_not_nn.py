@@ -83,9 +83,9 @@ if __name__ == '__main__':
 	# read in sequences and labels
 	# SVM requires 2D data
 	print("loading sequence data...")
-	X_pos = encode_fasta_sequences(pos_sequences, seq_length, twodim=True)
+	X_pos = encode_fasta_sequences(pos_sequences, twodim=True)
 	y_pos = np.array([[True]]*len(X_pos))
-	X_neg = encode_fasta_sequences(neg_sequences, seq_length, twodim=True)
+	X_neg = encode_fasta_sequences(neg_sequences, twodim=True)
 	y_neg = np.array([[False]]*len(X_neg))
 	X = np.concatenate((X_pos, X_neg))
 	y = np.concatenate((y_pos, y_neg))
