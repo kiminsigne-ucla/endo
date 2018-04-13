@@ -215,7 +215,13 @@ class RandomForestRegression(DecisionTree):
         self.regressor = RandomForestRegressor(n_estimators=100)
 
     def train(self, X, y, validation_data=None):
+        # X shape: n_samples, n_features
+        # y shape: n_samples
         self.regressor.fit(X, y)
 
     def predict(self, X):
-        return self.regressor.predict(X)[:, 1:]
+        return self.regressor.predict(X)
+
+    def score(self, X, y):
+        predictions = np.squeeze(self.regressor.predict(X))
+        return np.corrcoef(predictions, y)[0,1]
