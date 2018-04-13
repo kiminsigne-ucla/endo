@@ -91,12 +91,6 @@ if __name__ == '__main__':
 	X = np.concatenate((X_pos, X_neg))
 	y = np.concatenate((y_pos, y_neg))
 
-	# read in sequences and labels
-	print("loading sequence data...")
-	seqs = [line.split('\t')[0] for line in open(sequences)]
-	X = one_hot_encode(np.array(seqs))
-	y = np.array([float(line.strip().split('\t')[1]) for line in open(sequences)])
-
 
 	print('Partitioning data into training, validation and test sets...')
 	X_train, X_test, y_train, y_test = train_test_split(X, y, 
