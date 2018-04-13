@@ -20,7 +20,7 @@ def pileup(frags, start_position, end_position, outfile_name):
 			start = frag[1]
 			end = frag[2]
 			# fragment coordinates are 1-based
-			overlap = in_range(i + 1, start, end)
+			overlap = in_range(i, start, end)
 			if overlap:
 				current_frags.append(frags[0])
 			else:
