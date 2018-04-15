@@ -82,17 +82,17 @@ if __name__ == '__main__':
 	print('Test results: {}'.format(corr))
 	model.save(output_name + 'trained_model.json')
 
-	predictions = np.squeeze(model.predict(X_test))
-	corr_text = 'r = ' + str(round(corr, 3))
-	plt.figure()
-	plt.scatter(y_test, predictions, alpha=0.50)
-	plt.text(0.5, 75, corr_text)
-	plt.yscale('symlog')
-	plt.xscale('symlog')
-	plt.title('Neural net predictions for held-out test set (n = ' + str(len(y_test)) + ')')
-	plt.xlabel('observed')
-	plt.ylabel('predicted')
-	plt.savefig(output_name + '.png')
+	# predictions = np.squeeze(model.predict(X_test))
+	# corr_text = 'r = ' + str(round(corr, 3))
+	# plt.figure()
+	# plt.scatter(y_test, predictions, alpha=0.50)
+	# plt.text(0.5, 75, corr_text)
+	# plt.yscale('symlog')
+	# plt.xscale('symlog')
+	# plt.title('Neural net predictions for held-out test set (n = ' + str(len(y_test)) + ')')
+	# plt.xlabel('observed')
+	# plt.ylabel('predicted')
+	# plt.savefig(output_name + '.png')
 
 
 
