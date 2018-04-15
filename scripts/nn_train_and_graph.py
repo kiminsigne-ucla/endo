@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
 	corr = model.score(X_test, y_test)
 	print('Test results: {}'.format(corr))
-	model.save(output_name + '_trained_model.hd5')
+	model.save(output_name + '_trained_model')
 
 	# predictions = np.squeeze(model.predict(X_test))
 	# corr_text = 'r = ' + str(round(corr, 3))
