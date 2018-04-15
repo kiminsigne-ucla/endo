@@ -53,7 +53,7 @@ if __name__ == '__main__':
 	pool_width = args.pool_width
 	conv_width = map(int, args.conv_width.split(','))
 	num_filters = map(int, args.num_filters.split(','))
-	output_name = args.output_name
+	output_name = args.output_prefix
 
 	print("loading sequence data...")
 	seqs = [line.split('\t')[0] for line in open(sequences)]
