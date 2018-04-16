@@ -68,7 +68,7 @@ if __name__ == '__main__':
 	parser.add_argument('arch_file', help='architecture file')
 	parser.add_argument('weights_file', help='weights file')
 	parser.add_argument('data', help='data to predict, FASTA')
-	parser.add_argument('n_iter', help='number of iterations used to calculate uncertainty')
+	parser.add_argument('n_iter', type=int, help='number of iterations used to calculate uncertainty')
 	parser.add_argument('output_prefix', help='same order as fasta, first column is prediction, second is uncertainty')
 
 	args = parser.parse_args()
