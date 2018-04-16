@@ -100,9 +100,12 @@ if __name__ == '__main__':
 	test_sequences = [seqs[i] for i in range(len(seqs)) if i in random_test_index]
 	with open(output_name + '_predictions.txt', 'w') as outfile:
 		for i in range(len(predictions)):
-			outfile.write(test_sequences[i] + '\t' + str(float(predictions[i])) + '\n')
+			outfile.write(
+				test_sequences[i] + '\t' + 
+				str(float(predictions[i])) + '\t' + 
+				str(float(y_test[i])) + '\n')
 
-			
+
 	# predictions = np.squeeze(model.predict(X_test))
 	# corr_text = 'r = ' + str(round(corr, 3))
 	# plt.figure()
