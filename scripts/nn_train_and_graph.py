@@ -59,13 +59,27 @@ if __name__ == '__main__':
 
 	print("loading sequence data...")
 	seqs = [line.split('\t')[0] for line in open(sequences)]
+
 	X = one_hot_encode(np.array(seqs))
 	y = np.array([float(line.strip().split('\t')[1]) for line in open(sequences)])
 
+	# need test index so we can grab these sequences later and output them for 
+	# downstream analysis
+	random_test_index = random.sample(
+		list(range(len(seqs))), 
+		int(round(test_fraction * len(seqs)))
+		)
+	train_index = [i for i in range(len(seqs)) if i not in random_test_index]
+
+	X_test = np.take(X, random_test_index, axis=0)
+	y_test = np.take(y, random_test_index, axis=0)
+	X_train = np.take(X, train_index, axis=0)
+	y_train = np.take(y, train_index, axis=0)
+
 
 	print('Partitioning data into training, validation and test sets...')
-	X_train, X_test, y_train, y_test = train_test_split(X, y, 
-		test_size=test_fraction)
+	# X_train, X_test, y_train, y_test = train_test_split(X, y, 
+	# 	test_size=test_fraction)
 	X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, 
 		test_size=validation_fraction)
 
@@ -78,10 +92,17 @@ if __name__ == '__main__':
 
 	model.train(X_train, y_train, validation_data=(X_valid, y_valid))
 
+	predictions = model.predict(X_test)
 	corr = model.score(X_test, y_test)
 	print('Test results: {}'.format(corr))
 	model.save(output_name + '_trained_model')
 
+	test_sequences = [seqs[i] for i in range(len(seqs)) if i in random_test_index]
+	with open(output_name + '_predictions.txt', 'w') as outfile:
+		for i in range(len(predictions)):
+			outfile.write(test_sequences[i] + '\t' + str(float(predictions[i])) + '\n')
+
+			
 	# predictions = np.squeeze(model.predict(X_test))
 	# corr_text = 'r = ' + str(round(corr, 3))
 	# plt.figure()
