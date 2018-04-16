@@ -179,6 +179,15 @@ class SequenceDNN(Model):
         open(arch_fname, 'w').write(self.model.to_json())
         self.model.save_weights(weights_fname, overwrite=True)
 
+    @staticmethod
+    def load(arch_fname, weights_fname=None):
+        from keras.models import model_from_json
+        model_json_string = open(arch_fname).read()
+        sequence_dnn = SequenceDNN(keras_model=model_from_json(model_json_string))
+        if weights_fname is not None:
+            sequence_dnn.model.load_weights(weights_fname)
+        return sequence_dnn
+
 
 class SVR(Model):
 
