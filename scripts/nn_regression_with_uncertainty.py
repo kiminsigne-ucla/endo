@@ -72,7 +72,7 @@ if __name__ == '__main__':
 	parser.add_argument('output_prefix', help='same order as fasta, first column is prediction, second is uncertainty')
 
 	args = parser.parse_args()
-	data - encode_fasta_sequences(args.data)
+	data = encode_fasta_sequences(args.data)
 	model = SequenceDNN.load(args.arch_file, args.weights_file)
 	n_iter = args.n_iter
 	output_prefix = args.output_prefix
