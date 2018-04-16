@@ -69,6 +69,7 @@ if __name__ == '__main__':
 		list(range(len(seqs))), 
 		int(round(test_fraction * len(seqs)))
 		)
+	random_test_index = sorted(random_test_index)
 	train_index = [i for i in range(len(seqs)) if i not in random_test_index]
 
 	X_test = np.take(X, random_test_index, axis=0)
