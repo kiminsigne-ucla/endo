@@ -85,7 +85,7 @@ if __name__ == '__main__':
 	prediction, uncertainty = predict_with_uncertainty(f, data, num_classes=1, n_iter=n_iter)
 	output = np.concatenate([prediction, uncertainty], axis=1)
 
-	np.savetxt(output_prefix+'_prediction_with_uncertainty.txt', prediction, delimiter='\t', fmt='%f')
+	np.savetxt(output_prefix+'_prediction_with_uncertainty.txt', output, delimiter='\t', fmt='%f')
 
 	
 
