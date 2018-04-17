@@ -20,7 +20,7 @@ def pileup(frags, start_position, end_position, outfile_name):
 			start = frag[1]
 			end = frag[2]
 			# fragment coordinates are 1-based
-			overlap = in_range(i, start, end)
+			overlap = in_range(i + 1, start, end)
 			if overlap:
 				current_frags.append(frag)
 			else:
@@ -39,7 +39,7 @@ def pileup(frags, start_position, end_position, outfile_name):
 
 
 		# frag_pileup.append((i, mean_exp))
-		outfile.write(str(i) + '\t' + str(mean_exp) + '\n')
+		outfile.write(str(i+1) + '\t' + str(mean_exp) + '\n')
 
 		# reset list
 		current_frags = []
