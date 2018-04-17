@@ -43,27 +43,44 @@ if __name__ == '__main__':
 		help='number of filters in each layer, comma separated string, one value for each layer')
 	parser.add_argument('test_fraction', type=float, default=0.2, help='fraction used for testing')
 	parser.add_argument('validation_fraction', type=float, default=0.2, help='fraction used for valdation')
-	parser.add_argument('output_name', help='name of output graph')
+	parser.add_argument('output_prefix', help='prefix of output graph')
 	args = parser.parse_args()
  	
- 	sequences = arg.sequences
+ 	sequences = args.sequences
  	seq_length = args.seq_length
 	num_layers = args.num_layers
 	dropout = args.dropout
 	pool_width = args.pool_width
 	conv_width = map(int, args.conv_width.split(','))
 	num_filters = map(int, args.num_filters.split(','))
-	output_name = args.output_name
+	output_name = args.output_prefix
+	test_fraction = args.test_fraction
+	validation_fraction = args.validation_fraction
 
 	print("loading sequence data...")
 	seqs = [line.split('\t')[0] for line in open(sequences)]
+
 	X = one_hot_encode(np.array(seqs))
 	y = np.array([float(line.strip().split('\t')[1]) for line in open(sequences)])
 
+	# need test index so we can grab these sequences later and output them for 
+	# downstream analysis
+	random_test_index = random.sample(
+		list(range(len(seqs))), 
+		int(round(test_fraction * len(seqs)))
+		)
+	random_test_index = sorted(random_test_index)
+	train_index = [i for i in range(len(seqs)) if i not in random_test_index]
+
+	X_test = np.take(X, random_test_index, axis=0)
+	y_test = np.take(y, random_test_index, axis=0)
+	X_train = np.take(X, train_index, axis=0)
+	y_train = np.take(y, train_index, axis=0)
+
 
 	print('Partitioning data into training, validation and test sets...')
-	X_train, X_test, y_train, y_test = train_test_split(X, y, 
-		test_size=test_fraction)
+	# X_train, X_test, y_train, y_test = train_test_split(X, y, 
+	# 	test_size=test_fraction)
 	X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, 
 		test_size=validation_fraction)
 
@@ -76,21 +93,31 @@ if __name__ == '__main__':
 
 	model.train(X_train, y_train, validation_data=(X_valid, y_valid))
 
+	predictions = model.predict(X_test)
 	corr = model.score(X_test, y_test)
 	print('Test results: {}'.format(corr))
-	model.save(output_name + 'trained_model')
+	model.save(output_name + '_trained_model')
 
-	predictions = np.squeeze(model.predict(X_test))
-	corr_text = 'r = ' + str(round(corr, 3))
-	plt.figure()
-	plt.scatter(y_test, predictions, alpha=0.50)
-	plt.text(0.5, 75, corr_text)
-	plt.yscale('symlog')
-	plt.xscale('symlog')
-	plt.title('Neural net predictions for held-out test set (n = ' + str(len(y_test)) + ')')
-	plt.xlabel('observed')
-	plt.ylabel('predicted')
-	plt.savefig(output_name)
+	test_sequences = [seqs[i] for i in range(len(seqs)) if i in random_test_index]
+	with open(output_name + '_predictions.txt', 'w') as outfile:
+		for i in range(len(predictions)):
+			outfile.write(
+				test_sequences[i] + '\t' + 
+				str(float(predictions[i])) + '\t' + 
+				str(float(y_test[i])) + '\n')
+
+
+	# predictions = np.squeeze(model.predict(X_test))
+	# corr_text = 'r = ' + str(round(corr, 3))
+	# plt.figure()
+	# plt.scatter(y_test, predictions, alpha=0.50)
+	# plt.text(0.5, 75, corr_text)
+	# plt.yscale('symlog')
+	# plt.xscale('symlog')
+	# plt.title('Neural net predictions for held-out test set (n = ' + str(len(y_test)) + ')')
+	# plt.xlabel('observed')
+	# plt.ylabel('predicted')
+	# plt.savefig(output_name + '.png')
 
 
 

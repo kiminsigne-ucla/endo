@@ -99,11 +99,11 @@ class SequenceDNN(Model):
                 #     init='he_normal', input_shape=(1, 4, seq_length),
                 #     W_regularizer=l1(L1), b_regularizer=l1(L1)))
                 self.model.add(Conv2D(filters=nb_filter, 
-                    kernel_size=(conv_height, nb_col),
-                    activation='linear', kernel_initializer='he_normal',
-                    input_shape=(1, 4, seq_length),
-                    kernel_regularizer=l1(L1), bias_regularizer=l1(L1),
-                    data_format='channels_first'))
+                        kernel_size=(conv_height, nb_col),
+                        activation='linear', kernel_initializer='he_normal',
+                        input_shape=(1, 4, seq_length),
+                        kernel_regularizer=l1(L1), bias_regularizer=l1(L1),
+                        data_format='channels_first'))
                 self.model.add(Activation('relu'))
                 self.model.add(Dropout(dropout))
             self.model.add(MaxPooling2D(pool_size=(1, pool_width),
@@ -178,6 +178,15 @@ class SequenceDNN(Model):
         weights_fname = save_best_model_to_prefix + '.weights.h5'
         open(arch_fname, 'w').write(self.model.to_json())
         self.model.save_weights(weights_fname, overwrite=True)
+
+    @staticmethod
+    def load(arch_fname, weights_fname=None):
+        from keras.models import model_from_json
+        model_json_string = open(arch_fname).read()
+        sequence_dnn = SequenceDNN(keras_model=model_from_json(model_json_string))
+        if weights_fname is not None:
+            sequence_dnn.model.load_weights(weights_fname)
+        return sequence_dnn
 
 
 class SVR(Model):

@@ -88,13 +88,6 @@ if __name__ == '__main__':
 		test_size=validation_fraction)
 
 
-	# print("Compiling model...")
-	# model = SequenceDNN(seq_length = 150, num_filters=[15], 
-	# 	conv_width=[15])
-	# print("Training model...")
-	# model.train(X_train, y_train, validation_data=(X_valid, y_valid))
-	# print(model.score(X_test, y_test))
-
 	print('Starting hyperparameter search...')
 	min_layer = 1
 	max_layer = 4
