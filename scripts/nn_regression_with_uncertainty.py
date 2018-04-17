@@ -58,7 +58,8 @@ def predict_with_uncertainty(f, x, num_classes=1, n_iter=100):
 	for i in range(n_iter):
 		results[i, :, :] = f((x, 1))[0]
 
-	prediction = results.median(axis=0)
+	# prediction = results.mean(axis=0)
+	prediction = np.median(results, axis=0)
 	uncertainty = results.std(axis=0)
 	return prediction, uncertainty
 
