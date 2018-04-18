@@ -58,7 +58,8 @@ def predict_with_uncertainty(f, x, num_classes=1, n_iter=100):
 	for i in range(n_iter):
 		results[i, :, :] = f((x, 1))[0]
 
-	prediction = results.mean(axis=0)
+	# prediction = results.mean(axis=0)
+	prediction = np.median(results, axis=0)
 	uncertainty = results.std(axis=0)
 	return prediction, uncertainty
 
@@ -81,6 +82,7 @@ if __name__ == '__main__':
 	f = K.function(
 		[model.model.layers[0].input, K.learning_phase()], 
 		[model.model.layers[-1].output])
+	# f = K.function([model.model.inputs[0], K.learning_phase()], model.model.outputs[0])
 
 	prediction, uncertainty = predict_with_uncertainty(f, data, num_classes=1, n_iter=n_iter)
 	output = np.concatenate([prediction, uncertainty], axis=1)
