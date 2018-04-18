@@ -14,8 +14,14 @@ def pileup(frags, start_position, end_position, outfile_name):
 	current_frags = []
 	# frag_pileup = []
 	for i in range(start_position, end_position):
+		
 		if i % 50000 == 0:
 			print "Position ", i, "..."
+
+		# don't remove fragment until current position past end of first fragment
+		if (i + 1) > frags[0][2]:
+			frags.pop(0)
+		
 		for frag in frags:
 			start = frag[1]
 			end = frag[2]
@@ -26,20 +32,16 @@ def pileup(frags, start_position, end_position, outfile_name):
 			else:
 				break
 
-        # don't remove fragment until current position past fragment
-		if i > end: 
-			frags.pop(0)
-		
+
 		if len(current_frags) == 0:
 			mean_exp = 0
 
 		else:
 			# take average expression of all overlapping frags
-			mean_exp = np.mean([frag[0] for frag in current_frags])
-
+			mean_exp = round(np.mean([frag[0] for frag in current_frags]), 2)
 
 		# frag_pileup.append((i, mean_exp))
-		outfile.write(str(i+1) + '\t' + str(mean_exp) + '\n')
+		outfile.write(str(i+1) + '\t' + str(mean_exp) + '\t' + str(len(current_frags)) + '\n')
 
 		# reset list
 		current_frags = []
@@ -78,10 +80,10 @@ if __name__ == '__main__':
 				# switch start and end so start is always less than end
 				minus_frags.append((expression, end, start, strand))
 
-	print "Plus strand pileup..."
-	pileup(plus_frags, 1, 4639310, 'plus_' + prefix)
-	print "Minus strand pileup..."
-	pileup(minus_frags, 1, 4639310, 'minus_' + prefix)
+		print "Plus strand pileup..."
+		pileup(plus_frags, 1, 4639310, 'plus_' + prefix)
+		print "Minus strand pileup..."
+		pileup(minus_frags, 1, 4639310, 'minus_' + prefix)
 
 	# print "Printing results..."
 	# with open('plus_' + prefix, 'w') as outfile1:
