@@ -79,10 +79,10 @@ if __name__ == '__main__':
 	output_prefix = args.output_prefix
 
 	# create model with dropout during test
-	# f = K.function(
-	# 	[model.model.layers[0].input, K.learning_phase()], 
-	# 	[model.model.layers[-1].output])
-	f = K.function([model.model.inputs[0], K.learning_phase()], model.model.outputs[0])
+	f = K.function(
+		[model.model.layers[0].input, K.learning_phase()], 
+		[model.model.layers[-1].output])
+	# f = K.function([model.model.inputs[0], K.learning_phase()], model.model.outputs[0])
 
 	prediction, uncertainty = predict_with_uncertainty(f, data, num_classes=1, n_iter=n_iter)
 	output = np.concatenate([prediction, uncertainty], axis=1)
