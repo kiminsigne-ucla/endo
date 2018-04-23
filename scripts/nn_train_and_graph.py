@@ -104,7 +104,7 @@ if __name__ == '__main__':
 	model.train(X_train, y_train, validation_data=(X_valid, y_valid))
 
 	if uncertain:
-		predictions, uncertainty = model.predict(X_test)
+		predictions, uncertainty = model.predict_with_uncertainty(X_test)
 	else:
 		predictions = model.predict(X_test)
 
