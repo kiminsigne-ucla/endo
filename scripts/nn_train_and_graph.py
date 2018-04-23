@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 import numpy as np, random
 np.random.seed(1)
 random.seed(1)
-from keras_regression import SequenceDNN
+from keras_regression import SequenceDNN, SequenceDNN_dropout
 from hyperparameter_search_regression import HyperparameterSearcher, RandomSearch
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 try:
@@ -44,6 +44,7 @@ if __name__ == '__main__':
 	parser.add_argument('test_fraction', type=float, default=0.2, help='fraction used for testing')
 	parser.add_argument('validation_fraction', type=float, default=0.2, help='fraction used for valdation')
 	parser.add_argument('output_prefix', help='prefix of output graph')
+	parser.add_argument('--uncertain', action='store_true', default=False, help='predict with uncertainty')
 	args = parser.parse_args()
  	
  	sequences = args.sequences
@@ -56,6 +57,7 @@ if __name__ == '__main__':
 	output_name = args.output_prefix
 	test_fraction = args.test_fraction
 	validation_fraction = args.validation_fraction
+	uncertain = args.uncertain
 
 	print("loading sequence data...")
 	seqs = [line.split('\t')[0] for line in open(sequences)]
@@ -84,27 +86,50 @@ if __name__ == '__main__':
 	X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, 
 		test_size=validation_fraction)
 
-	model = SequenceDNN(
-		seq_length = seq_length,
-		num_filters=num_filters,
-		conv_width=conv_width,
-		pool_width=pool_width,
-		dropout=dropout)
+	if uncertain:
+		model = SequenceDNN_dropout(
+			seq_length = seq_length,
+			num_filters=num_filters,
+			conv_width=conv_width,
+			pool_width=pool_width,
+			dropout=dropout)
+	else:
+		model = SequenceDNN(
+			seq_length = seq_length,
+			num_filters=num_filters,
+			conv_width=conv_width,
+			pool_width=pool_width,
+			dropout=dropout)
 
 	model.train(X_train, y_train, validation_data=(X_valid, y_valid))
 
-	predictions = model.predict(X_test)
-	corr = model.score(X_test, y_test)
+	if uncertain:
+		predictions, uncertainty = model.predict(X_test)
+	else:
+		predictions = model.predict(X_test)
+
+
+    corr = np.corrcoef(np.squeeze(predictions), y_test)[0, 1]
 	print('Test results: {}'.format(corr))
 	model.save(output_name + '_trained_model')
 
 	test_sequences = [seqs[i] for i in range(len(seqs)) if i in random_test_index]
-	with open(output_name + '_predictions.txt', 'w') as outfile:
-		for i in range(len(predictions)):
-			outfile.write(
-				test_sequences[i] + '\t' + 
-				str(float(predictions[i])) + '\t' + 
-				str(float(y_test[i])) + '\n')
+	
+	if uncertain:
+		with open(output_name + '_predictions.txt', 'w') as outfile:
+			for i in range(len(predictions)):
+				outfile.write(
+					test_sequences[i] + '\t' + 
+					str(float(predictions[i])) + '\t' + 
+					str(float(y_test[i])) + '\t' +
+					str(float(uncertainty[i])) + '\n')
+	else:
+		with open(output_name + '_predictions.txt', 'w') as outfile:
+			for i in range(len(predictions)):
+				outfile.write(
+					test_sequences[i] + '\t' + 
+					str(float(predictions[i])) + '\t' + 
+					str(float(y_test[i])) + '\n')
 
 
 	# predictions = np.squeeze(model.predict(X_test))
