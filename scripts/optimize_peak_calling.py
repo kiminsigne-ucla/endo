@@ -43,6 +43,8 @@ if __name__ == '__main__':
 	parser.add_argument('min_threshold', type=float, help='minimum threshold')
 	parser.add_argument('max_threshold', type=float, help='maximum threshold')
 	parser.add_argument('threshold_step', type=float, help='step size for threshold')
+	parser.add_argument('merge_dist', type=int, help='distance between adjacent peaks to merge')
+	parser.add_argument('min_width', type=int, help='min width of peak')
 
 	args = parser.parse_args()
 	pos_file = args.pos_file
@@ -50,6 +52,8 @@ if __name__ == '__main__':
 	min_threshold = args.min_threshold
 	max_threshold = args.max_threshold
 	step = args.threshold_step
+	merge_dist = args.merge_dist
+	min_width = args.min_width
 
 	# separate positive and negative files by strand
 	cmd = 'awk \'{if ($6 == \"+\") print $0}\' ' + pos_file + ' > pos_file_plus.bed'
@@ -64,8 +68,6 @@ if __name__ == '__main__':
 	cmd = 'awk \'{if ($6 == \"-\") print $0}\' ' + neg_file + ' > neg_file_minus.bed'
 	os.system(cmd)
 
-	merge_dist = 3
-	min_width = 20 
 
 	outfile = open('optimize_peak_call_results.txt', 'w')
 	# write header
