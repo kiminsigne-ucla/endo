@@ -109,7 +109,7 @@ if __name__ == '__main__':
 		predictions = model.predict(X_test)
 
 
-    corr = np.corrcoef(np.squeeze(predictions), y_test)[0, 1]
+	corr = np.corrcoef(np.squeeze(predictions), y_test)[0, 1]
 	print('Test results: {}'.format(corr))
 	model.save(output_name + '_trained_model')
 
