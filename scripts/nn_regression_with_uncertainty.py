@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 import numpy as np, random
 np.random.seed(1)
 random.seed(1)
-from keras_regression import SequenceDNN
+from keras_regression import SequenceDNN_dropout
 import keras.backend as K
 from hyperparameter_search_regression import HyperparameterSearcher, RandomSearch
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
@@ -65,7 +65,7 @@ def predict_with_uncertainty(f, x, num_classes=1, n_iter=100):
 
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser('Predict data with uncertainty from trained CNN regression')
+	parser = argparse.ArgumentParser('Predict data with uncertainty using CNN with dropout in training and test')
 	parser.add_argument('arch_file', help='architecture file')
 	parser.add_argument('weights_file', help='weights file')
 	parser.add_argument('data', help='data to predict, FASTA')
@@ -73,8 +73,9 @@ if __name__ == '__main__':
 	parser.add_argument('output_prefix', help='same order as fasta, first column is prediction, second is uncertainty')
 
 	args = parser.parse_args()
+
 	data = encode_fasta_sequences(args.data)
-	model = SequenceDNN.load(args.arch_file, args.weights_file)
+	model = SequenceDNN_dropout.load(args.arch_file, args.weights_file)
 	n_iter = args.n_iter
 	output_prefix = args.output_prefix
 
@@ -82,8 +83,7 @@ if __name__ == '__main__':
 	f = K.function(
 		[model.model.layers[0].input, K.learning_phase()], 
 		[model.model.layers[-1].output])
-	# f = K.function([model.model.inputs[0], K.learning_phase()], model.model.outputs[0])
-
+	
 	prediction, uncertainty = predict_with_uncertainty(f, data, num_classes=1, n_iter=n_iter)
 	output = np.concatenate([prediction, uncertainty], axis=1)
 

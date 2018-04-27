@@ -48,6 +48,15 @@ results %>%
 
 ```{r}
 results %>% 
+    mutate(precision = round(precision, 3)) %>% 
+    ggplot(aes(reorder(precision, threshold), recall)) +
+    geom_point() +
+    labs(x = 'precision', title = 'ordered by increasing threshold') +
+    theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1))
+```
+
+```{r}
+results %>% 
     filter(threshold >= 0.90) %>% 
     ggplot(aes(recall, precision)) + geom_step() +
         scale_x_continuous(breaks = seq(0, 1, 0.1), labels = seq(0, 1, 0.1), limits = c(0, 1.0)) +

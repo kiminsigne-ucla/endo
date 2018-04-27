@@ -1,0 +1,84 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+options(stringsAsFactors = F, scipen = 10000)
+library(dplyr)
+library(ggplot2)
+library(cowplot)
+
+data <- read.table('../processed_data/tss_all.txt', sep='\t',
+                   col.names = c('sequence', 'expression'))
+
+predictions <- read.table('hyperparameter_best_predictions.txt',
+                          sep = '\t', col.names = c('sequence', 'prediction', 'observed'))
+
+predictions_uncertainty <- read.table('hyperparameter_best_uncertainty_predictions.txt',
+                          sep = '\t', 
+                          col.names = c('sequence', 'prediction_with_dropout', 
+                                        'observed', 'uncertainty'))
+
+
+# data <- bind_cols(data, predictions, predictions_median %>% select(prediction_median_with_dropout))
+# 
+# # grab test sequences and predictions from model without uncertainty
+# test_data <- read.table('hyperparameter_best_predictions.txt',
+#                         sep = '\t', col.names = c('sequence', 'prediction', 'observed')) 
+# 
+# 
+# data <- data %>% 
+#     left_join(test_data, by = 'sequence')
+
+data <- data %>% 
+    left_join(predictions, by = 'sequence') %>% 
+    left_join(select(predictions_uncertainty, -observed), by = 'sequence')
+```
+
+
+```{r}
+corr <- signif(cor(log(data$expression), log(data$prediction), use = 'p'), 3)
+ggplot(data, aes(expression, prediction)) + 
+    geom_point() +
+    labs(x = 'expression', 
+         y = 'prediction no dropout', 
+         title = 'Held-out test set (n = 3458)') + 
+    scale_x_log10() + scale_y_log10() + annotation_logticks(sides = 'bl') +
+    viridis::scale_color_viridis() +
+    geom_abline(intercept = 0, slope=1) +
+    annotate('text', x = 50, y = .01, label = paste('r = ', corr))
+```
+
+```{r}
+corr <- signif(cor(log(data$expression), log(data$prediction_with_dropout), use = 'p'), 3)
+ggplot(data, aes(expression, prediction_with_dropout)) + 
+    geom_point(aes(color = log10(uncertainty)), alpha = 0.50) +
+    labs(x = 'expression', 
+         y = 'prediction with dropout', 
+         color = 'log10(uncertainty)',
+         title = 'Held-out test set (n = 3458)') + 
+    scale_x_log10() + scale_y_log10() + annotation_logticks(sides = 'bl') +
+    viridis::scale_color_viridis() +
+    geom_abline(intercept = 0, slope=1) +
+    annotate('text', x = 50, y = .01, label = paste('r = ', corr))
+```
+
+
+```{r}
+corr <- signif(cor(log(data$prediction), log(data$prediction_with_dropout), use = 'p'), 3)
+data %>% 
+    filter(!is.na(prediction)) %>% 
+    ggplot(aes(prediction, prediction_with_dropout)) + 
+        geom_point(aes(color = log10(uncertainty)), alpha = 0.25) +
+        labs(x = 'prediction no dropout', 
+             y = 'predicted with dropout', 
+             color = 'log10(uncertainty)',
+             title = 'Held-out test set (n = 3458)') + 
+        scale_x_log10() + scale_y_log10() + annotation_logticks(sides = 'bl') +
+        viridis::scale_color_viridis() +
+        geom_abline(intercept = 0, slope=1) +
+        annotate('text', x = 10, y = .01, label = paste('r = ', corr))
+```
+
+
