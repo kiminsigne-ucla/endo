@@ -143,14 +143,22 @@ class SequenceDNN_dropout(Model):
                     best_epoch, save_best_model_to_prefix))
 
 
-    def predict_with_uncertainty(self, X, num_classes, n_iter=100):
+    def predict_with_uncertainty(self, X, num_classes, n_iter=100, 
+        length_scale=1, dropout=0, L1=0):
         results = np.zeros((n_iter,) + (X.shape[0], num_classes))
 
         for i in range(n_iter):
             results[i, :, :] = self.predict(X)
         
         prediction = results.mean(axis=0)
-        uncertainty = results.std(axis=0)
+        uncertainty = np.var(results, axis=0)
+        # model precision
+        # if no regularization/weight decay then L1 = 0 and decay = 1
+        weight_decay = 1 - L1
+        N = results.shape[1]
+        tau = length_scale**2 * (1 - dropout) / (2 * N * weight_decay)
+        uncertainty += tau**-1
+
         return prediction, uncertainty
     
     

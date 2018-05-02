@@ -104,7 +104,13 @@ if __name__ == '__main__':
 	model.train(X_train, y_train, validation_data=(X_valid, y_valid))
 
 	if uncertain:
-		predictions, uncertainty = model.predict_with_uncertainty(X_test, 1)
+		predictions, uncertainty = model.predict_with_uncertainty(
+			X=X_test, 
+			num_classes=1,
+			n_iter=100,
+			length_scale=1,
+			dropout=dropout,
+			L1=0)
 	else:
 		predictions = model.predict(X_test)
 
