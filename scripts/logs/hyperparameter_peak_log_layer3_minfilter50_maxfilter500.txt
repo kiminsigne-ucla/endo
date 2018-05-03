@@ -1,0 +1,1969 @@
+loading sequence data...
+Partitioning data into training, validation and test sets...
+Adding reverse complements...
+Starting hyperparameter search...
+Number of convolutional layers:  3
+Hyperparameter trial: 0
+Training model (* indicates new best result)...
+Epoch 1:
+Train Loss: 0.6931	Balanced Accuracy: 50.00%	 auROC: 0.508	 auPRC: 0.502
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6932	Balanced Accuracy: 50.00%	 auROC: 0.488	 auPRC: 0.544
+	Recall at 5%|10%|20% FDR: 0.4%|0.4%|0.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 2:
+Train Loss: 0.6923	Balanced Accuracy: 50.96%	 auROC: 0.538	 auPRC: 0.537
+	Recall at 5%|10%|20% FDR: 0.2%|0.2%|0.3%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6928	Balanced Accuracy: 50.14%	 auROC: 0.502	 auPRC: 0.514
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 3:
+Train Loss: 0.6905	Balanced Accuracy: 53.32%	 auROC: 0.549	 auPRC: 0.545
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6921	Balanced Accuracy: 50.72%	 auROC: 0.517	 auPRC: 0.547
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 4:
+Train Loss: 0.6894	Balanced Accuracy: 54.71%	 auROC: 0.557	 auPRC: 0.547
+	Recall at 5%|10%|20% FDR: 0.2%|0.2%|0.3%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6914	Balanced Accuracy: 52.02%	 auROC: 0.525	 auPRC: 0.548
+	Recall at 5%|10%|20% FDR: 0.4%|0.4%|0.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 5:
+Train Loss: 0.6866	Balanced Accuracy: 54.72%	 auROC: 0.554	 auPRC: 0.555
+	Recall at 5%|10%|20% FDR: 0.2%|0.2%|0.2%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6910	Balanced Accuracy: 52.30%	 auROC: 0.524	 auPRC: 0.562
+	Recall at 5%|10%|20% FDR: 0.3%|0.3%|0.3%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 6:
+Train Loss: 0.6848	Balanced Accuracy: 55.31%	 auROC: 0.570	 auPRC: 0.559
+	Recall at 5%|10%|20% FDR: 0.2%|0.9%|1.3%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6893	Balanced Accuracy: 52.72%	 auROC: 0.524	 auPRC: 0.534
+	Recall at 5%|10%|20% FDR: 0.4%|0.4%|0.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 7:
+Train Loss: 0.6830	Balanced Accuracy: 55.98%	 auROC: 0.572	 auPRC: 0.566
+	Recall at 5%|10%|20% FDR: 0.2%|0.2%|0.2%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6905	Balanced Accuracy: 53.11%	 auROC: 0.537	 auPRC: 0.571
+	Recall at 5%|10%|20% FDR: 0.3%|0.3%|0.3%	 Num Positives: 686	 Num Negatives: 642
+Epoch 8:
+Train Loss: 0.6811	Balanced Accuracy: 55.96%	 auROC: 0.592	 auPRC: 0.583
+	Recall at 5%|10%|20% FDR: 0.1%|0.4%|0.9%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6904	Balanced Accuracy: 51.65%	 auROC: 0.527	 auPRC: 0.548
+	Recall at 5%|10%|20% FDR: 0.3%|1.3%|2.2%	 Num Positives: 686	 Num Negatives: 642
+Epoch 9:
+Train Loss: 0.6712	Balanced Accuracy: 59.77%	 auROC: 0.636	 auPRC: 0.598
+	Recall at 5%|10%|20% FDR: 0.6%|0.6%|0.7%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6846	Balanced Accuracy: 57.43%	 auROC: 0.587	 auPRC: 0.566
+	Recall at 5%|10%|20% FDR: 0.1%|0.1%|0.1%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 10:
+Train Loss: 0.6413	Balanced Accuracy: 66.27%	 auROC: 0.717	 auPRC: 0.696
+	Recall at 5%|10%|20% FDR: 0.3%|1.2%|13.4%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6520	Balanced Accuracy: 63.39%	 auROC: 0.688	 auPRC: 0.675
+	Recall at 5%|10%|20% FDR: 0.4%|0.4%|4.2%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 11:
+Train Loss: 0.5723	Balanced Accuracy: 69.21%	 auROC: 0.790	 auPRC: 0.800
+	Recall at 5%|10%|20% FDR: 14.2%|33.9%|56.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5912	Balanced Accuracy: 66.15%	 auROC: 0.756	 auPRC: 0.784
+	Recall at 5%|10%|20% FDR: 16.0%|21.9%|55.7%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 12:
+Train Loss: 0.5492	Balanced Accuracy: 73.31%	 auROC: 0.821	 auPRC: 0.823
+	Recall at 5%|10%|20% FDR: 17.7%|36.2%|62.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5862	Balanced Accuracy: 69.00%	 auROC: 0.770	 auPRC: 0.786
+	Recall at 5%|10%|20% FDR: 12.0%|21.0%|50.7%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 13:
+Train Loss: 0.5198	Balanced Accuracy: 76.22%	 auROC: 0.860	 auPRC: 0.857
+	Recall at 5%|10%|20% FDR: 26.2%|44.0%|72.6%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5717	Balanced Accuracy: 68.22%	 auROC: 0.780	 auPRC: 0.798
+	Recall at 5%|10%|20% FDR: 11.5%|27.1%|58.6%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 14:
+Train Loss: 0.4763	Balanced Accuracy: 78.13%	 auROC: 0.869	 auPRC: 0.869
+	Recall at 5%|10%|20% FDR: 29.4%|49.9%|75.2%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5573	Balanced Accuracy: 71.16%	 auROC: 0.786	 auPRC: 0.800
+	Recall at 5%|10%|20% FDR: 14.9%|26.5%|54.8%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 15:
+Train Loss: 0.4692	Balanced Accuracy: 79.80%	 auROC: 0.890	 auPRC: 0.889
+	Recall at 5%|10%|20% FDR: 35.4%|58.0%|80.7%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5670	Balanced Accuracy: 70.23%	 auROC: 0.780	 auPRC: 0.793
+	Recall at 5%|10%|20% FDR: 9.8%|22.9%|53.4%	 Num Positives: 686	 Num Negatives: 642
+Epoch 16:
+Train Loss: 0.4369	Balanced Accuracy: 81.47%	 auROC: 0.907	 auPRC: 0.905
+	Recall at 5%|10%|20% FDR: 41.2%|65.1%|85.8%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5684	Balanced Accuracy: 70.66%	 auROC: 0.787	 auPRC: 0.798
+	Recall at 5%|10%|20% FDR: 2.0%|21.0%|56.1%	 Num Positives: 686	 Num Negatives: 642
+Epoch 17:
+Train Loss: 0.4323	Balanced Accuracy: 82.80%	 auROC: 0.930	 auPRC: 0.926
+	Recall at 5%|10%|20% FDR: 53.0%|74.7%|91.6%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5813	Balanced Accuracy: 69.32%	 auROC: 0.778	 auPRC: 0.796
+	Recall at 5%|10%|20% FDR: 13.0%|25.9%|53.8%	 Num Positives: 686	 Num Negatives: 642
+Epoch 18:
+Train Loss: 0.3817	Balanced Accuracy: 87.27%	 auROC: 0.946	 auPRC: 0.944
+	Recall at 5%|10%|20% FDR: 67.1%|82.8%|94.4%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5737	Balanced Accuracy: 68.87%	 auROC: 0.768	 auPRC: 0.788
+	Recall at 5%|10%|20% FDR: 11.2%|28.0%|53.8%	 Num Positives: 686	 Num Negatives: 642
+Epoch 19:
+Train Loss: 0.3871	Balanced Accuracy: 82.27%	 auROC: 0.951	 auPRC: 0.947
+	Recall at 5%|10%|20% FDR: 69.3%|85.3%|95.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6125	Balanced Accuracy: 68.76%	 auROC: 0.779	 auPRC: 0.792
+	Recall at 5%|10%|20% FDR: 12.2%|25.5%|52.0%	 Num Positives: 686	 Num Negatives: 642
+Epoch 20:
+Train Loss: 0.4227	Balanced Accuracy: 78.66%	 auROC: 0.962	 auPRC: 0.962
+	Recall at 5%|10%|20% FDR: 78.5%|88.6%|97.3%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6476	Balanced Accuracy: 64.79%	 auROC: 0.764	 auPRC: 0.781
+	Recall at 5%|10%|20% FDR: 2.6%|21.9%|44.5%	 Num Positives: 686	 Num Negatives: 642
+Finished training after 20 epochs.
+Hyperparameter trial: 1
+Training model (* indicates new best result)...
+Epoch 1:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.591	 auPRC: 0.665
+	Recall at 5%|10%|20% FDR: 0.2%|19.9%|32.1%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.590	 auPRC: 0.681
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|34.8%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 2:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.599	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 3:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.1%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 4:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 5:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 6:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 7:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 8:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 9:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 10:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 11:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 12:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 13:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 14:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 15:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 16:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 17:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 18:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 19:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 20:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 21:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 22:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 23:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 24:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 25:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 26:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 27:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 28:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 29:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 30:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 31:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 32:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 33:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 34:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 35:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 36:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 37:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 38:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 39:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 40:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 41:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 42:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 43:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 44:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 45:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 46:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 47:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 48:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 49:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 50:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 51:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 52:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 53:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 54:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 55:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 56:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 57:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 58:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 59:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 60:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 61:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 62:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 63:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 64:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 65:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 66:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 67:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 68:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 69:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 70:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 71:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 72:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 73:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 74:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 75:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 76:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 77:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 78:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 79:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 80:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 81:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 82:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 83:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 84:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 85:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 86:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 87:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 88:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 89:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 90:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 91:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 92:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 93:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 94:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 95:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 96:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 97:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 98:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 99:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|20.4%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 100:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.669
+	Recall at 5%|10%|20% FDR: 0.2%|19.8%|32.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.600	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 7.4%|15.5%|32.4%	 Num Positives: 686	 Num Negatives: 642 *
+Finished training after 100 epochs.
+Hyperparameter trial: 2
+Training model (* indicates new best result)...
+Epoch 1:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 2:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 3:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 4:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 5:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 6:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 7:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 8:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 9:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 10:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 11:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 12:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 13:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 14:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 15:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 16:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 17:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 18:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 19:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 20:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 21:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 22:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 23:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 24:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 25:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 26:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 27:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 28:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 29:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 30:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 31:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 32:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 33:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 34:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 35:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 36:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 37:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 38:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 39:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 40:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 41:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 42:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 43:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 44:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 45:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 46:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 47:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 48:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 49:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 50:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 51:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 52:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 53:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 54:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 55:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 56:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 57:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 58:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 59:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 60:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 61:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 62:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 63:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 64:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 65:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 66:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 67:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 68:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 69:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 70:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 71:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 72:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 73:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 74:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 75:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 76:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 77:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 78:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 79:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 80:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 81:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 82:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 83:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 84:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 85:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 86:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 87:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 88:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 89:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 90:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 91:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 92:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 93:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 94:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 95:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 96:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 97:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 98:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 99:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 100:
+Train Loss: 17.3218	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 16.6976	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Finished training after 100 epochs.
+Hyperparameter trial: 3
+Training model (* indicates new best result)...
+Epoch 1:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 2:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 3:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 4:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 5:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 6:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 7:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 8:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 9:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 10:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 11:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 12:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 13:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 14:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 15:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 16:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 17:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 18:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 19:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 20:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 21:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 22:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 23:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 24:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 25:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 26:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 27:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 28:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 29:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 30:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 31:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 32:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 33:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 34:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 35:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 36:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 37:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 38:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 39:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 40:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 41:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 42:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 43:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 44:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 45:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 46:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 47:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 48:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 49:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 50:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 51:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 52:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 53:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 54:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 55:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 56:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 57:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 58:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 59:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 60:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 61:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 62:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 63:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 64:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 65:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 66:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 67:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 68:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 69:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 70:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 71:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 72:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 73:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 74:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 75:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 76:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 77:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 78:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 79:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 80:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 81:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 82:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 83:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 84:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 85:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 86:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 87:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 88:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 89:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 90:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 91:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 92:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 93:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 94:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 95:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 96:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 97:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 98:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 99:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 100:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Finished training after 100 epochs.
+Hyperparameter trial: 4
+Training model (* indicates new best result)...
+Epoch 1:
+Train Loss: 0.6819	Balanced Accuracy: 52.11%	 auROC: 0.662	 auPRC: 0.714
+	Recall at 5%|10%|20% FDR: 0.5%|21.5%|42.1%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6807	Balanced Accuracy: 51.57%	 auROC: 0.659	 auPRC: 0.731
+	Recall at 5%|10%|20% FDR: 14.6%|20.4%|44.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 2:
+Train Loss: 0.5816	Balanced Accuracy: 69.11%	 auROC: 0.773	 auPRC: 0.777
+	Recall at 5%|10%|20% FDR: 0.0%|26.9%|51.1%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5726	Balanced Accuracy: 71.94%	 auROC: 0.789	 auPRC: 0.807
+	Recall at 5%|10%|20% FDR: 15.0%|23.3%|59.9%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 3:
+Train Loss: 0.5826	Balanced Accuracy: 68.17%	 auROC: 0.779	 auPRC: 0.781
+	Recall at 5%|10%|20% FDR: 0.1%|27.4%|50.2%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5789	Balanced Accuracy: 70.07%	 auROC: 0.792	 auPRC: 0.809
+	Recall at 5%|10%|20% FDR: 15.5%|25.7%|58.9%	 Num Positives: 686	 Num Negatives: 642
+Epoch 4:
+Train Loss: 0.5763	Balanced Accuracy: 69.06%	 auROC: 0.783	 auPRC: 0.785
+	Recall at 5%|10%|20% FDR: 0.1%|28.3%|52.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5745	Balanced Accuracy: 70.15%	 auROC: 0.789	 auPRC: 0.806
+	Recall at 5%|10%|20% FDR: 17.2%|28.1%|57.3%	 Num Positives: 686	 Num Negatives: 642
+Epoch 5:
+Train Loss: 0.6059	Balanced Accuracy: 65.34%	 auROC: 0.787	 auPRC: 0.789
+	Recall at 5%|10%|20% FDR: 0.1%|30.3%|53.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6112	Balanced Accuracy: 65.63%	 auROC: 0.791	 auPRC: 0.807
+	Recall at 5%|10%|20% FDR: 16.9%|25.2%|57.6%	 Num Positives: 686	 Num Negatives: 642
+Epoch 6:
+Train Loss: 0.5688	Balanced Accuracy: 70.23%	 auROC: 0.798	 auPRC: 0.797
+	Recall at 5%|10%|20% FDR: 9.1%|32.1%|53.1%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5843	Balanced Accuracy: 69.29%	 auROC: 0.776	 auPRC: 0.794
+	Recall at 5%|10%|20% FDR: 11.2%|22.9%|52.3%	 Num Positives: 686	 Num Negatives: 642
+Epoch 7:
+Train Loss: 0.5379	Balanced Accuracy: 73.26%	 auROC: 0.810	 auPRC: 0.814
+	Recall at 5%|10%|20% FDR: 16.3%|40.4%|60.5%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5598	Balanced Accuracy: 69.95%	 auROC: 0.777	 auPRC: 0.805
+	Recall at 5%|10%|20% FDR: 19.8%|30.3%|56.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 8:
+Train Loss: 0.5214	Balanced Accuracy: 74.06%	 auROC: 0.828	 auPRC: 0.827
+	Recall at 5%|10%|20% FDR: 15.6%|40.0%|62.9%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5479	Balanced Accuracy: 71.80%	 auROC: 0.793	 auPRC: 0.813
+	Recall at 5%|10%|20% FDR: 20.3%|28.1%|57.7%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 9:
+Train Loss: 0.5072	Balanced Accuracy: 76.04%	 auROC: 0.845	 auPRC: 0.844
+	Recall at 5%|10%|20% FDR: 23.4%|45.5%|68.3%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5586	Balanced Accuracy: 70.49%	 auROC: 0.781	 auPRC: 0.803
+	Recall at 5%|10%|20% FDR: 21.0%|27.3%|56.7%	 Num Positives: 686	 Num Negatives: 642
+Epoch 10:
+Train Loss: 0.5215	Balanced Accuracy: 76.24%	 auROC: 0.848	 auPRC: 0.849
+	Recall at 5%|10%|20% FDR: 23.7%|49.0%|71.4%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5801	Balanced Accuracy: 67.70%	 auROC: 0.762	 auPRC: 0.795
+	Recall at 5%|10%|20% FDR: 22.9%|29.7%|55.1%	 Num Positives: 686	 Num Negatives: 642
+Epoch 11:
+Train Loss: 0.4886	Balanced Accuracy: 76.88%	 auROC: 0.871	 auPRC: 0.870
+	Recall at 5%|10%|20% FDR: 32.0%|55.6%|77.3%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5868	Balanced Accuracy: 68.74%	 auROC: 0.756	 auPRC: 0.787
+	Recall at 5%|10%|20% FDR: 21.3%|28.9%|50.9%	 Num Positives: 686	 Num Negatives: 642
+Epoch 12:
+Train Loss: 0.4394	Balanced Accuracy: 81.75%	 auROC: 0.901	 auPRC: 0.898
+	Recall at 5%|10%|20% FDR: 40.6%|63.6%|84.4%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5663	Balanced Accuracy: 70.62%	 auROC: 0.773	 auPRC: 0.797
+	Recall at 5%|10%|20% FDR: 17.6%|30.5%|52.0%	 Num Positives: 686	 Num Negatives: 642
+Epoch 13:
+Train Loss: 0.4137	Balanced Accuracy: 84.53%	 auROC: 0.919	 auPRC: 0.918
+	Recall at 5%|10%|20% FDR: 53.9%|72.8%|89.4%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5794	Balanced Accuracy: 68.17%	 auROC: 0.764	 auPRC: 0.780
+	Recall at 5%|10%|20% FDR: 13.3%|24.6%|45.3%	 Num Positives: 686	 Num Negatives: 642
+Epoch 14:
+Train Loss: 0.3777	Balanced Accuracy: 87.65%	 auROC: 0.946	 auPRC: 0.942
+	Recall at 5%|10%|20% FDR: 66.5%|84.5%|94.4%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5857	Balanced Accuracy: 68.22%	 auROC: 0.758	 auPRC: 0.780
+	Recall at 5%|10%|20% FDR: 18.4%|25.7%|46.4%	 Num Positives: 686	 Num Negatives: 642
+Finished training after 14 epochs.
+Hyperparameter trial: 5
+Training model (* indicates new best result)...
+Epoch 1:
+Train Loss: 17.2160	Balanced Accuracy: 50.00%	 auROC: 0.589	 auPRC: 0.537
+	Recall at 5%|10%|20% FDR: 0.2%|0.2%|0.2%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8395	Balanced Accuracy: 50.00%	 auROC: 0.613	 auPRC: 0.576
+	Recall at 5%|10%|20% FDR: 1.2%|1.2%|1.5%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 2:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.589	 auPRC: 0.537
+	Recall at 5%|10%|20% FDR: 0.2%|0.2%|0.2%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.614	 auPRC: 0.576
+	Recall at 5%|10%|20% FDR: 1.2%|1.2%|1.3%	 Num Positives: 686	 Num Negatives: 642
+Epoch 3:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.589	 auPRC: 0.537
+	Recall at 5%|10%|20% FDR: 0.2%|0.2%|0.2%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.614	 auPRC: 0.576
+	Recall at 5%|10%|20% FDR: 1.2%|1.2%|1.3%	 Num Positives: 686	 Num Negatives: 642
+Epoch 4:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.589	 auPRC: 0.537
+	Recall at 5%|10%|20% FDR: 0.2%|0.2%|0.2%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.614	 auPRC: 0.576
+	Recall at 5%|10%|20% FDR: 1.2%|1.2%|1.3%	 Num Positives: 686	 Num Negatives: 642
+Epoch 5:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.589	 auPRC: 0.537
+	Recall at 5%|10%|20% FDR: 0.2%|0.2%|0.2%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.614	 auPRC: 0.576
+	Recall at 5%|10%|20% FDR: 1.2%|1.2%|1.3%	 Num Positives: 686	 Num Negatives: 642
+Epoch 6:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.589	 auPRC: 0.537
+	Recall at 5%|10%|20% FDR: 0.2%|0.2%|0.2%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.614	 auPRC: 0.576
+	Recall at 5%|10%|20% FDR: 1.2%|1.2%|1.3%	 Num Positives: 686	 Num Negatives: 642
+Epoch 7:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.589	 auPRC: 0.537
+	Recall at 5%|10%|20% FDR: 0.2%|0.2%|0.2%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.614	 auPRC: 0.576
+	Recall at 5%|10%|20% FDR: 1.2%|1.2%|1.3%	 Num Positives: 686	 Num Negatives: 642
+Finished training after 7 epochs.
+Hyperparameter trial: 6
+Training model (* indicates new best result)...
+Epoch 1:
+Train Loss: 0.6726	Balanced Accuracy: 58.88%	 auROC: 0.715	 auPRC: 0.711
+	Recall at 5%|10%|20% FDR: 0.5%|0.6%|27.4%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6736	Balanced Accuracy: 58.14%	 auROC: 0.727	 auPRC: 0.729
+	Recall at 5%|10%|20% FDR: 0.7%|0.7%|31.9%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 2:
+Train Loss: 0.6817	Balanced Accuracy: 59.79%	 auROC: 0.709	 auPRC: 0.685
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6802	Balanced Accuracy: 60.86%	 auROC: 0.706	 auPRC: 0.683
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642
+Epoch 3:
+Train Loss: 0.6318	Balanced Accuracy: 65.80%	 auROC: 0.751	 auPRC: 0.742
+	Recall at 5%|10%|20% FDR: 0.2%|6.3%|35.3%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6337	Balanced Accuracy: 66.42%	 auROC: 0.763	 auPRC: 0.773
+	Recall at 5%|10%|20% FDR: 6.6%|14.6%|43.6%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 4:
+Train Loss: 0.6355	Balanced Accuracy: 63.90%	 auROC: 0.772	 auPRC: 0.782
+	Recall at 5%|10%|20% FDR: 1.6%|28.2%|52.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6344	Balanced Accuracy: 62.60%	 auROC: 0.762	 auPRC: 0.785
+	Recall at 5%|10%|20% FDR: 7.6%|25.7%|50.9%	 Num Positives: 686	 Num Negatives: 642
+Epoch 5:
+Train Loss: 0.6092	Balanced Accuracy: 67.56%	 auROC: 0.791	 auPRC: 0.797
+	Recall at 5%|10%|20% FDR: 0.5%|30.5%|55.4%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6129	Balanced Accuracy: 66.15%	 auROC: 0.775	 auPRC: 0.793
+	Recall at 5%|10%|20% FDR: 9.5%|24.9%|56.1%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 6:
+Train Loss: 0.6283	Balanced Accuracy: 60.45%	 auROC: 0.792	 auPRC: 0.796
+	Recall at 5%|10%|20% FDR: 8.3%|29.0%|55.5%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6307	Balanced Accuracy: 58.09%	 auROC: 0.774	 auPRC: 0.791
+	Recall at 5%|10%|20% FDR: 6.9%|21.6%|57.0%	 Num Positives: 686	 Num Negatives: 642
+Epoch 7:
+Train Loss: 0.6237	Balanced Accuracy: 61.26%	 auROC: 0.804	 auPRC: 0.806
+	Recall at 5%|10%|20% FDR: 2.5%|33.6%|57.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6293	Balanced Accuracy: 59.33%	 auROC: 0.780	 auPRC: 0.793
+	Recall at 5%|10%|20% FDR: 9.5%|15.5%|52.5%	 Num Positives: 686	 Num Negatives: 642
+Epoch 8:
+Train Loss: 0.5876	Balanced Accuracy: 71.28%	 auROC: 0.802	 auPRC: 0.803
+	Recall at 5%|10%|20% FDR: 6.2%|31.0%|56.7%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6031	Balanced Accuracy: 67.81%	 auROC: 0.767	 auPRC: 0.781
+	Recall at 5%|10%|20% FDR: 11.5%|15.9%|44.5%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 9:
+Train Loss: 0.5645	Balanced Accuracy: 72.62%	 auROC: 0.821	 auPRC: 0.821
+	Recall at 5%|10%|20% FDR: 10.3%|36.9%|62.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5809	Balanced Accuracy: 70.46%	 auROC: 0.792	 auPRC: 0.805
+	Recall at 5%|10%|20% FDR: 12.8%|18.8%|57.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 10:
+Train Loss: 0.5978	Balanced Accuracy: 65.28%	 auROC: 0.831	 auPRC: 0.829
+	Recall at 5%|10%|20% FDR: 11.4%|39.9%|64.4%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6149	Balanced Accuracy: 61.49%	 auROC: 0.785	 auPRC: 0.800
+	Recall at 5%|10%|20% FDR: 11.5%|19.5%|57.6%	 Num Positives: 686	 Num Negatives: 642
+Epoch 11:
+Train Loss: 0.6416	Balanced Accuracy: 56.12%	 auROC: 0.814	 auPRC: 0.818
+	Recall at 5%|10%|20% FDR: 18.1%|37.2%|59.8%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6632	Balanced Accuracy: 54.11%	 auROC: 0.748	 auPRC: 0.778
+	Recall at 5%|10%|20% FDR: 11.4%|20.1%|46.4%	 Num Positives: 686	 Num Negatives: 642
+Epoch 12:
+Train Loss: 0.6048	Balanced Accuracy: 68.00%	 auROC: 0.793	 auPRC: 0.784
+	Recall at 5%|10%|20% FDR: 8.2%|17.5%|47.6%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6357	Balanced Accuracy: 62.41%	 auROC: 0.709	 auPRC: 0.719
+	Recall at 5%|10%|20% FDR: 0.7%|7.7%|22.3%	 Num Positives: 686	 Num Negatives: 642
+Epoch 13:
+Train Loss: 0.5903	Balanced Accuracy: 66.07%	 auROC: 0.842	 auPRC: 0.840
+	Recall at 5%|10%|20% FDR: 14.0%|43.0%|66.5%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6223	Balanced Accuracy: 59.40%	 auROC: 0.763	 auPRC: 0.793
+	Recall at 5%|10%|20% FDR: 17.8%|32.4%|50.9%	 Num Positives: 686	 Num Negatives: 642
+Epoch 14:
+Train Loss: 0.5778	Balanced Accuracy: 67.57%	 auROC: 0.855	 auPRC: 0.849
+	Recall at 5%|10%|20% FDR: 10.8%|42.6%|71.2%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6116	Balanced Accuracy: 61.60%	 auROC: 0.782	 auPRC: 0.805
+	Recall at 5%|10%|20% FDR: 16.8%|31.0%|56.4%	 Num Positives: 686	 Num Negatives: 642
+Epoch 15:
+Train Loss: 0.5956	Balanced Accuracy: 64.81%	 auROC: 0.853	 auPRC: 0.846
+	Recall at 5%|10%|20% FDR: 19.0%|40.5%|71.5%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6362	Balanced Accuracy: 59.32%	 auROC: 0.743	 auPRC: 0.773
+	Recall at 5%|10%|20% FDR: 14.7%|25.2%|45.0%	 Num Positives: 686	 Num Negatives: 642
+Finished training after 15 epochs.
+Hyperparameter trial: 7
+Training model (* indicates new best result)...
+Epoch 1:
+Train Loss: 16.5055	Balanced Accuracy: 50.00%	 auROC: 0.547	 auPRC: 0.519
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.1110	Balanced Accuracy: 50.00%	 auROC: 0.560	 auPRC: 0.548
+	Recall at 5%|10%|20% FDR: 0.3%|0.3%|0.3%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 2:
+Train Loss: 16.5668	Balanced Accuracy: 50.00%	 auROC: 0.547	 auPRC: 0.519
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.1727	Balanced Accuracy: 50.00%	 auROC: 0.560	 auPRC: 0.548
+	Recall at 5%|10%|20% FDR: 0.4%|0.4%|0.4%	 Num Positives: 686	 Num Negatives: 642
+Epoch 3:
+Train Loss: 16.5677	Balanced Accuracy: 50.00%	 auROC: 0.547	 auPRC: 0.519
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.1736	Balanced Accuracy: 50.00%	 auROC: 0.560	 auPRC: 0.548
+	Recall at 5%|10%|20% FDR: 0.4%|0.4%|0.4%	 Num Positives: 686	 Num Negatives: 642
+Epoch 4:
+Train Loss: 16.5678	Balanced Accuracy: 50.00%	 auROC: 0.547	 auPRC: 0.519
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.1737	Balanced Accuracy: 50.00%	 auROC: 0.560	 auPRC: 0.548
+	Recall at 5%|10%|20% FDR: 0.4%|0.4%|0.4%	 Num Positives: 686	 Num Negatives: 642
+Epoch 5:
+Train Loss: 16.5678	Balanced Accuracy: 50.00%	 auROC: 0.547	 auPRC: 0.519
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.1737	Balanced Accuracy: 50.00%	 auROC: 0.560	 auPRC: 0.548
+	Recall at 5%|10%|20% FDR: 0.4%|0.4%|0.4%	 Num Positives: 686	 Num Negatives: 642
+Epoch 6:
+Train Loss: 16.5678	Balanced Accuracy: 50.00%	 auROC: 0.547	 auPRC: 0.519
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.1737	Balanced Accuracy: 50.00%	 auROC: 0.560	 auPRC: 0.548
+	Recall at 5%|10%|20% FDR: 0.4%|0.4%|0.4%	 Num Positives: 686	 Num Negatives: 642
+Epoch 7:
+Train Loss: 16.5678	Balanced Accuracy: 50.00%	 auROC: 0.547	 auPRC: 0.519
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.1737	Balanced Accuracy: 50.00%	 auROC: 0.560	 auPRC: 0.548
+	Recall at 5%|10%|20% FDR: 0.4%|0.4%|0.4%	 Num Positives: 686	 Num Negatives: 642
+Finished training after 7 epochs.
+Hyperparameter trial: 8
+Training model (* indicates new best result)...
+Epoch 1:
+Train Loss: 0.6764	Balanced Accuracy: 56.41%	 auROC: 0.696	 auPRC: 0.718
+	Recall at 5%|10%|20% FDR: 0.0%|16.3%|35.2%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6733	Balanced Accuracy: 57.40%	 auROC: 0.717	 auPRC: 0.751
+	Recall at 5%|10%|20% FDR: 1.6%|24.6%|42.4%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 2:
+Train Loss: 0.6380	Balanced Accuracy: 67.11%	 auROC: 0.764	 auPRC: 0.771
+	Recall at 5%|10%|20% FDR: 0.0%|27.7%|48.4%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6397	Balanced Accuracy: 67.96%	 auROC: 0.766	 auPRC: 0.788
+	Recall at 5%|10%|20% FDR: 14.1%|25.5%|53.9%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 3:
+Train Loss: 0.6194	Balanced Accuracy: 70.04%	 auROC: 0.781	 auPRC: 0.788
+	Recall at 5%|10%|20% FDR: 3.2%|32.5%|51.2%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6204	Balanced Accuracy: 71.26%	 auROC: 0.772	 auPRC: 0.793
+	Recall at 5%|10%|20% FDR: 9.0%|26.8%|58.9%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 4:
+Train Loss: 0.6139	Balanced Accuracy: 68.81%	 auROC: 0.781	 auPRC: 0.787
+	Recall at 5%|10%|20% FDR: 14.5%|31.6%|51.4%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6167	Balanced Accuracy: 70.04%	 auROC: 0.783	 auPRC: 0.799
+	Recall at 5%|10%|20% FDR: 6.6%|17.3%|57.3%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 5:
+Train Loss: 0.6149	Balanced Accuracy: 70.58%	 auROC: 0.772	 auPRC: 0.788
+	Recall at 5%|10%|20% FDR: 12.8%|34.3%|54.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6154	Balanced Accuracy: 70.26%	 auROC: 0.764	 auPRC: 0.791
+	Recall at 5%|10%|20% FDR: 14.4%|23.2%|56.9%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 6:
+Train Loss: 0.6002	Balanced Accuracy: 70.41%	 auROC: 0.792	 auPRC: 0.798
+	Recall at 5%|10%|20% FDR: 8.0%|33.8%|53.7%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6015	Balanced Accuracy: 71.51%	 auROC: 0.789	 auPRC: 0.804
+	Recall at 5%|10%|20% FDR: 15.0%|18.8%|58.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 7:
+Train Loss: 0.6063	Balanced Accuracy: 70.56%	 auROC: 0.799	 auPRC: 0.803
+	Recall at 5%|10%|20% FDR: 13.7%|34.4%|56.5%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6096	Balanced Accuracy: 69.85%	 auROC: 0.791	 auPRC: 0.805
+	Recall at 5%|10%|20% FDR: 15.7%|20.8%|58.2%	 Num Positives: 686	 Num Negatives: 642
+Epoch 8:
+Train Loss: 0.5974	Balanced Accuracy: 70.23%	 auROC: 0.796	 auPRC: 0.802
+	Recall at 5%|10%|20% FDR: 11.6%|35.6%|53.7%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6018	Balanced Accuracy: 70.26%	 auROC: 0.791	 auPRC: 0.805
+	Recall at 5%|10%|20% FDR: 13.3%|21.7%|55.4%	 Num Positives: 686	 Num Negatives: 642
+Epoch 9:
+Train Loss: 0.6174	Balanced Accuracy: 70.38%	 auROC: 0.805	 auPRC: 0.808
+	Recall at 5%|10%|20% FDR: 15.1%|34.5%|56.7%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6222	Balanced Accuracy: 69.82%	 auROC: 0.790	 auPRC: 0.802
+	Recall at 5%|10%|20% FDR: 9.9%|19.2%|57.6%	 Num Positives: 686	 Num Negatives: 642
+Epoch 10:
+Train Loss: 0.5890	Balanced Accuracy: 72.36%	 auROC: 0.808	 auPRC: 0.813
+	Recall at 5%|10%|20% FDR: 13.3%|39.2%|58.9%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5945	Balanced Accuracy: 71.59%	 auROC: 0.792	 auPRC: 0.806
+	Recall at 5%|10%|20% FDR: 14.3%|23.0%|57.6%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 11:
+Train Loss: 0.6051	Balanced Accuracy: 68.55%	 auROC: 0.799	 auPRC: 0.801
+	Recall at 5%|10%|20% FDR: 16.7%|31.6%|52.6%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6152	Balanced Accuracy: 67.58%	 auROC: 0.783	 auPRC: 0.791
+	Recall at 5%|10%|20% FDR: 1.3%|20.8%|52.8%	 Num Positives: 686	 Num Negatives: 642
+Epoch 12:
+Train Loss: 0.5968	Balanced Accuracy: 73.23%	 auROC: 0.814	 auPRC: 0.818
+	Recall at 5%|10%|20% FDR: 15.3%|37.3%|58.3%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6054	Balanced Accuracy: 70.70%	 auROC: 0.787	 auPRC: 0.797
+	Recall at 5%|10%|20% FDR: 13.0%|20.4%|55.5%	 Num Positives: 686	 Num Negatives: 642
+Epoch 13:
+Train Loss: 0.5889	Balanced Accuracy: 73.52%	 auROC: 0.821	 auPRC: 0.824
+	Recall at 5%|10%|20% FDR: 15.8%|39.2%|60.9%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5980	Balanced Accuracy: 71.65%	 auROC: 0.793	 auPRC: 0.807
+	Recall at 5%|10%|20% FDR: 1.7%|30.3%|57.9%	 Num Positives: 686	 Num Negatives: 642
+Epoch 14:
+Train Loss: 0.5999	Balanced Accuracy: 72.04%	 auROC: 0.818	 auPRC: 0.820
+	Recall at 5%|10%|20% FDR: 19.0%|36.4%|59.4%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6135	Balanced Accuracy: 68.68%	 auROC: 0.781	 auPRC: 0.790
+	Recall at 5%|10%|20% FDR: 12.4%|23.8%|48.3%	 Num Positives: 686	 Num Negatives: 642
+Epoch 15:
+Train Loss: 0.5909	Balanced Accuracy: 70.13%	 auROC: 0.818	 auPRC: 0.821
+	Recall at 5%|10%|20% FDR: 18.8%|37.4%|58.1%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.6081	Balanced Accuracy: 68.30%	 auROC: 0.785	 auPRC: 0.795
+	Recall at 5%|10%|20% FDR: 12.7%|21.6%|51.6%	 Num Positives: 686	 Num Negatives: 642
+Epoch 16:
+Train Loss: 0.5786	Balanced Accuracy: 74.63%	 auROC: 0.835	 auPRC: 0.839
+	Recall at 5%|10%|20% FDR: 26.2%|44.7%|65.8%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 0.5962	Balanced Accuracy: 70.40%	 auROC: 0.791	 auPRC: 0.796
+	Recall at 5%|10%|20% FDR: 14.3%|20.7%|54.2%	 Num Positives: 686	 Num Negatives: 642
+Finished training after 16 epochs.
+Hyperparameter trial: 9
+Training model (* indicates new best result)...
+Epoch 1:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 2:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 3:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 4:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 5:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 6:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 7:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
+Epoch 8:
+Train Loss: 17.2173	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.749
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 2646	 Num Negatives: 2662
+Valid Loss: 17.8416	Balanced Accuracy: 50.00%	 auROC: 0.500	 auPRC: 0.758
+	Recall at 5%|10%|20% FDR: 0.0%|0.0%|0.0%	 Num Positives: 686	 Num Negatives: 642 *
