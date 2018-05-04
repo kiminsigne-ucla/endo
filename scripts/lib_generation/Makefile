@@ -44,11 +44,6 @@ $(DATE)_lb_peak_tile_lib.txt: $(PEAK_DEST)/U00096.2_plus_minus_called_peaks_thre
 	synthetic_promoter_pos_controls.csv 10 150 $@
 
 
-$(DATE)_active_tss_scrambled10_stride5.txt: ../../processed_data/tss_positives.fasta
-	@ echo "Generating scramble library..."
-	@ python scramble_tiling.py $< neg_controls_no_primers.txt \
-	synthetic_promoter_pos_controls.csv 10 5 $@
-
 print-%  : ; @echo $* = $($*)
 
 
