@@ -6,40 +6,40 @@
 # install.packages("dplyr")
 # install.packages("ggplot2")
 
-library("dplyr")
-
+library(dplyr)
+library(tidyr)
 options(stringsAsFactors = F)
 
 #SET TO WORKING DIRECTORY CONTAINING BARCODE RNA AND DNA COUNTS 
 #Read in all barcode counts and normalize by Reads per Million
 
-filelist = list.files(pattern = 'counts_*')
+filelist = list.files(path = '../../processed_data/expression_pipeline',
+                      pattern = '^counts_*',
+                      full.names = T)
 for(i in filelist) {
-  x <- read.table(i, col.names=c(i, 'barcode'), header = F)
-  x[[i]] <- 1000000*x[[i]]/sum(x[[i]])  #Normalizes by RPM
-  assign(i,x)  
+    name <- gsub('counts_', '', basename(i))
+    name <- gsub('.txt', '', name)
+    x <- read.table(i, col.names=c(name, 'barcode'), header = F)
+    x[[name]] <- 1000000*x[[name]]/sum(x[[name]])  #Normalizes by RPM
+    assign(name,x)  
 }
-filelist
 
 #combine reads for all barcodes 
-rLP5_Endo2 <- full_join(rLP5_Endo2_DNA1.txt, rLP5_Endo2_DNA2.txt, by='barcode') %>%
-  full_join(., rLP5_Endo2_RNA1.txt, by='barcode') %>%
-  full_join(., rLP5_Endo2_RNA2.txt, by='barcode')
+rLP5_Endo2 <- full_join(rLP5_Endo2_DNA1, rLP5_Endo2_DNA2, by='barcode') %>%
+  full_join(., rLP5_Endo2_RNA1, by='barcode') %>%
+  full_join(., rLP5_Endo2_RNA2, by='barcode')
 
-names(rLP5_Endo2) = sub(".txt","", names(rLP5_Endo2)) #rename all colummns that were named after text file
-rm(list = c(filelist))
+rm(rLP5_Endo2_DNA1, rLP5_Endo2_DNA2, rLP5_Endo2_RNA1, rLP5_Endo2_RNA2)
 rm(x)
-
-
 
 #Combine barcode counts with their promoter identity
 
-barcode_stats_Endo2 <- read.table("./ref/barcode_statistics.txt", header = T)
-mapped_barcodes <- barcode_stats_Endo2[!is.na(barcode_stats_Endo2$most_common),] #Remove unmapped barcodes
+barcode_stats_Endo2 <- read.table("../../processed_data/expression_pipeline/barcode_statistics.txt", header = T)
+#Remove unmapped barcodes
+mapped_barcodes <- barcode_stats_Endo2 %>% 
+    filter(!is.na(most_common))
 Compare_barcode_Reps <- left_join(mapped_barcodes, rLP5_Endo2 , by ='barcode') 
 Compare_barcode_Reps[is.na(Compare_barcode_Reps)] <- 0
-
-
 
 temp <- filter(Compare_barcode_Reps, rLP5_Endo2_DNA1 > 0 | rLP5_Endo2_DNA2 > 0) #Remove barcodes with no DNA counts
 
@@ -58,36 +58,48 @@ Endo2 <- temp %>% group_by(most_common) %>%
   distinct() 
 
 #Convert sequence to variant
-
-Endo2 <- read.table("./ref/variant_statistics.txt",
+Endo2 <- read.table("../../processed_data/expression_pipeline/variant_statistics.txt",
                     header = T,
                     fill = T,
-                    col.names = c('most_common', 'name', 'num_barcodes', 'num_barcodes_unique', 'barcodes')) %>%
-  select(most_common, name) %>%
-  inner_join(., Endo2, by = 'most_common') %>%
-  distinct() %>%
-  select('name', 'RNA_exp_1', 'RNA_exp_2', 'RNA_exp_ave', 'DNA_sum', 'num_barcodes', 'num_barcodes_integrated')
+                    col.names = c('most_common', 'name', 'num_barcodes', 
+                                  'num_barcodes_unique', 'barcodes')) %>%
+    select(most_common, name) %>%
+    mutate(name = gsub('>', '', name)) %>% 
+    inner_join(., Endo2, by = 'most_common') %>%
+    distinct() %>%
+    select('name', 'RNA_exp_1', 'RNA_exp_2', 'RNA_exp_ave', 'DNA_sum', 
+           'num_barcodes', 'num_barcodes_integrated')
 
-write.table(Endo2, "./rLP5_Endo2_expression.txt", quote = F, row.names = F)
-Endo2 <- read.table("./rLP5_Endo2_expression.txt", header = T)
+# read in ref
+ref <- read.table('../../ref/endo_lib_2016_controls_clean.txt', header = F, 
+                  sep = '\t', col.names = c('name', 'seq')) %>% 
+    mutate(name = gsub('>', '', name))
 
-#Write out active and inactive promoters
+Endo2 <- left_join(Endo2, ref, by = 'name')
 
-neg_median <- median(subset(Endo2, grepl("neg_control", Endo2$name)) %>% .$RNA_exp_ave)
-neg_sd <- sd(subset(Endo2, grepl("neg_control", Endo2$name)) %>% .$RNA_exp_ave)
+# remove primers
+Endo2 <- Endo2 %>% 
+    mutate(trimmed_seq = substring(seq, 25, 174))
 
-#read in coordinate files
-coordinates <- read.table("./tss_coordinates.bed", header = F)
-Endo2$name <- gsub('>', '', Endo2$name)
-
-#Subset bed file for positive TSSs
-tss_positives.bed <- filter(Endo2, RNA_exp_ave > (neg_median+2*(neg_sd))) %>%
-                     semi_join(coordinates, . , by = c("V4" = "name")) %>%
-		     write.table(tss_positives.bed, "./tss_positives.bed", col.names = F, row.names = F, quote = F, sep = '\t')
-
-#Subset bed file for negative TSSs
-tss_negatives.bed <- filter(Endo2, RNA_exp_ave < (neg_median+2*(neg_sd))) %>%
-                     semi_join(coordinates, . , by = c("V4" = "name")) %>%
-		     write.table(tss_negatives.bed, "./tss_negatives.bed", col.names = F, row.names = F, quote = F, sep = '\t')
+# separate name into fields
+Endo2 <- Endo2 %>% 
+    separate(name, into = c('source', 'tss_pos', 'strand'), sep = ',', remove = F) %>% 
+    mutate(tss_pos = as.numeric(tss_pos),
+           strand = ifelse(is.na(strand), '+', strand))
 
 
+
+# create accurate var start and end from TSS position
+Endo2 <- Endo2 %>% 
+    filter(!grepl('neg_control', name)) %>% 
+    mutate(start = ifelse(strand == '+', tss_pos - 120, tss_pos - 30),
+           end = ifelse(strand == '+', tss_pos + 30, tss_pos + 120))
+
+# parse negatives separately
+neg <- subset(Endo2, grepl("neg_control", Endo2$name))
+Endo2 <- neg %>% 
+    mutate(coord = gsub('neg_control_', '', name)) %>% 
+    separate(coord, into = c('start', 'end'), sep = ':', convert = T) %>% 
+    bind_rows(Endo2, .)
+
+write.table(Endo2, "../../processed_data/expression_pipeline/rLP5_Endo2_expression.txt", quote = F, row.names = F)
