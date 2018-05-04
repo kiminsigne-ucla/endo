@@ -64,7 +64,7 @@ Endo2 <- read.table("../../processed_data/expression_pipeline/variant_statistics
                     col.names = c('most_common', 'name', 'num_barcodes', 
                                   'num_barcodes_unique', 'barcodes')) %>%
     select(most_common, name) %>%
-    mutate(name = gsub('>', '', name))
+    mutate(name = gsub('>', '', name)) %>% 
     inner_join(., Endo2, by = 'most_common') %>%
     distinct() %>%
     select('name', 'RNA_exp_1', 'RNA_exp_2', 'RNA_exp_ave', 'DNA_sum', 
@@ -87,10 +87,7 @@ Endo2 <- Endo2 %>%
     mutate(tss_pos = as.numeric(tss_pos),
            strand = ifelse(is.na(strand), '+', strand))
 
-# identify 3standard deviations greater than median of negatives
-neg <- subset(Endo2, grepl("neg_control", Endo2$name))
-neg_median <- median(neg$RNA_exp_ave)
-neg_sd <- sd(neg$RNA_exp_ave)
+
 
 # create accurate var start and end from TSS position
 Endo2 <- Endo2 %>% 
@@ -99,13 +96,10 @@ Endo2 <- Endo2 %>%
            end = ifelse(strand == '+', tss_pos + 30, tss_pos + 120))
 
 # parse negatives separately
+neg <- subset(Endo2, grepl("neg_control", Endo2$name))
 Endo2 <- neg %>% 
     mutate(coord = gsub('neg_control_', '', name)) %>% 
     separate(coord, into = c('start', 'end'), sep = ':', convert = T) %>% 
     bind_rows(Endo2, .)
-
-# Subset all promoters that are greater than 3sd from the mean
-positive_Endo2 <- filter(Endo2, RNA_exp_ave > (neg_median+3*(neg_sd)))
-negative_Endo2 <- filter(Endo2, RNA_exp_ave < (neg_median+3*(neg_sd)))
 
 write.table(Endo2, "../../processed_data/expression_pipeline/rLP5_Endo2_expression.txt", quote = F, row.names = F)
