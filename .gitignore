@@ -6,5 +6,5 @@ processed_data/merged_reads_pear/endo_merged.fastq
 processed_data/filtered_fragments_sorted.txt
 processed_data/U00096.2_frag-rLP5_LB_expression.txt
 scripts/mismatches.txt
-scripts/expression_pipeline/barcode_statistics.txt
+processed_data/expression_pipeline/barcode_statistics.txt
 *.fastq

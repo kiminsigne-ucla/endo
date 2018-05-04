@@ -1,5 +1,5 @@
 MERGE_DEST=../../processed_data/merged_reads_pear
-
+DATA=../../processed_data/expression_pipeline
 
 all: merge map
 
@@ -25,10 +25,13 @@ $(MERGE_DEST)/endo_merged.fastq: $(MERGE_DEST)/pEndo2_84.paired.assembled.fastq 
 
 endo_mapping_barcode_statistics.txt: $(MERGE_DEST)/endo_merged.fastq
 	@ python barcode_mapping.py $< fastq ../../ref/endo_lib_2016_controls_clean.txt \
-	tab 150 24 end 20 endo_mapping --controls ../../ref/synthetic_promoter_pos_controls_formatted.txt \
+	tab 150 24 end 20 $(DATA)/endo_mapping --controls ../../ref/synthetic_promoter_pos_controls_formatted.txt \
 	--controls_primer_len 0
 
 
 # use one FASTQ file to trigger barcode counting for all FASTQ files
 counts_rLP5_Endo2_DNA1.txt: rLP5_Endo2_DNA1.fastq
 	@ ./barcode_counting.sh
+	@ mv counts* $(DATA)
+
+# calculate expression
