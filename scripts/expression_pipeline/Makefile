@@ -1,5 +1,7 @@
-MERGE_DEST=../../processed_data/merged_reads_pear
+MERGE_DEST=../../processed_data/endo_bc_map_merged_reads_pear
+RAW_DATA=../../raw_data/endo_bc_map
 DATA=../../processed_data/expression_pipeline
+LIB=../../processed_data/lib_gen
 DATE=$(shell date +%Y%m%d)
 
 all: merge map
@@ -14,12 +16,12 @@ barcode_counts: $(DATA)/counts_rLP5_Endo2_DNA1.txt
 active_tss_lib_gen: $(DATE)_active_tss_scrambled10_stride5.txt
 
 
-$(MERGE_DEST)/pEndo2_84.paired.assembled.fastq: pEndo2_84_R1.fastq pEndo2_84_R2.fastq pearallel.sh
-	./pearallel.sh pEndo2_84 $(MERGE_DEST)
+$(MERGE_DEST)/pEndo2_84.paired.assembled.fastq: $(RAW_DATA)/pEndo2_84_R1.fastq $(RAW_DATA)/pEndo2_84_R2.fastq pearallel.sh
+	./pearallel.sh $(RAW_DATA)/pEndo2_84 $(MERGE_DEST)
 
 
-$(MERGE_DEST)/pEndo2_85.paired.assembled.fastq: pEndo2_85_R1.fastq pEndo2_85_R2.fastq pearallel.sh
-	./pearallel.sh pEndo2_85 $(MERGE_DEST)
+$(MERGE_DEST)/pEndo2_85.paired.assembled.fastq: $(RAW_DATA)/pEndo2_85_R1.fastq $(RAW_DATA)/pEndo2_85_R2.fastq pearallel.sh
+	./pearallel.sh $(RAW_DATA)/pEndo2_85 $(MERGE_DEST)
 
 
 $(MERGE_DEST)/endo_merged.fastq: $(MERGE_DEST)/pEndo2_84.paired.assembled.fastq $(MERGE_DEST)/pEndo2_85.paired.assembled.fastq
@@ -42,7 +44,6 @@ $(DATA)/rLP5_Endo2_expression.txt: $(DATA)/counts_rLP5_Endo2_DNA1.txt \
 	$(DATA)/endo_mapping_barcode_statistics.txt
 	@ Rscript bc_counts2expression.R
 
-
 # threshold active TSS
 $(DATA)/tss_positives.bed: $(DATA)/rLP5_Endo2_expression.txt
 	@ Rscript threshold_tss.R
@@ -53,8 +54,7 @@ $(DATA)/tss_positives.fasta: $(DATA)/tss_positives.bed
 	-fo $(DATA)/tss_positives.fasta -name -s
 
 # generate active TSS scramble library
-$(DATE)_active_tss_scrambled10_stride5.txt: $(DATA)/tss_positives.fasta
+$(LIB)/$(DATE)_active_tss_scrambled10_stride5.txt: $(DATA)/tss_positives.fasta
 	@ echo "Generating scramble library..."
-	@ python scramble_tiling.py $< neg_controls_no_primers.txt \
-	synthetic_promoter_pos_controls.csv 10 5 $@
-	
+	@ python scramble_tiling.py $< $(LIB)/neg_controls_no_primers.txt \
+	../../ref/synthetic_promoter_pos_controls.csv 10 5 $@
