@@ -34,7 +34,8 @@ rm(x)
 
 #Combine barcode counts with their promoter identity
 
-barcode_stats_Endo2 <- read.table("../../processed_data/expression_pipeline/barcode_statistics.txt", header = T)
+barcode_stats_Endo2 <- read.table("../../processed_data/expression_pipeline/endo_mapping_barcode_statistics.txt", 
+                                  header = T)
 #Remove unmapped barcodes
 mapped_barcodes <- barcode_stats_Endo2 %>% 
     filter(!is.na(most_common))
@@ -44,31 +45,36 @@ Compare_barcode_Reps[is.na(Compare_barcode_Reps)] <- 0
 temp <- filter(Compare_barcode_Reps, rLP5_Endo2_DNA1 > 0 | rLP5_Endo2_DNA2 > 0) #Remove barcodes with no DNA counts
 
 #calculate expression of promoters
-Endo2 <- temp %>% group_by(most_common) %>% 
-  mutate(num_barcodes = n()) %>%
-  filter(rLP5_Endo2_DNA1 > 0 | rLP5_Endo2_DNA2 > 0) %>%
-  mutate(num_barcodes_integrated = n()) %>%
-  filter(num_barcodes_integrated >= 4) %>% #Filter out promoters with fewer than 3 barcodes integrated
-  mutate(RNA_exp_1 = sum(rLP5_Endo2_RNA1)/(sum(rLP5_Endo2_DNA1)+sum(rLP5_Endo2_DNA2)),
-         RNA_exp_2 = sum(rLP5_Endo2_RNA2)/(sum(rLP5_Endo2_DNA2)+sum(rLP5_Endo2_DNA1)),
-         RNA_exp_ave = ((RNA_exp_1+RNA_exp_2)/2),
-         DNA_sum = (sum(rLP5_Endo2_DNA2)+sum(rLP5_Endo2_DNA1))) %>% 
-  ungroup() %>% 
-  select(most_common, RNA_exp_1, RNA_exp_2, RNA_exp_ave, DNA_sum, num_barcodes, num_barcodes_integrated) %>% 
-  distinct() 
+Endo2 <- temp %>% 
+    group_by(most_common) %>% 
+    mutate(num_barcodes = n()) %>%
+    filter(rLP5_Endo2_DNA1 > 0 | rLP5_Endo2_DNA2 > 0) %>%
+    mutate(num_barcodes_integrated = n()) %>%
+    #Filter out promoters with fewer than 3 barcodes integrated
+    filter(num_barcodes_integrated >= 4) %>% 
+    mutate(DNA_sum = (sum(rLP5_Endo2_DNA2)+sum(rLP5_Endo2_DNA1)),
+           RNA_exp_1 = sum(rLP5_Endo2_RNA1)/DNA_sum,
+           RNA_exp_2 = sum(rLP5_Endo2_RNA2)/DNA_sum,
+           RNA_exp_ave = ((RNA_exp_1+RNA_exp_2)/2)) %>% 
+    ungroup() %>% 
+    select(most_common, RNA_exp_1, RNA_exp_2, RNA_exp_ave, DNA_sum, num_barcodes, num_barcodes_integrated) %>% 
+    distinct() 
 
 #Convert sequence to variant
-Endo2 <- read.table("../../processed_data/expression_pipeline/variant_statistics.txt",
+var_stats <- read.table("../../processed_data/expression_pipeline/endo_mapping_variant_statistics.txt",
                     header = T,
                     fill = T,
-                    col.names = c('most_common', 'name', 'num_barcodes', 
+                    col.names = c('seq', 'name', 'num_barcodes', 
                                   'num_barcodes_unique', 'barcodes')) %>%
-    select(most_common, name) %>%
-    mutate(name = gsub('>', '', name)) %>% 
-    inner_join(., Endo2, by = 'most_common') %>%
-    distinct() %>%
-    select('name', 'RNA_exp_1', 'RNA_exp_2', 'RNA_exp_ave', 'DNA_sum', 
-           'num_barcodes', 'num_barcodes_integrated')
+    select(name, seq) %>%
+    mutate(name = gsub('>', '', name))
+# remove any duplicates
+var_stats_unique <- var_stats[!duplicated(var_stats$name), ]
+
+Endo2 <- left_join(Endo2, var_stats_unique, by = c('most_common' = 'seq')) %>% 
+    select('name', 'RNA_exp_1', 'RNA_exp_2', 'RNA_exp_ave', 'DNA_sum',
+           'num_barcodes', 'num_barcodes_integrated') %>% 
+    filter(!is.na(name))
 
 # read in ref
 ref <- read.table('../../ref/endo_lib_2016_controls_clean.txt', header = F, 
@@ -86,8 +92,6 @@ Endo2 <- Endo2 %>%
     separate(name, into = c('source', 'tss_pos', 'strand'), sep = ',', remove = F) %>% 
     mutate(tss_pos = as.numeric(tss_pos),
            strand = ifelse(is.na(strand), '+', strand))
-
-
 
 # create accurate var start and end from TSS position
 Endo2 <- Endo2 %>% 
