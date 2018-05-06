@@ -4,7 +4,7 @@ options(stringsAsFactors = F)
 #Read in all Sequencing data for rLP5-Frag
 
 filelist = list.files(path = '../../processed_data/frag_peak_calling',
-                      pattern = 'rLP5*',
+                      pattern = 'rLP5_frag*',
                       full.names = T)
 for(i in filelist) {
     name <- gsub('.txt', '',basename(i))

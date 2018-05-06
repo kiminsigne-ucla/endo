@@ -55,7 +55,7 @@ $(DATA)/U00096.2_rLP5-frag_expression.txt: $(DATA)/frag_stats.txt
 
 # fragment expression pileup - get expression of each fragment at every position, this will create both strands
 $(DATA)/plus_frag_pileup.wig: $(DATA)/U00096.2_rLP5-frag_expression.txt
-	@ python ../frag_expression_pileup.py $< frag_pileup.wig 50
+	@ python frag_expression_pileup.py $< frag_pileup.wig 50
 
 
 ### call peaks based on fragment expression pileup ###
