@@ -4,8 +4,7 @@ DATA=../../processed_data/expression_pipeline
 LIB=../../processed_data/lib_gen
 DATE=$(shell date +%Y%m%d)
 
-all: merge map
-
+expression: $(DATA)/rLP5_Endo2_expression.txt
 
 merge: $(MERGE_DEST)/endo_merged.fastq
 
@@ -43,6 +42,9 @@ $(DATA)/counts_rLP5_Endo2_DNA1.txt: ../../raw_data/endo_DNA_RNA/rLP5_Endo2_DNA1.
 $(DATA)/rLP5_Endo2_expression.txt: $(DATA)/counts_rLP5_Endo2_DNA1.txt \
 	$(DATA)/endo_mapping_barcode_statistics.txt
 	@ Rscript bc_counts2expression.R
+
+
+### Generate library ###
 
 # threshold active TSS
 $(DATA)/tss_positives.bed: $(DATA)/rLP5_Endo2_expression.txt
