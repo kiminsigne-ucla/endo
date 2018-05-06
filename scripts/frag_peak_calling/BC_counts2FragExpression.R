@@ -7,8 +7,7 @@ filelist = list.files(path = '../../processed_data/frag_peak_calling',
                       pattern = 'rLP5*',
                       full.names = T)
 for(i in filelist) {
-    name <- gsub('counts_', '', basename(i))
-    name <- gsub('.txt', '', name)
+    name <- gsub('.txt', '',basename(i))
     x <- read.table(i, col.names=c(name, 'barcode'), header = F)
     x[[name]] <- 1000000*x[[name]]/sum(x[[name]])  #Normalizes by RPM
     assign(name,x)
