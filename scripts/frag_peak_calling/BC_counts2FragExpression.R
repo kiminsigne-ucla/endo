@@ -4,7 +4,7 @@ options(stringsAsFactors = F)
 #Read in all Sequencing data for rLP5-Frag
 
 filelist = list.files(path = '../../processed_data/frag_peak_calling',
-                      pattern = '*.txt',
+                      pattern = 'rLP5*',
                       full.names = T)
 for(i in filelist) {
     name <- gsub('counts_', '', basename(i))
@@ -54,4 +54,4 @@ Frag_LB <- fragstats %>%
   select(fragment, RNA_exp_1, RNA_exp_2, RNA_exp_ave, DNA_sum_1, DNA_sum_2, DNA_ave, num_mapped_barcodes, num_integrated_barcodes, start, end, strand, variation) %>% 
   distinct() 
 
-write.table(Frag_LB, "../processed_data/frag_peak_calling/U00096.2_frag-rLP5_LB_expression.txt", quote = F, row.names = F)
+write.table(Frag_LB, "../../processed_data/frag_peak_calling/U00096.2_frag-rLP5_LB_expression.txt", quote = F, row.names = F)
