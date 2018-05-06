@@ -48,14 +48,16 @@ $(DATA)/rLP5_frag_DNA1_1.txt: $(RAW_DATA)/DNA_RNA/rLP5_frag_DNA1_1_S1_R1_001.fas
 	@ ./frag_barcode_counting.sh $(RAW_DATA)/DNA_RNA $(DATA)
 
 
-$(DATA)/U00096.2_rLP5-frag_expression.txt: $(DATA)/frag_stats.txt
+$(DATA)/U00096.2_frag-rLP5_LB_expression.txt: $(DATA)/frag_stats.txt
 	@ echo "Barcode counts to expression..."
 	@ Rscript BC_counts2FragExpression.R
 
 
 # fragment expression pileup - get expression of each fragment at every position, this will create both strands
-$(DATA)/plus_frag_pileup.wig: $(DATA)/U00096.2_rLP5-frag_expression.txt
+$(DATA)/plus_frag_pileup.wig: $(DATA)/U00096.2_frag-rLP5_LB_expression.txt
 	@ python frag_expression_pileup.py $< frag_pileup.wig 50
+	@ mv plus_frag_pileup.wig $(DATA)
+	@ mv minus_frag_pileup.wig $(DATA)
 
 
 ### call peaks based on fragment expression pileup ###
@@ -83,7 +85,7 @@ $(DATA)/U00096.2_plus_minus_called_peaks_threshold1.1_merge40_min60.fasta: \
 
 
 # peak tiling library
-$(LIB)/$(DATE)_lb_peak_tile_lib.txt: $(DATA)/U00096.2_plus_minus_called_peaks_threshold1.1_merge20_min60.fasta
+$(LIB)/$(DATE)_lb_peak_tile_lib.txt: $(DATA)/U00096.2_plus_minus_called_peaks_threshold1.1_merge40_min60.fasta
 	@ echo "Generating peak tiling library..."
 	@ python peak_tiling.py $< $(LIB)/neg_controls_no_primers.txt \
 	../../ref/synthetic_promoter_pos_controls.csv 10 150 $@
