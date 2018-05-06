@@ -1,3 +1,5 @@
+library(dplyr)
+
 Endo2 <- read.table("../../processed_data/expression_pipeline/rLP5_Endo2_expression.txt", 
                     header = T)
 
