@@ -9,8 +9,8 @@ neg_median <- median(neg$RNA_exp_ave)
 neg_sd <- sd(neg$RNA_exp_ave)
 
 # Subset all promoters that are greater than 3sd from the mean
-positive_Endo2 <- filter(Endo2, RNA_exp_ave > (neg_median+2*(neg_sd)))
-negative_Endo2 <- filter(Endo2, RNA_exp_ave < (neg_median+2*(neg_sd)))
+positive_Endo2 <- filter(Endo2, RNA_exp_ave > (neg_median+3*(neg_sd)))
+negative_Endo2 <- filter(Endo2, RNA_exp_ave < (neg_median+3*(neg_sd)))
 
 # Write out active and inactive promoters
 positive_Endo2 %>%
