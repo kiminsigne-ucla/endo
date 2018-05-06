@@ -3,14 +3,14 @@ library(dplyr)
 Endo2 <- read.table("../../processed_data/expression_pipeline/rLP5_Endo2_expression.txt", 
                     header = T)
 
-# identify 3standard deviations greater than median of negatives
+# identify two standard deviations greater than median of negatives
 neg <- subset(Endo2, grepl("neg_control", Endo2$name))
 neg_median <- median(neg$RNA_exp_ave)
 neg_sd <- sd(neg$RNA_exp_ave)
 
 # Subset all promoters that are greater than 3sd from the mean
-positive_Endo2 <- filter(Endo2, RNA_exp_ave > (neg_median+3*(neg_sd)))
-negative_Endo2 <- filter(Endo2, RNA_exp_ave < (neg_median+3*(neg_sd)))
+positive_Endo2 <- filter(Endo2, RNA_exp_ave > (neg_median+2*(neg_sd)))
+negative_Endo2 <- filter(Endo2, RNA_exp_ave < (neg_median+2*(neg_sd)))
 
 # Write out active and inactive promoters
 positive_Endo2 %>%

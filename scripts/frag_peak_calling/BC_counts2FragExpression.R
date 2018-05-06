@@ -3,31 +3,34 @@ options(stringsAsFactors = F)
 
 #Read in all Sequencing data for rLP5-Frag
 
-filelist = list.files(pattern = '*.txt')
+filelist = list.files(path = '../../processed_data/frag_peak_calling',
+                      pattern = '*.txt',
+                      full.names = T)
 for(i in filelist) {
-  x <- read.table(i, col.names=c(i, 'barcode'), header = F)
-  x[[i]] <- 1000000*x[[i]]/sum(x[[i]])  #Normalizes by RPM
-  assign(i,x)
+    name <- gsub('counts_', '', basename(i))
+    name <- gsub('.txt', '', name)
+    x <- read.table(i, col.names=c(name, 'barcode'), header = F)
+    x[[name]] <- 1000000*x[[name]]/sum(x[[name]])  #Normalizes by RPM
+    assign(name,x)
 }
 
+rLP5_frag <- full_join(rLP5_frag_DNA1_1, rLP5_frag_DNA1_2, by='barcode') %>%
+  full_join(rLP5_frag_DNA2_1, by='barcode') %>%
+  full_join(rLP5_frag_DNA2_2, by='barcode') %>%
+  full_join(rLP5_frag_RNA1_1, by='barcode') %>%
+  full_join(rLP5_frag_RNA1_2, by='barcode') %>%
+  full_join(rLP5_frag_RNA2_1, by='barcode') %>%
+  full_join(rLP5_frag_RNA2_2, by='barcode') 
 
-rLP5_frag <- full_join(rLP5_frag_DNA1_1.txt, rLP5_frag_DNA1_2.txt, by='barcode') %>%
-  full_join(., rLP5_frag_DNA2_1.txt, by='barcode') %>%
-  full_join(., rLP5_frag_DNA2_2.txt, by='barcode') %>%
-  full_join(., rLP5_frag_RNA1_1.txt, by='barcode') %>%
-  full_join(., rLP5_frag_RNA1_2.txt, by='barcode') %>%
-  full_join(., rLP5_frag_RNA2_1.txt, by='barcode') %>%
-  full_join(., rLP5_frag_RNA2_2.txt, by='barcode') 
-
-
-names(rLP5_frag) = sub(".txt","", names(rLP5_frag)) #rename all colummns that were named after text file temp <- frag_Data[c(-1,-5)]
-
-rm(list = c(filelist))
+rm(rLP5_frag_DNA1_1, rLP5_frag_DNA1_2, rLP5_frag_DNA2_1, rLP5_frag_DNA2_2,
+   rLP5_frag_RNA1_1, rLP5_frag_RNA1_2, rLP5_frag_RNA2_1, rLP5_frag_RNA2_2)
 rm(x)
 
 rLP5_frag[is.na(rLP5_frag)] <- 0
 
-mapped_fragstats <- read.table("../ref/FragStats.txt", header = F, fill=T, col.names = c('barcode', 'start', 'end', 'strand', 'fragment'))
+mapped_fragstats <- read.table("../../processed_data/frag_peak_calling/frag_stats.txt", 
+                               header = F, fill = T, 
+                               col.names = c('barcode', 'start', 'end', 'strand', 'fragment'))
 mapped_fragstats <- mapped_fragstats[!duplicated(mapped_fragstats$barcode),]
 
 fragstats <- left_join(mapped_fragstats, rLP5_frag, by ='barcode')
@@ -51,4 +54,4 @@ Frag_LB <- fragstats %>%
   select(fragment, RNA_exp_1, RNA_exp_2, RNA_exp_ave, DNA_sum_1, DNA_sum_2, DNA_ave, num_mapped_barcodes, num_integrated_barcodes, start, end, strand, variation) %>% 
   distinct() 
 
-write.table(Frag_LB, "./U00096.2_frag-rLP5_LB_expression.txt", quote = F, row.names = F)
+write.table(Frag_LB, "../processed_data/frag_peak_calling/U00096.2_frag-rLP5_LB_expression.txt", quote = F, row.names = F)
