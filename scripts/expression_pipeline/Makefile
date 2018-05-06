@@ -1,9 +1,11 @@
 MERGE_DEST=../../processed_data/endo_bc_map_merged_reads_pear
-RAW_DATA=../../raw_data/endo_bc_map
+RAW_DATA=../../raw_data/endo
 DATA=../../processed_data/expression_pipeline
 LIB=../../processed_data/lib_gen
 DATE=$(shell date +%Y%m%d)
 
+all: expression
+	
 expression: $(DATA)/rLP5_Endo2_expression.txt
 
 merge: $(MERGE_DEST)/endo_merged.fastq
@@ -12,15 +14,17 @@ map: $(DATA)/endo_mapping_barcode_statistics.txt
 
 barcode_counts: $(DATA)/counts_rLP5_Endo2_DNA1.txt
 
-active_tss_lib_gen: $(DATE)_active_tss_scrambled10_stride5.txt
+active_tss_lib: $(LIB)/$(DATE)_active_tss_scrambled10_stride5.txt
 
 
-$(MERGE_DEST)/pEndo2_84.paired.assembled.fastq: $(RAW_DATA)/pEndo2_84_R1.fastq $(RAW_DATA)/pEndo2_84_R2.fastq pearallel.sh
-	./pearallel.sh $(RAW_DATA)/pEndo2_84 $(MERGE_DEST)
+$(MERGE_DEST)/pEndo2_84.paired.assembled.fastq: $(RAW_DATA)/bc_map/pEndo2_84_R1.fastq \
+	$(RAW_DATA)/bc_map/pEndo2_84_R2.fastq pearallel.sh
+	./pearallel.sh $(RAW_DATA)/bc_map/pEndo2_84 $(MERGE_DEST)
 
 
-$(MERGE_DEST)/pEndo2_85.paired.assembled.fastq: $(RAW_DATA)/pEndo2_85_R1.fastq $(RAW_DATA)/pEndo2_85_R2.fastq pearallel.sh
-	./pearallel.sh $(RAW_DATA)/pEndo2_85 $(MERGE_DEST)
+$(MERGE_DEST)/pEndo2_85.paired.assembled.fastq: $(RAW_DATA)/bc_map/pEndo2_85_R1.fastq \
+	$(RAW_DATA)/bc_map/pEndo2_85_R2.fastq pearallel.sh
+	./pearallel.sh $(RAW_DATA)/bc_map/pEndo2_85 $(MERGE_DEST)
 
 
 $(MERGE_DEST)/endo_merged.fastq: $(MERGE_DEST)/pEndo2_84.paired.assembled.fastq $(MERGE_DEST)/pEndo2_85.paired.assembled.fastq
@@ -34,8 +38,8 @@ $(DATA)/endo_mapping_barcode_statistics.txt: $(MERGE_DEST)/endo_merged.fastq
 
 
 # use one FASTQ file to trigger barcode counting for all FASTQ files
-$(DATA)/counts_rLP5_Endo2_DNA1.txt: ../../raw_data/endo_DNA_RNA/rLP5_Endo2_DNA1.fastq
-	@ ./barcode_counting.sh $(RAW_DATA)
+$(DATA)/counts_rLP5_Endo2_DNA1.txt: $(RAW_DATA)/DNA_RNA/rLP5_Endo2_DNA1.fastq
+	@ ./endo_barcode_counting.sh $(RAW_DATA)/DNA_RNA
 	@ mv counts* $(DATA)
 
 # calculate expression
