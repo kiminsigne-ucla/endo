@@ -141,10 +141,15 @@ if __name__ == '__main__':
 			tiles[tile_name] = tile
 		else:
 			for i in range(0, len(seq), stride):
+
 				# if tile exceeds sequence length
 				if i + tile_len > len(seq):
 					start = len(seq) - tile_len
 					end = len(seq)
+
+				# # make sure full tile length contained in seq
+				# if i + tile_len > (len(seq) - stride):
+				# 	continue
 				else:
 					start = i
 					end = i + tile_len

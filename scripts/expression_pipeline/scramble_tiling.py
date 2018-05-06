@@ -140,6 +140,8 @@ if __name__ == '__main__':
 		tile_name = name + '_unscrambled'
 		tiles[tile_name] = seq
 		for i in range(0, len(seq), stride_len):
+			if i + scramble_len > len(seq):
+				continue
 			scrambled = list(seq[i:i+scramble_len])
 			random.shuffle(scrambled)
 			tile = seq[:i] + ''.join(scrambled).lower() + seq[i+scramble_len:]
