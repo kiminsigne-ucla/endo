@@ -35,8 +35,8 @@ $(DATA)/endo_mapping_barcode_statistics.txt: $(MERGE_DEST)/endo_merged.fastq
 
 
 # use one FASTQ file to trigger barcode counting for all FASTQ files
-$(DATA)/counts_rLP5_Endo2_DNA1.txt: rLP5_Endo2_DNA1.fastq
-	@ ./barcode_counting.sh
+$(DATA)/counts_rLP5_Endo2_DNA1.txt: ../../raw_data/endo_DNA_RNA/rLP5_Endo2_DNA1.fastq
+	@ ./barcode_counting.sh $(RAW_DATA)
 	@ mv counts* $(DATA)
 
 # calculate expression
