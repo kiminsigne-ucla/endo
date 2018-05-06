@@ -9,4 +9,4 @@ scripts/mismatches.txt
 processed_data/expression_pipeline/endo_mapping_barcode_statistics.txt
 *.fastq
 processed_data/frag_peak_calling/frag_stats.txt
-processed_data/frag_peak_calling/U00096.2_frag_rLP5_LB_expression.txt
+processed_data/frag_peak_calling/U00096.2_frag-rLP5_LB_expression.txt
