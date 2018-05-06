@@ -94,13 +94,14 @@ Endo2 <- Endo2 %>%
            strand = ifelse(is.na(strand), '+', strand))
 
 # create accurate var start and end from TSS position
+# parse negatives separately
+neg <- subset(Endo2, grepl("neg_control", Endo2$name))
+
 Endo2 <- Endo2 %>% 
     filter(!grepl('neg_control', name)) %>% 
     mutate(start = ifelse(strand == '+', tss_pos - 120, tss_pos - 30),
            end = ifelse(strand == '+', tss_pos + 30, tss_pos + 120))
 
-# parse negatives separately
-neg <- subset(Endo2, grepl("neg_control", Endo2$name))
 Endo2 <- neg %>% 
     mutate(coord = gsub('neg_control_', '', name)) %>% 
     separate(coord, into = c('start', 'end'), sep = ':', convert = T) %>% 
