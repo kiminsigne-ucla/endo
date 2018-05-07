@@ -3,6 +3,9 @@ from itertools import islice
 import string
 import numpy as np
 import re
+import random
+
+random.seed(123)
 
 
 def fasta_reader(filename):
@@ -102,6 +105,11 @@ def add_stuffer(sequence, stuffer, tile_len):
 	return stuffer
 
 
+def generate_random_sequence(length):
+	random_seq = ''.join([random.choice('ACGT') for i in range(length)])
+	return random_seq
+
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser("script to generate tiled regions of peak calls")
 	parser.add_argument('sequences', help='filename of input sequences, FASTA format')
@@ -109,6 +117,7 @@ if __name__ == '__main__':
 	parser.add_argument('pos_controls', help='fasta file of positive controls')
 	parser.add_argument('stride', type=int, help='distance between consecutive tiles')
 	parser.add_argument('tile_len', type=int, help='tile length')
+	parser.add_argument('--n_random', type=int, help='Number of random sequences, optional')
 	parser.add_argument('output_name', help='name of output file')
 
 	args = parser.parse_args()
@@ -117,6 +126,8 @@ if __name__ == '__main__':
 	pos_controls = parse_controls(args.pos_controls)
 	stride = args.stride
 	tile_len = args.tile_len
+	if args.n_random:
+		n_random = args.n_random
 	output_name = args.output_name
 
 	# these primers include 20bp of primer and overlaps 2bp with 6bp restriction site
@@ -166,6 +177,15 @@ if __name__ == '__main__':
 			tiles[name] = add_stuffer(seq, stuffer, tile_len)
 		else:
 			tiles[name] = seq
+
+	if args.n_random:
+		seq_len = len(sequences.values()[0])
+		# add random sequences
+		random_seqs = {}
+		for i in range(n_random):
+			random_seq = generate_random_sequence(seq_len)
+			name = 'random' + str(i)
+			tiles[name] = random_seq
 
 
 	outfile = open(output_name, 'w')			
