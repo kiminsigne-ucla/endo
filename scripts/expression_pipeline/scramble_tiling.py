@@ -5,6 +5,7 @@ import numpy as np
 import random
 import re
 
+random.seed(123)
 
 def fasta_reader(filename):
 	"""
@@ -104,7 +105,6 @@ def add_stuffer(sequence, stuffer, tile_len):
 	return stuffer
 
 
-
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser("script to generate scrambled regions tiling input sequences")
 	parser.add_argument('sequences', help='filename of input sequences, FASTA format')
@@ -112,6 +112,7 @@ if __name__ == '__main__':
 	parser.add_argument('pos_controls', help='fasta file of positive controls')
 	parser.add_argument('scramble_len', type=int, help='length of scrambled segments')
 	parser.add_argument('stride_len', type=int, help='step length between scrambled segments')
+	
 	parser.add_argument('output_name', help='name of output file')
 
 	args = parser.parse_args()
@@ -120,6 +121,7 @@ if __name__ == '__main__':
 	pos_controls = parse_controls(args.pos_controls)
 	scramble_len = args.scramble_len
 	stride_len = args.stride_len
+	n_random = args.n_random
 	output_name = args.output_name
 
 	# just grab length of input sequence
@@ -157,6 +159,7 @@ if __name__ == '__main__':
 			tiles[name] = add_stuffer(seq, stuffer, tile_len)
 		else:
 			tiles[name] = seq
+
 
 	with open(output_name, 'w') as outfile:
 		for tile_name in sorted(tiles.keys()):
