@@ -4,6 +4,7 @@ import string
 import numpy as np
 import random
 import re
+from difflib import SequenceMatcher
 
 random.seed(123)
 
@@ -105,6 +106,22 @@ def add_stuffer(sequence, stuffer, tile_len):
 	return stuffer
 
 
+def similar(a, b):
+    # must be same length sequence
+    num_same = sum([1 for i in range(len(a)) if a[i] == b[i]])
+    return num_same
+
+
+def most_scramble(sequence, n_iter):
+	'''
+	Scramble sequence n_iter times and choose the most scrambled sequence
+	'''
+	scrambled_seqs = [''.join(random.sample(list(sequence), len(sequence))) for i in range(n_iter)]
+	similarity = [similar(sequence, x) for x in scrambled_seqs]
+	max_scrambled = scrambled_seqs[np.argmin(similarity)]
+	return max_scrambled
+
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser("script to generate scrambled regions tiling input sequences")
 	parser.add_argument('sequences', help='filename of input sequences, FASTA format')
@@ -121,7 +138,6 @@ if __name__ == '__main__':
 	pos_controls = parse_controls(args.pos_controls)
 	scramble_len = args.scramble_len
 	stride_len = args.stride_len
-	n_random = args.n_random
 	output_name = args.output_name
 
 	# just grab length of input sequence
@@ -144,8 +160,10 @@ if __name__ == '__main__':
 		for i in range(0, len(seq), stride_len):
 			if i + scramble_len > len(seq):
 				continue
-			scrambled = list(seq[i:i+scramble_len])
-			random.shuffle(scrambled)
+			# scrambled = list(seq[i:i+scramble_len])
+			# random.shuffle(scrambled)
+			to_scramble = seq[i:i+scramble_len] 
+			scrambled = most_scramble(to_scramble, 100)
 			tile = seq[:i] + ''.join(scrambled).lower() + seq[i+scramble_len:]
 			# print ''.join(scrambled).lower()
 			tile_name = name + '_scrambled' + str(i) + '-' + str(i+scramble_len)
