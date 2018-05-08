@@ -117,8 +117,9 @@ if __name__ == '__main__':
 	parser.add_argument('pos_controls', help='fasta file of positive controls')
 	parser.add_argument('stride', type=int, help='distance between consecutive tiles')
 	parser.add_argument('tile_len', type=int, help='tile length')
-	parser.add_argument('--n_random', type=int, help='Number of random sequences, optional')
 	parser.add_argument('output_name', help='name of output file')
+	parser.add_argument('--n_random', type=int, help='Number of random sequences, optional')
+	parser.add_argument('--rand_length', type=int, help='length of random sequences')
 
 	args = parser.parse_args()
 	sequences = fasta_reader(args.sequences)
@@ -128,6 +129,7 @@ if __name__ == '__main__':
 	tile_len = args.tile_len
 	if args.n_random:
 		n_random = args.n_random
+		rand_length = args.rand_length
 	output_name = args.output_name
 
 	# these primers include 20bp of primer and overlaps 2bp with 6bp restriction site
@@ -179,11 +181,10 @@ if __name__ == '__main__':
 			tiles[name] = seq
 
 	if args.n_random:
-		seq_len = len(sequences.values()[0])
 		# add random sequences
 		random_seqs = {}
 		for i in range(n_random):
-			random_seq = generate_random_sequence(seq_len)
+			random_seq = generate_random_sequence(rand_length)
 			name = 'random' + str(i)
 			tiles[name] = random_seq
 
