@@ -88,7 +88,7 @@ $(DATA)/U00096.2_plus_minus_called_peaks_threshold1.1_merge40_min60.fasta: \
 $(LIB)/$(DATE)_lb_peak_tile_lib.txt: $(DATA)/U00096.2_plus_minus_called_peaks_threshold1.1_merge40_min60.fasta
 	@ echo "Generating peak tiling library..."
 	@ python peak_tiling.py $< $(LIB)/neg_controls_no_primers.txt \
-	../../ref/synthetic_promoter_pos_controls.csv 10 150 $@ --n_random 1000 --rand_length 150
+	../../ref/synthetic_promoter_pos_controls.csv 10 150 $@ $(LIB)/re_sites.fasta --n_random 1000 --rand_length 150
 
 
 print-%  : ; @echo $* = $($*)

@@ -105,8 +105,13 @@ def add_stuffer(sequence, stuffer, tile_len):
 	return stuffer
 
 
-def generate_random_sequence(length):
-	random_seq = ''.join([random.choice('ACGT') for i in range(length)])
+def generate_random_sequence(length, re_seqs):
+	re_present = True
+
+	while re_present:
+		random_seq = ''.join([random.choice('ACGT') for i in range(length)])
+		re_present = any([x in random_seq for x in re_sites])
+
 	return random_seq
 
 
@@ -118,6 +123,7 @@ if __name__ == '__main__':
 	parser.add_argument('stride', type=int, help='distance between consecutive tiles')
 	parser.add_argument('tile_len', type=int, help='tile length')
 	parser.add_argument('output_name', help='name of output file')
+	parser.add_argument('re_sites', help='fasta file, REs used for cloning, will remove sequences with RE sites')
 	parser.add_argument('--n_random', type=int, help='Number of random sequences, optional')
 	parser.add_argument('--rand_length', type=int, help='length of random sequences')
 
@@ -127,6 +133,7 @@ if __name__ == '__main__':
 	pos_controls = parse_controls(args.pos_controls)
 	stride = args.stride
 	tile_len = args.tile_len
+	re_sites = fasta_reader(args.re_sites).values()
 	if args.n_random:
 		n_random = args.n_random
 		rand_length = args.rand_length
@@ -184,7 +191,7 @@ if __name__ == '__main__':
 		# add random sequences
 		random_seqs = {}
 		for i in range(n_random):
-			random_seq = generate_random_sequence(rand_length)
+			random_seq = generate_random_sequence(rand_length, re_sites)
 			name = 'random' + str(i)
 			tiles[name] = random_seq
 

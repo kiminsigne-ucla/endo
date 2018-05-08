@@ -29,6 +29,6 @@ uniq |
 join -1 4 - FragmentBarcodes.txt | 
 awk '{print $1, $3, $4, $6, $7}' > $DIR/frag_stats.txt
 
-rm FragmentBarcode_*.fa.out
-rm Gfrag*
+rm -f FragmentBarcode_*.fa.out
+rm -f Gfrag*
 echo "Done!"
