@@ -1,7 +1,8 @@
 DATA=../../processed_data/expression_pipeline/imperfects
 
-# python generate_imperfects.py ../../ref/endo_lib_2016_controls_clean.txt tab \
-# 24 ${DATA}/endo_lib_imperfects.txt
+echo "Generating imperfects..."
+python generate_imperfects.py ../../ref/endo_lib_2016_controls_clean.txt tab \
+24 ${DATA}/endo_lib_imperfects.fasta fasta
 
 # # set cutoff, otherwise randomly choosing sequences in bootstrapping from large
 # # library takes way too long
@@ -14,6 +15,7 @@ DATA=../../processed_data/expression_pipeline/imperfects
 #  ../../ref/endo_lib_2016_controls_clean.txt ${DATA}/endo_imperfect_expression.txt
 
 # predict with uncertainty
+echo "Predicting..."
 python ../nn_regression_with_uncertainty.py hyperparameter_best_trained_model.arch.json \
 hyperparameter_best_trained_model.weights.h5 ${DATA}/endo_lib_imperfects.fasta \
 100 ${DATA}/endo_imperfects_nn_predictions_uncertain.txt
