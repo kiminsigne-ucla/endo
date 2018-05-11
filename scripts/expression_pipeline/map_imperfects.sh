@@ -14,19 +14,25 @@ DATA=../../processed_data/expression_pipeline/imperfects
 #  ${DATA}/endo_mapping_imperfect_variant_statistics.txt \
 #  ../../ref/endo_lib_2016_controls_clean.txt ${DATA}/endo_imperfect_expression.txt
 
-# predict with uncertainty
-echo "Predicting..."
-touch endo_imperfect_uncertain_predictions.txt
-for i in `seq 1 100000 3256500`
-do
-	stop=$((i+ 100001))
-	echo "Predicting $i to $stop"
-	sed -n $i,${stop}p ${DATA}/endo_lib_imperfects.fasta > chunk.fasta
-	python ../nn_regression_with_uncertainty.py \
-	../hyperparameter_best_uncertainty_trained_model.arch.json \
-	../hyperparameter_best_uncertainty_trained_model.weights.h5 \
-	chunk.fasta 100 tmp
-	cat tmp_prediction_with_uncertainty.txt >> endo_imperfect_uncertain_predictions.txt
-done
+# # predict with uncertainty
+# echo "Predicting..."
+# touch endo_imperfect_uncertain_predictions.txt
+# for i in `seq 1 100000 3256500`
+# do
+# 	stop=$((i+ 100001))
+# 	echo "Predicting $i to $stop"
+# 	sed -n $i,${stop}p ${DATA}/endo_lib_imperfects.fasta > chunk.fasta
+# 	python ../nn_regression_with_uncertainty.py \
+# 	../hyperparameter_best_uncertainty_trained_model.arch.json \
+# 	../hyperparameter_best_uncertainty_trained_model.weights.h5 \
+# 	chunk.fasta 100 tmp
+# 	cat tmp_prediction_with_uncertainty.txt >> endo_imperfect_uncertain_predictions.txt
+# done
 
-sort -k3,3 -rn endo_imperfect_uncertain_predictions.txt > endo_imperfect_uncertain_predictions_sorted.txt
+# sort -k3,3 -rn endo_imperfect_uncertain_predictions.txt > endo_imperfect_uncertain_predictions_sorted.txt
+# mv endo_imperfect_uncertain_predictions_sorted.txt ${DATA}
+
+python generate_imperfect_lib.py \
+${DATA}/endo_imperfect_uncertain_predictions.txt \
+${DATA}/endo_lib_imperfects.fasta \
+60000 ../../lib_gen/20180511_endo_imperfect_lib.txt

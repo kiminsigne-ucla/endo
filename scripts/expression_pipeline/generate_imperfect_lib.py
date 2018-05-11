@@ -1,6 +1,7 @@
 import argparse
 import string
 from itertools import islice
+import re
 
 def fasta_reader(filename):
 	"""
@@ -48,6 +49,57 @@ def reverse_complement(sequence):
     return ''.join(letters) 
 
 
+def tab_reader(filename):
+	infile = open(filename)
+	seqs = {}
+
+	for line in infile:
+		name, seq = line.strip().split('\t')
+		seqs[name] = seq
+		seqs[name] = seq
+
+	return seqs
+
+
+def add_stuffer(sequence, stuffer, tile_len):
+	# store as tuple so we can easily insert the restriction site in between the
+	# stuffer and tile
+	stuffer = (stuffer[:(tile_len - len(sequence))], sequence)
+	return stuffer
+
+
+def parse_controls(filename):
+	'''
+	Extract promoters from CSV file. There are weird quotation marks and spaces
+	so have to do some regex stuff
+	'''
+
+	infile = open(filename, 'r')
+
+	syn_promoters = {}
+
+	# read through header
+	infile.readline()
+
+	for line in infile.readlines():
+		fields = line.strip().split(',')
+		name = fields[0]
+		seq = fields[9]
+
+		# remove white space from seq
+		seq = ''.join(seq.split())
+		# remove quotations
+		match = re.search('[ACGT]{1,}', seq)
+		clean_seq = match.group(0)
+
+		# remove quotations from name, always first and last characters
+		clean_name = name.replace('\"', '')
+
+		syn_promoters['pos_control_'+clean_name] = clean_seq
+
+	return syn_promoters
+
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('predictions', help='uncertain predictions file, tab separated,\
@@ -55,12 +107,16 @@ if __name__ == '__main__':
 		order by uncertainty')
 	parser.add_argument('lib', help='reference library, fasta format')
 	parser.add_argument('lib_size', type=int, help="number of sequences")
+	parser.add_argument('neg_controls', help='fasta file of negative controls (more than 200bp from TSS either strand)')
+	parser.add_argument('pos_controls', help='fasta file of positive controls')
 	parser.add_argument('output_name', help='name of output file')
 
 	args = parser.parse_args()
 	filename = args.predictions
 	lib = args.lib
 	lib_size = args.lib_size
+	neg_controls = tab_reader(args.neg_controls)
+	pos_controls = parse_controls(args.pos_controls)
 
 	print "Reading in reference..."
 	lib = fasta_reader(lib)
@@ -68,7 +124,7 @@ if __name__ == '__main__':
 	print "Reading in predictions..."
 	predictions = {}
 	with open(filename) as infile:
-		for i in range(lib_size):
+		for i in range(lib_size+1):
 			line = infile.readline()
 			name, prediction, uncertainty = line.strip().split('\t')
 			# remove '>'
@@ -81,24 +137,49 @@ if __name__ == '__main__':
 	# skpp-285-R sk20mer-5049
 	rev_primer = 'GCTAGCCAGAAGGTACGCTTTATG'
 
+	tile_len = 150
+	# T is easiest to synthesize, won't have secondary structure
+	stuffer = 'T' * tile_len
+
 	print "Writing library..."
-	missing = 0
+	seqs = {x : lib[x] for x in predictions}
+
+	# add controls to tiles
+	seqs.update(neg_controls)
+	
+	# positive controls are shorter, need to stuff
+	for name, seq in pos_controls.items():
+		if len(seq) < tile_len:
+			seqs[name] = add_stuffer(seq, stuffer, tile_len)
+		else:
+			seqs[name] = seq
+
 	with open(args.output_name, 'w') as outfile:
-		for x in predictions:
-			seq = lib.get(x, None)
-			if seq is not None:
-				full_seq = fwd_primer + seq + rev_primer
-				reverse = best_A_content(full_seq)
-				if reverse:
-					x += '_flipped'
-					full_seq = reverse_complement(full_seq)
+		for x in seqs:
+			full_seq = fwd_primer + seq + rev_primer
+			reverse = best_A_content(full_seq)
+			if reverse:
+				x += '_flipped'
+				full_seq = reverse_complement(full_seq)
 
-				outfile.write(x + '\t' + full_seq + '\n')
-			else:
-				missing += 1
-				continue
+			outfile.write(x + '\t' + full_seq + '\n')
 
-	print missing, "missing sequences"
+	# with open(args.output_name, 'w') as outfile:
+	# 	for x in predictions:
+	# 		seq = lib.get(x, None)
+	# 		if seq is not None:
+	# 			full_seq = fwd_primer + seq + rev_primer
+	# 			reverse = best_A_content(full_seq)
+	# 			if reverse:
+	# 				x += '_flipped'
+	# 				full_seq = reverse_complement(full_seq)
+
+	# 			outfile.write(x + '\t' + full_seq + '\n')
+	# 		else:
+	# 			missing += 1
+	# 			continue
+
+	# print missing, "missing sequences"
 
 
 
