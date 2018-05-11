@@ -16,4 +16,17 @@ DATA=../../processed_data/expression_pipeline/imperfects
 
 # predict with uncertainty
 echo "Predicting..."
-python ../nn_regression_with_uncertainty.py ../hyperparameter_best_uncertainty_trained_model.arch.json ../hyperparameter_best_uncertainty_trained_model.weights.h5 chunk1.fasta 100 ${DATA}/endo_imperfects_nn_predictions_uncertain.txt
+touch endo_imperfect_uncertain_predictions.txt
+for i in `seq 1 100000 200001`
+do
+	stop=$((i+ 100001))
+	echo "Predicting $i to $stop"
+	sed -n $i,${stop}p ${DATA}/endo_lib_imperfects.fasta > chunk.fasta
+	python ../nn_regression_with_uncertainty.py \
+	../hyperparameter_best_uncertainty_trained_model.arch.json \
+	../hyperparameter_best_uncertainty_trained_model.weights.h5 \
+	chunk.fasta 100 tmp.txt
+	cat tmp.txt >> endo_imperfect_uncertain_predictions.txt
+done
+
+# 3256500
