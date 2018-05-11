@@ -113,13 +113,14 @@ if __name__ == '__main__':
 
 	args = parser.parse_args()
 	filename = args.predictions
-	lib = args.lib
 	lib_size = args.lib_size
 	neg_controls = tab_reader(args.neg_controls)
 	pos_controls = parse_controls(args.pos_controls)
+	output_name = args.output_name
 
 	print "Reading in reference..."
-	lib = fasta_reader(lib)
+	lib = fasta_reader(args.lib)
+	print len(lib)
 
 	print "Reading in predictions..."
 	predictions = {}
@@ -147,16 +148,25 @@ if __name__ == '__main__':
 	# add controls to tiles
 	seqs.update(neg_controls)
 	
-	# positive controls are shorter, need to stuff
+# positive controls are shorter, need to stuff
 	for name, seq in pos_controls.items():
 		if len(seq) < tile_len:
 			seqs[name] = add_stuffer(seq, stuffer, tile_len)
 		else:
 			seqs[name] = seq
 
-	with open(args.output_name, 'w') as outfile:
+	xhoI = 'CTCGAG'
+	with open(output_name, 'w') as outfile:
 		for x in seqs:
-			full_seq = fwd_primer + seq + rev_primer
+			seq = seqs[x]
+			if len(seq) == 2:
+				stuffer, payload = seq
+				# stuffed sequence, only use first 20bp of fwd primer, subtract 2bp from stuffer,
+				# then add the full 6bp of RE (no overlap between primer and RE anymore)
+				full_seq = fwd_primer[:20] + stuffer[:-2] + xhoI + payload + rev_primer
+			else:
+				full_seq = fwd_primer + seq + rev_primer
+		
 			reverse = best_A_content(full_seq)
 			if reverse:
 				x += '_flipped'
