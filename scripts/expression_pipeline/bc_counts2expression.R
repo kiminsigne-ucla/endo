@@ -61,14 +61,14 @@ Endo2 <- temp %>%
     filter(rLP5_Endo2_DNA1 > 0 | rLP5_Endo2_DNA2 > 0) %>%
     mutate(num_barcodes_integrated = n()) %>%
     #Filter out promoters with fewer than 3 barcodes integrated
-    filter(num_barcodes_integrated >= 4) %>% 
+    filter(num_barcodes_integrated >= 3) %>% 
     mutate(DNA_sum = (sum(rLP5_Endo2_DNA2)+sum(rLP5_Endo2_DNA1)),
            RNA_exp_1 = sum(rLP5_Endo2_RNA1)/DNA_sum,
            RNA_exp_2 = sum(rLP5_Endo2_RNA2)/DNA_sum,
            RNA_exp_ave = ((RNA_exp_1+RNA_exp_2)/2)) %>% 
     ungroup() %>% 
-    select(most_common, RNA_exp_1, RNA_exp_2, RNA_exp_ave, DNA_sum, num_barcodes, num_barcodes_integrated) %>% 
-    distinct() 
+    select(most_common, RNA_exp_1, RNA_exp_2, RNA_exp_ave, DNA_sum, num_barcodes, num_barcodes_integrated)
+
 
 #Convert sequence to variant
 var_stats <- read.table(var_stats,
