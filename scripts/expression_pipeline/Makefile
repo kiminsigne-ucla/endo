@@ -45,7 +45,9 @@ $(DATA)/counts_rLP5_Endo2_DNA1.txt: | $(RAW_DATA)/DNA_RNA/rLP5_Endo2_DNA1.fastq
 # calculate expression
 $(DATA)/rLP5_Endo2_expression.txt: $(DATA)/counts_rLP5_Endo2_DNA1.txt \
 	$(DATA)/endo_mapping_barcode_statistics.txt
-	@ Rscript bc_counts2expression.R
+	@ Rscript bc_counts2expression.R $(DATA) $(DATA)/endo_mapping_barcode_statistics.txt \
+	$(DATA)/endo_mapping_variant_statistics.txt ../../ref/endo_lib_2016_controls_clean.txt \
+	$@
 
 
 ### Generate library ###

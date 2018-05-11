@@ -10,10 +10,20 @@ library(dplyr)
 library(tidyr)
 options(stringsAsFactors = F)
 
+# expect five arguments in this order: relative path to barcode count files,
+# barcode statistics file, variant statistics file, library reference file,
+# output name
+args = commandArgs(trailingOnly=TRUE)
+count_folder <- args[1]
+bc_stats <- args[2]
+var_stats <- args[3]
+lib_file <- args[4]
+output_name <- args[5]
+
 #SET TO WORKING DIRECTORY CONTAINING BARCODE RNA AND DNA COUNTS 
 #Read in all barcode counts and normalize by Reads per Million
 
-filelist = list.files(path = '../../processed_data/expression_pipeline',
+filelist = list.files(path = count_folder,
                       pattern = '^counts_*',
                       full.names = T)
 for(i in filelist) {
@@ -34,15 +44,15 @@ rm(x)
 
 #Combine barcode counts with their promoter identity
 
-barcode_stats_Endo2 <- read.table("../../processed_data/expression_pipeline/endo_mapping_barcode_statistics.txt", 
-                                  header = T)
+barcode_stats_Endo2 <- read.table(bc_stats, header = T)
 #Remove unmapped barcodes
 mapped_barcodes <- barcode_stats_Endo2 %>% 
     filter(!is.na(most_common))
 Compare_barcode_Reps <- left_join(mapped_barcodes, rLP5_Endo2 , by ='barcode') 
 Compare_barcode_Reps[is.na(Compare_barcode_Reps)] <- 0
 
-temp <- filter(Compare_barcode_Reps, rLP5_Endo2_DNA1 > 0 | rLP5_Endo2_DNA2 > 0) #Remove barcodes with no DNA counts
+#Remove barcodes with no DNA counts
+temp <- filter(Compare_barcode_Reps, rLP5_Endo2_DNA1 > 0 | rLP5_Endo2_DNA2 > 0) 
 
 #calculate expression of promoters
 Endo2 <- temp %>% 
@@ -61,7 +71,7 @@ Endo2 <- temp %>%
     distinct() 
 
 #Convert sequence to variant
-var_stats <- read.table("../../processed_data/expression_pipeline/endo_mapping_variant_statistics.txt",
+var_stats <- read.table(var_stats,
                     header = T,
                     fill = T,
                     col.names = c('seq', 'name', 'num_barcodes', 
@@ -77,7 +87,7 @@ Endo2 <- left_join(Endo2, var_stats_unique, by = c('most_common' = 'seq')) %>%
     filter(!is.na(name))
 
 # read in ref
-ref <- read.table('../../ref/endo_lib_2016_controls_clean.txt', header = F, 
+ref <- read.table(lib_file, header = F, 
                   sep = '\t', col.names = c('name', 'seq')) %>% 
     mutate(name = gsub('>', '', name))
 
@@ -107,4 +117,4 @@ Endo2 <- neg %>%
     separate(coord, into = c('start', 'end'), sep = ':', convert = T) %>% 
     bind_rows(Endo2, .)
 
-write.table(Endo2, "../../processed_data/expression_pipeline/rLP5_Endo2_expression.txt", quote = F, row.names = F)
+write.table(Endo2, output_name, quote = F, row.names = F)
