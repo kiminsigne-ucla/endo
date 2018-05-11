@@ -86,8 +86,13 @@ if __name__ == '__main__':
 	
 	prediction, uncertainty = predict_with_uncertainty(f, data, num_classes=1, n_iter=n_iter)
 	output = np.concatenate([prediction, uncertainty], axis=1)
-
-	np.savetxt(output_prefix+'_prediction_with_uncertainty.txt', output, delimiter='\t', fmt='%f')
+	
+	# get fasta names
+	names = [line.strip() for line in open(args.data) if line.startswith('>')]
+	with open(output_prefix + '_prediction_with_uncertainty.txt', 'w') as outfile:	
+		for i in range(len(prediction)):
+			outfile.write(names[i] + '\t' + str(prediction[i][0]) + '\t' + str(uncertainty[i][0]) + '\n')
+	#np.savetxt(output_prefix+'_prediction_with_uncertainty.txt', output, delimiter='\t', fmt='%f')
 
 	
 
