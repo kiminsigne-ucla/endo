@@ -13,7 +13,12 @@ options(stringsAsFactors = F)
 # expect five arguments in this order: relative path to barcode count files,
 # barcode statistics file, variant statistics file, library reference file,
 # output name
-args = commandArgs(trailingOnly=TRUE)
+# args = commandArgs(trailingOnly=TRUE)
+args <- c('/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline', 
+          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/endo_mapping_barcode_statistics.txt', 
+          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/endo_mapping_variant_statistics.txt', 
+          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/ref/endo_lib_2016_controls_clean.txt', 
+          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/test.txt')
 count_folder <- args[1]
 bc_stats <- args[2]
 var_stats <- args[3]
@@ -118,3 +123,9 @@ Endo2 <- neg %>%
     bind_rows(Endo2, .)
 
 write.table(Endo2, output_name, quote = F, row.names = F)
+
+# # write simplified format, just sequence and expression
+# Endo2 %>%
+#     select(trimmed_seq, RNA_exp_ave) %>%
+#     write.table('../../processed_data/expression_pipeline/tss_all.txt',
+#                 sep = '\t', quote=F, row.names=F, col.names=F)
