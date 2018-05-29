@@ -122,10 +122,13 @@ Endo2 <- neg %>%
     separate(coord, into = c('start', 'end'), sep = ':', convert = T) %>% 
     bind_rows(Endo2, .)
 
+Endo2 <- Endo2 %>% 
+    mutate(exp_sum = RNA_exp_1 + RNA_exp_2)
+
 write.table(Endo2, output_name, quote = F, row.names = F)
 
-# # write simplified format, just sequence and expression
-# Endo2 %>%
-#     select(trimmed_seq, RNA_exp_ave) %>%
-#     write.table('../../processed_data/expression_pipeline/tss_all.txt',
-#                 sep = '\t', quote=F, row.names=F, col.names=F)
+# write simplified format, just sequence and expression
+Endo2 %>%
+    select(trimmed_seq, RNA_exp_ave) %>%
+    write.table('../../processed_data/expression_pipeline/tss_all.txt',
+                sep = '\t', quote=F, row.names=F, col.names=F)
