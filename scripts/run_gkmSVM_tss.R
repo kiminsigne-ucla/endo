@@ -21,7 +21,7 @@ set.seed(123)
 
 # run gkmSVM on TSS library sequences
 # read input
-active <- read.fasta('../processed_data/dragonn_output/tss_positives.fasta')
+active <- read.fasta('../processed_data/expression_pipeline/tss_positives.fasta')
 # make sure names are unique
 active_names <- paste0('seq', seq(1:length(active)))
 # get train index
@@ -38,7 +38,7 @@ write.fasta(test, names = active_names[-train_index], nbchar = 300,
             file.out = '../processed_data/gkmsvm_results/tss_positives_test.fasta')
 
 # read negative and split into train and test
-negatives <- read.fasta('../processed_data/dragonn_output/tss_negatives.fasta')
+negatives <- read.fasta('../processed_data/expression_pipeline/tss_negatives.fasta')
 # get train index
 neg_train_size = 0.75
 neg_train_index <- base::sample(seq(1:length(negatives)), 

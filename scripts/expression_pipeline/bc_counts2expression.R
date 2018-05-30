@@ -13,12 +13,12 @@ options(stringsAsFactors = F)
 # expect five arguments in this order: relative path to barcode count files,
 # barcode statistics file, variant statistics file, library reference file,
 # output name
-# args = commandArgs(trailingOnly=TRUE)
-args <- c('/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline', 
-          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/endo_mapping_barcode_statistics.txt', 
-          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/endo_mapping_variant_statistics.txt', 
-          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/ref/endo_lib_2016_controls_clean.txt', 
-          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/test.txt')
+args = commandArgs(trailingOnly=TRUE)
+args <- c('/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline',
+          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/endo_mapping_barcode_statistics.txt',
+          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/endo_mapping_variant_statistics.txt',
+          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/ref/endo_lib_2016_controls_clean.txt',
+          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/rLP5_Endo2_expression.txt')
 count_folder <- args[1]
 bc_stats <- args[2]
 var_stats <- args[3]
@@ -72,8 +72,8 @@ Endo2 <- temp %>%
            RNA_exp_2 = sum(rLP5_Endo2_RNA2)/DNA_sum,
            RNA_exp_ave = ((RNA_exp_1+RNA_exp_2)/2)) %>% 
     ungroup() %>% 
-    select(most_common, RNA_exp_1, RNA_exp_2, RNA_exp_ave, DNA_sum, num_barcodes, num_barcodes_integrated)
-
+    select(most_common, RNA_exp_1, RNA_exp_2, RNA_exp_ave, DNA_sum, num_barcodes, num_barcodes_integrated) %>% 
+    distinct()
 
 #Convert sequence to variant
 var_stats <- read.table(var_stats,

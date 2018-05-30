@@ -26,3 +26,16 @@ negative_Endo2 %>%
     filter(start > 0) %>%
     write.table('../../processed_data/expression_pipeline/tss_negatives.bed', 
                 sep = '\t', col.names = F, row.names = F, quote = F)
+
+# convert to FASTA
+system(paste('bedtools getfasta',
+             '-fi ../../ref/U00096.2.fasta',
+             '-bed ../../processed_data/expression_pipeline/tss_positives.bed',
+             '-fo ../../processed_data/expression_pipeline/tss_positives.fasta',
+             '-name -s'))
+
+system(paste('bedtools getfasta',
+             '-fi ../../ref/U00096.2.fasta',
+             '-bed ../../processed_data/expression_pipeline/tss_negatives.bed',
+             '-fo ../../processed_data/expression_pipeline/tss_negatives.fasta',
+             '-name -s'))
