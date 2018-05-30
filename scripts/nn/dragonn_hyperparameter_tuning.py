@@ -5,13 +5,31 @@ random.seed(1)
 from dragonn.models import SequenceDNN
 from dragonn.hyperparameter_search import HyperparameterSearcher, RandomSearch
 # from simdna.simulations import simulate_single_motif_detection
-from dragonn.utils import one_hot_encode, reverse_complement
+# from dragonn.utils import one_hot_encode, reverse_complement
 try:
     from sklearn.model_selection import train_test_split  # sklearn >= 0.18
 except ImportError:
     from sklearn.cross_validation import train_test_split  # sklearn < 0.18
 import sys
 import argparse
+
+
+
+def one_hot_encode(sequences):
+    sequence_length = len(sequences[0])
+    integer_type = np.int8 if sys.version_info[
+        0] == 2 else np.int32  # depends on Python version
+    integer_array = LabelEncoder().fit(np.array(('ACGTN',)).view(integer_type)).transform(
+        sequences.view(integer_type)).reshape(len(sequences), sequence_length)
+    one_hot_encoding = OneHotEncoder(
+        sparse=False, n_values=5, dtype=integer_type).fit_transform(integer_array)
+
+    return one_hot_encoding.reshape(
+        len(sequences), 1, sequence_length, 5).swapaxes(2, 3)[:, :, [0, 1, 2, 4], :]
+
+
+def reverse_complement(encoded_seqs):
+    return encoded_seqs[..., ::-1, ::-1]
 
 
 def encode_trim_pad_fasta_sequences(fname, max_length):
