@@ -10,6 +10,7 @@ try:
     from sklearn.model_selection import train_test_split  # sklearn >= 0.18
 except ImportError:
     from sklearn.cross_validation import train_test_split  # sklearn < 0.18
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 import sys
 import argparse
 

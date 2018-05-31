@@ -129,7 +129,7 @@ if __name__ == '__main__':
 	model.save(output_name)
 
 	fpr, tpr, thresholds = roc_curve(y_test, predictions)
-	with open(output_prefix + '_roc_info.txt') as outfile:
+	with open(output_name + '_roc_info.txt', 'w') as outfile:
 		for i in range(len(fpr)):
 			outfile.write(str(fpr[i]) + ',' + str(tpr[i]) + ',' + str(thresholds[i]) + '\n')
 
