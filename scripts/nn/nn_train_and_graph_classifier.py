@@ -8,6 +8,7 @@ try:
     from sklearn.model_selection import train_test_split  # sklearn >= 0.18
 except ImportError:
     from sklearn.cross_validation import train_test_split  # sklearn < 0.18
+from sklearn.metrics import roc_curve
 import sys
 import argparse
 import matplotlib.pyplot as plt
@@ -126,6 +127,11 @@ if __name__ == '__main__':
 	print('Test results: {}'.format(model.test(X_test, y_test)))
 
 	model.save(output_name)
+
+	fpr, tpr, thresholds = roc_curve(y_test, predictions)
+	with open(output_prefix + '_roc_info.txt') as outfile:
+		for i in range(len(fpr)):
+			outfile.write(str(fpr[i]) + ',' + str(tpr[i]) + ',' + str(thresholds[i]) + '\n')
 
 
 
