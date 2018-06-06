@@ -143,6 +143,7 @@ write.table(Endo2, file = output_name, quote = F, row.names = F)
 # write simple file
 Endo2 %>% 
     select(original_seq, RNA_exp_ave) %>% 
+    filter(!is.na(original_seq)) %>% 
     write.table(file = '../../processed_data/expression_pipeline/tss_all.txt',
                 quote = F, row.names = F, col.names = F)
 
