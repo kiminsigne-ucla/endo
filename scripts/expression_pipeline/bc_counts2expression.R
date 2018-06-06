@@ -117,6 +117,37 @@ Endo2 <- Endo2 %>%
     mutate(start = ifelse(strand == '+', tss_pos - 120, tss_pos - 30),
            end = ifelse(strand == '+', tss_pos + 30, tss_pos + 120))
 
+# get original (unflipped) sequence based on coordinates
+Endo2 %>% 
+    mutate(chrom = 'U00096.2',
+           score = '.') %>% 
+    select(chrom, start, end, name, score, strand) %>%
+    filter(start > 0) %>% 
+    write.table(file = '../../processed_data/expression_pipeline/endo_bed.txt',
+                sep = '\t', quote = F, col.names = F, row.names = F)
+
+system(paste(' bedtools getfasta',
+             '-fi ../../ref/U00096.2.fasta',
+             '-bed ../../processed_data/expression_pipeline/endo_bed.txt',
+             '-fo ../../ref/endo_lib_original_seq.txt',
+             '-name -s -tab'))
+
+original <- read.table('../../ref/endo_lib_original_seq.txt', header = F,
+                       col.names = c('name', 'original_seq'))
+
+Endo2 <- left_join(Endo2, original, by = 'name') %>% 
+    select(-seq)
+
+write.table(Endo2, file = output_name, quote = F, row.names = F)
+
+# write simple file
+Endo2 %>% 
+    select(original_seq, RNA_exp_ave) %>% 
+    write.table(file = '../../processed_data/expression_pipeline/tss_all.txt',
+                quote = F, row.names = F, col.names = F)
+
+
+
 Endo2 <- neg %>% 
     mutate(coord = gsub('neg_control_', '', name)) %>% 
     separate(coord, into = c('start', 'end'), sep = ':', convert = T) %>% 
