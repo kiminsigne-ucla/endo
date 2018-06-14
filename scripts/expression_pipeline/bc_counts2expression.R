@@ -145,6 +145,7 @@ Endo2 %>%
     select(original_seq, RNA_exp_ave) %>% 
     filter(!is.na(original_seq)) %>% 
     write.table(file = '../../processed_data/expression_pipeline/tss_all.txt',
+                sep = '\t',
                 quote = F, row.names = F, col.names = F)
 
 
@@ -164,3 +165,10 @@ Endo2 %>%
     select(trimmed_seq, RNA_exp_ave) %>%
     write.table('../../processed_data/expression_pipeline/tss_all.txt',
                 sep = '\t', quote=F, row.names=F, col.names=F)
+
+Endo2 %>% 
+    mutate(log_RNA_exp_ave = log(RNA_exp_ave)) %>% 
+    select(trimmed_seq, log_RNA_exp_ave) %>% 
+    write.table('../../processed_data/expression_pipeline/tss_all_log.txt',
+                sep = '\t', quote=F, row.names=F, col.names=F)
+    
