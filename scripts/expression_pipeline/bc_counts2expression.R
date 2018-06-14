@@ -169,6 +169,7 @@ Endo2 %>%
 Endo2 %>% 
     mutate(log_RNA_exp_ave = log(RNA_exp_ave)) %>% 
     select(trimmed_seq, log_RNA_exp_ave) %>% 
+    filter(is.finite(log_RNA_exp_ave)) %>% 
     write.table('../../processed_data/expression_pipeline/tss_all_log.txt',
                 sep = '\t', quote=F, row.names=F, col.names=F)
     
