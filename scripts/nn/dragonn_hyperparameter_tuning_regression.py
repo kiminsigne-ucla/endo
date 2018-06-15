@@ -43,6 +43,47 @@ def one_hot_encode_2d(sequences):
     # vector instead of split into 1x4 matrix. n-features = 4 * sequence_length
     return one_hot_encoding
 
+
+def encode_trim_pad_fasta_sequences(fname, max_length):
+    """
+    One hot encodes sequences in fasta file. If sequences are too long, they will
+    be trimmed to the center. If too short, they will be padded with Ns
+    """
+    name, seq_chars = None, []
+    sequences = []
+    with open(fname) as fp:
+        for line in fp:
+            line = line.rstrip()
+            if line.startswith(">"):
+                if name:
+                	seq = ''.join(seq_chars).upper()
+                	# this will center the string, and pad with Ns
+                	if len(seq) > max_length:
+                		diff = len(seq) - max_length
+                		# diff%2 returns 1 if odd
+                		trim_length = int(diff / 2)
+                		seq = seq[trim_length : -(trim_length + diff%2)]
+                	else:
+                		seq = seq.center(max_length, 'N')
+                	sequences.append(seq)
+                name, seq_chars = line, []
+            else:
+                seq_chars.append(line)
+    if name is not None:
+    	seq = ''.join(seq_chars).upper()
+    	# this will center the string, and pad with Ns
+    	if len(seq) > max_length:
+    		diff = len(seq) - max_length
+    		# diff%2 returns 1 if odd
+    		trim_length = int(diff / 2)
+    		seq = seq[trim_length : -(trim_length + diff%2)]
+    	else:
+    		seq = seq.center(max_length, 'N')
+        sequences.append(seq)
+
+    return one_hot_encode(np.array(sequences))
+
+
 if __name__ == '__main__':
 
 	parser = argparse.ArgumentParser()
@@ -77,8 +118,9 @@ if __name__ == '__main__':
 
 	# read in sequences and labels
 	print("loading sequence data...")
-	seqs = [line.split('\t')[0] for line in open(sequences)]
-	X = one_hot_encode(np.array(seqs))
+	# seqs = [line.split('\t')[0] for line in open(sequences)]
+	# X = one_hot_encode(np.array(seqs))
+	X = encode_trim_pad_fasta_sequences(sequences, seq_length)
 	y = np.array([float(line.strip().split('\t')[1]) for line in open(sequences)])
 
 	print('Partitioning data into training, validation and test sets...')

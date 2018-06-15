@@ -30,6 +30,46 @@ def one_hot_encode(sequences):
         len(sequences), 1, sequence_length, 5).swapaxes(2, 3)[:, :, [0, 1, 2, 4], :]
 
 
+def encode_trim_pad_fasta_sequences(fname, max_length):
+    """
+    One hot encodes sequences in fasta file. If sequences are too long, they will
+    be trimmed to the center. If too short, they will be padded with Ns
+    """
+    name, seq_chars = None, []
+    sequences = []
+    with open(fname) as fp:
+        for line in fp:
+            line = line.rstrip()
+            if line.startswith(">"):
+                if name:
+                	seq = ''.join(seq_chars).upper()
+                	# this will center the string, and pad with Ns
+                	if len(seq) > max_length:
+                		diff = len(seq) - max_length
+                		# diff%2 returns 1 if odd
+                		trim_length = int(diff / 2)
+                		seq = seq[trim_length : -(trim_length + diff%2)]
+                	else:
+                		seq = seq.center(max_length, 'N')
+                	sequences.append(seq)
+                name, seq_chars = line, []
+            else:
+                seq_chars.append(line)
+    if name is not None:
+    	seq = ''.join(seq_chars).upper()
+    	# this will center the string, and pad with Ns
+    	if len(seq) > max_length:
+    		diff = len(seq) - max_length
+    		# diff%2 returns 1 if odd
+    		trim_length = int(diff / 2)
+    		seq = seq[trim_length : -(trim_length + diff%2)]
+    	else:
+    		seq = seq.center(max_length, 'N')
+        sequences.append(seq)
+
+    return one_hot_encode(np.array(sequences))
+
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser('Train keras sequential CNN with regression and plot correlation')
 	parser.add_argument('sequences', help='tab-separated, two columns. First is sequence, second is continuous value')
@@ -60,9 +100,9 @@ if __name__ == '__main__':
 	uncertain = args.uncertain
 
 	print("loading sequence data...")
-	seqs = [line.split('\t')[0] for line in open(sequences)]
-
-	X = one_hot_encode(np.array(seqs))
+	# seqs = [line.split('\t')[0] for line in open(sequences)]
+	# X = one_hot_encode(np.array(seqs))
+	X = encode_trim_pad_fasta_sequences(sequences, seq_length)
 	y = np.array([float(line.strip().split('\t')[1]) for line in open(sequences)])
 
 	# need test index so we can grab these sequences later and output them for 
