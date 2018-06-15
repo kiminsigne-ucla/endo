@@ -93,8 +93,8 @@ if __name__ == '__main__':
 	max_layer = 4
 	# min_filter = 5
 	# max_filter = 100
-	min_conv_width = 6
-	max_conv_width = 30
+	min_conv_width = 1
+	max_conv_width = 10
 	min_dropout = 0.1
 	max_dropout = 0.9
 
