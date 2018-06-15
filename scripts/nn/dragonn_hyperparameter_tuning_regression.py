@@ -91,7 +91,7 @@ if __name__ == '__main__':
 	# read in sequences and labels
 	print("loading sequence data...")
 	seqs = [line.split('\t')[0] for line in open(sequences)]
-	padded_seqs = [pad_sequence(x, seq_length) for x in sequences]
+	padded_seqs = [pad_sequence(x, seq_length) for x in seqs]
 	# X = one_hot_encode(np.array(seqs))
 	X = one_hot_encode(np.array(padded_seqs))
 	y = np.array([float(line.strip().split('\t')[1]) for line in open(sequences)])
