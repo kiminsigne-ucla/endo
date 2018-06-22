@@ -30,6 +30,17 @@ def one_hot_encode(sequences):
         len(sequences), 1, sequence_length, 5).swapaxes(2, 3)[:, :, [0, 1, 2, 4], :]
 
 
+def pad_sequence(seq, max_length):
+	if len(seq) > max_length:
+		diff = len(seq) - max_length
+		# diff%2 returns 1 if odd
+		trim_length = int(diff / 2)
+		seq = seq[trim_length : -(trim_length + diff%2)]
+	else:
+		seq = seq.center(max_length, 'N')
+
+	return seq
+
 def encode_trim_pad_fasta_sequences(fname, max_length):
     """
     One hot encodes sequences in fasta file. If sequences are too long, they will
@@ -100,9 +111,10 @@ if __name__ == '__main__':
 	uncertain = args.uncertain
 
 	print("loading sequence data...")
-	# seqs = [line.split('\t')[0] for line in open(sequences)]
-	# X = one_hot_encode(np.array(seqs))
-	X = encode_trim_pad_fasta_sequences(sequences, seq_length)
+	seqs = [line.split('\t')[0] for line in open(sequences)]
+	padded_seqs = [pad_sequence(x, seq_length) for x in seqs]
+	X = one_hot_encode(np.array(padded_seqs))
+	# X = encode_trim_pad_fasta_sequences(sequences, seq_length)
 	y = np.array([float(line.strip().split('\t')[1]) for line in open(sequences)])
 
 	# need test index so we can grab these sequences later and output them for 
