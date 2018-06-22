@@ -54,3 +54,8 @@ Frag_LB <- fragstats %>%
   distinct() 
 
 write.table(Frag_LB, "../../processed_data/frag_peak_calling/U00096.2_frag-rLP5_LB_expression.txt", quote = F, row.names = F)
+
+Frag_LB %>% 
+    select(fragment, RNA_exp_ave) %>% 
+    write.table('../../processed_data/frag_peak_calling/frag_expression.txt', sep = '\t',
+                quote = F, row.names = F, col.names = F)

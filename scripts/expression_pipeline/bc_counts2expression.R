@@ -14,11 +14,17 @@ options(stringsAsFactors = F)
 # barcode statistics file, variant statistics file, library reference file,
 # output name
 args = commandArgs(trailingOnly=TRUE)
-args <- c('/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline',
-          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/endo_mapping_barcode_statistics.txt',
-          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/endo_mapping_variant_statistics.txt',
-          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/ref/endo_lib_2016_controls_clean.txt',
-          '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/rLP5_Endo2_expression.txt')
+# args <- c('/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline',
+#           '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/endo_mapping_barcode_statistics.txt',
+#           '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/endo_mapping_variant_statistics.txt',
+#           '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/ref/endo_lib_2016_controls_clean.txt',
+#           '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/rLP5_Endo2_expression.txt')
+
+args <- c('../../processed_data/expression_pipeline',
+          '../../processed_data/expression_pipeline/imperfects/endo_mapping_imperfect_barcode_statistics.txt',
+          '../../processed_data/expression_pipeline/imperfects/endo_mapping_imperfect_variant_statistics.txt',
+          '../../processed_data/expression_pipeline/imperfects/endo_lib_imperfects.txt',
+          '../../processed_data/expression_pipeline/imperfects/endo_imperfect_expression.txt')
 count_folder <- args[1]
 bc_stats <- args[2]
 var_stats <- args[3]
@@ -60,13 +66,14 @@ Compare_barcode_Reps[is.na(Compare_barcode_Reps)] <- 0
 temp <- filter(Compare_barcode_Reps, rLP5_Endo2_DNA1 > 0 | rLP5_Endo2_DNA2 > 0) 
 
 #calculate expression of promoters
+barcode_cutoff <- 1
 Endo2 <- temp %>% 
-    group_by(most_common) %>% 
-    mutate(num_barcodes = n()) %>%
     filter(rLP5_Endo2_DNA1 > 0 | rLP5_Endo2_DNA2 > 0) %>%
-    mutate(num_barcodes_integrated = n()) %>%
+    group_by(most_common) %>% 
+    mutate(num_barcodes = n(),
+           num_barcodes_integrated = n()) %>%
     #Filter out promoters with fewer than 3 barcodes integrated
-    filter(num_barcodes_integrated >= 3) %>% 
+    filter(num_barcodes_integrated >= barcode_cutoff) %>% 
     mutate(DNA_sum = (sum(rLP5_Endo2_DNA2)+sum(rLP5_Endo2_DNA1)),
            RNA_exp_1 = sum(rLP5_Endo2_RNA1)/DNA_sum,
            RNA_exp_2 = sum(rLP5_Endo2_RNA2)/DNA_sum,
@@ -88,7 +95,7 @@ var_stats_unique <- var_stats[!duplicated(var_stats$name), ]
 
 Endo2 <- left_join(Endo2, var_stats_unique, by = c('most_common' = 'seq')) %>% 
     select('name', 'RNA_exp_1', 'RNA_exp_2', 'RNA_exp_ave', 'DNA_sum',
-           'num_barcodes', 'num_barcodes_integrated') %>% 
+           'num_barcodes', 'num_barcodes_integrated', 'most_common') %>% 
     filter(!is.na(name))
 
 # read in ref
@@ -98,78 +105,67 @@ ref <- read.table(lib_file, header = F,
 
 Endo2 <- left_join(Endo2, ref, by = 'name')
 
-# remove primers
-Endo2 <- Endo2 %>% 
-    mutate(trimmed_seq = substring(seq, 25, 174))
 
-# separate name into fields
-Endo2 <- Endo2 %>% 
-    separate(name, into = c('source', 'tss_pos', 'strand'), sep = ',', remove = F) %>% 
-    mutate(tss_pos = as.numeric(tss_pos),
-           strand = ifelse(is.na(strand), '+', strand))
-
-# create accurate var start and end from TSS position
-# parse negatives separately
-neg <- subset(Endo2, grepl("neg_control", Endo2$name))
-
-Endo2 <- Endo2 %>% 
-    filter(!grepl('neg_control', name)) %>% 
-    mutate(start = ifelse(strand == '+', tss_pos - 120, tss_pos - 30),
-           end = ifelse(strand == '+', tss_pos + 30, tss_pos + 120))
-
-# get original (unflipped) sequence based on coordinates
-Endo2 %>% 
-    mutate(chrom = 'U00096.2',
-           score = '.') %>% 
-    select(chrom, start, end, name, score, strand) %>%
-    filter(start > 0) %>% 
-    write.table(file = '../../processed_data/expression_pipeline/endo_bed.txt',
-                sep = '\t', quote = F, col.names = F, row.names = F)
-
-system(paste(' bedtools getfasta',
-             '-fi ../../ref/U00096.2.fasta',
-             '-bed ../../processed_data/expression_pipeline/endo_bed.txt',
-             '-fo ../../ref/endo_lib_original_seq.txt',
-             '-name -s -tab'))
-
-original <- read.table('../../ref/endo_lib_original_seq.txt', header = F,
-                       col.names = c('name', 'original_seq'))
-
-Endo2 <- left_join(Endo2, original, by = 'name') %>% 
-    select(-seq)
+if(!grepl('imperfect', output_name)){
+    # remove primers
+    Endo2 <- Endo2 %>% 
+        mutate(trimmed_seq = substring(seq, 25, 174))
+    # separate name into fields
+    Endo2 <- Endo2 %>% 
+        separate(name, into = c('source', 'tss_pos', 'strand'), sep = ',', remove = F) %>% 
+        mutate(tss_pos = as.numeric(tss_pos),
+               strand = ifelse(is.na(strand), '+', strand))
+    
+    # create accurate var start and end from TSS position
+    # parse negatives separately
+    neg <- subset(Endo2, grepl("neg_control", Endo2$name))
+    
+    Endo2 <- Endo2 %>% 
+        filter(!grepl('neg_control', name)) %>% 
+        mutate(start = ifelse(strand == '+', tss_pos - 120, tss_pos - 30),
+               end = ifelse(strand == '+', tss_pos + 30, tss_pos + 120))
+    
+    # get original (unflipped) sequence based on coordinates
+    Endo2 %>% 
+        mutate(chrom = 'U00096.2',
+               score = '.') %>% 
+        select(chrom, start, end, name, score, strand) %>%
+        filter(start > 0) %>% 
+        write.table(file = '../../processed_data/expression_pipeline/endo_bed.txt',
+                    sep = '\t', quote = F, col.names = F, row.names = F)
+    
+    system(paste(' bedtools getfasta',
+                 '-fi ../../ref/U00096.2.fasta',
+                 '-bed ../../processed_data/expression_pipeline/endo_bed.txt',
+                 '-fo ../../ref/endo_lib_original_seq.txt',
+                 '-name -s -tab'))
+    
+    original <- read.table('../../ref/endo_lib_original_seq.txt', header = F,
+                           col.names = c('name', 'original_seq'))
+    
+    Endo2 <- left_join(Endo2, original, by = 'name') %>% 
+        select(-seq)
+    
+    # write simple file
+    Endo2 %>% 
+        select(original_seq, RNA_exp_ave) %>% 
+        filter(!is.na(original_seq)) %>% 
+        write.table(file = '../../processed_data/expression_pipeline/tss_all.txt',
+                    sep = '\t',
+                    quote = F, row.names = F, col.names = F)
+}
 
 write.table(Endo2, file = output_name, quote = F, row.names = F)
 
-# write simple file
-Endo2 %>% 
-    select(original_seq, RNA_exp_ave) %>% 
-    filter(!is.na(original_seq)) %>% 
-    write.table(file = '../../processed_data/expression_pipeline/tss_all.txt',
-                sep = '\t',
-                quote = F, row.names = F, col.names = F)
 
+# Endo2 <- neg %>% 
+#     mutate(coord = gsub('neg_control_', '', name)) %>% 
+#     separate(coord, into = c('start', 'end'), sep = ':', convert = T) %>% 
+#     bind_rows(Endo2, .)
+# 
+# Endo2 <- Endo2 %>% 
+#     mutate(exp_sum = RNA_exp_1 + RNA_exp_2)
+# 
+# write.table(Endo2, output_name, quote = F, row.names = F)
 
-
-Endo2 <- neg %>% 
-    mutate(coord = gsub('neg_control_', '', name)) %>% 
-    separate(coord, into = c('start', 'end'), sep = ':', convert = T) %>% 
-    bind_rows(Endo2, .)
-
-Endo2 <- Endo2 %>% 
-    mutate(exp_sum = RNA_exp_1 + RNA_exp_2)
-
-write.table(Endo2, output_name, quote = F, row.names = F)
-
-# write simplified format, just sequence and expression
-Endo2 %>%
-    select(trimmed_seq, RNA_exp_ave) %>%
-    write.table('../../processed_data/expression_pipeline/tss_all.txt',
-                sep = '\t', quote=F, row.names=F, col.names=F)
-
-Endo2 %>% 
-    mutate(log_RNA_exp_ave = log(RNA_exp_ave)) %>% 
-    select(trimmed_seq, log_RNA_exp_ave) %>% 
-    filter(is.finite(log_RNA_exp_ave)) %>% 
-    write.table('../../processed_data/expression_pipeline/tss_all_log.txt',
-                sep = '\t', quote=F, row.names=F, col.names=F)
     
