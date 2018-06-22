@@ -34,7 +34,7 @@ def library_reader(filename, primer_len, rev_complement=True, format = 'csv'):
 
 			if rev_complement:
 				rc_seq = reverse_complement(seq)
-				lib[rc_seq] = name
+				lib[rc_seq] = name + '_rc'
 
 			lib[seq] = name
 
