@@ -133,5 +133,7 @@ if __name__ == '__main__':
 	model = searcher.best_model
 	# Test model
 	print('Test results: {}'.format(model.score(X_test, y_test)))
+	# save model
+	model.save('hyperparam_tuned_model')
 
 
