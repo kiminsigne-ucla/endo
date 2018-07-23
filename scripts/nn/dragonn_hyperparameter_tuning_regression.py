@@ -109,7 +109,7 @@ if __name__ == '__main__':
 	# min_filter = 5
 	# max_filter = 100
 	min_conv_width = 1
-	max_conv_width = 10
+	max_conv_width = 30
 	min_dropout = 0.1
 	max_dropout = 0.9
 
@@ -133,5 +133,7 @@ if __name__ == '__main__':
 	model = searcher.best_model
 	# Test model
 	print('Test results: {}'.format(model.score(X_test, y_test)))
+	# save model
+	model.save('hyperparam_tuned_model')
 
 

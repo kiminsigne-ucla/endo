@@ -171,7 +171,7 @@ if __name__ == '__main__':
 	print('Test results: {}'.format(corr))
 	model.save(output_name + '_trained_model')
 
-	test_sequences = [seqs[i] for i in range(len(seqs)) if i in random_test_index]
+	test_sequences = [seqs[i] for i in random_test_index]
 	
 	if uncertain:
 		with open(output_name + '_predictions.txt', 'w') as outfile:
