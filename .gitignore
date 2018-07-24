@@ -13,6 +13,7 @@ processed_data/endo_scramble/pEndoScramble_80.paired.assembled.fastq
 processed_data/endo_scramble/pEndoScramble_81.paired.discarded.fastq
 processed_data/endo_scramble/pEndoScramble_80.paired.discarded.fastq
 processed_data/endo_scramble/endo_scramble_merged.fastq
+processed_data/endo_scramble/endo_scramble_mapping_barcode_statistics.txt
 processed_data/endo_bc_map_merged_reads_pear/pEndo2_85.paired.assembled.fastq
 processed_data/endo_bc_map_merged_reads_pear/pEndo2_84.paired.assembled.fastq
 processed_data/endo_bc_map_merged_reads_pear/pEndo2_85.paired.discarded.fastq
