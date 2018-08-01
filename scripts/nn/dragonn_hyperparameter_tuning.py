@@ -150,4 +150,6 @@ if __name__ == '__main__':
 	# Test model
 	print('Test results: {}'.format(model.test(X_test, y_test)))
 
+	model.save('hyperparam_tuned_best_model')
+
 
