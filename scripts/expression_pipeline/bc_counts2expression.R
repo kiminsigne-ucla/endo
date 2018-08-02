@@ -14,17 +14,11 @@ options(stringsAsFactors = F)
 # barcode statistics file, variant statistics file, library reference file,
 # output name
 args = commandArgs(trailingOnly=TRUE)
-# args <- c('/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline',
-#           '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/endo_mapping_barcode_statistics.txt',
-#           '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/endo_mapping_variant_statistics.txt',
-#           '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/ref/endo_lib_2016_controls_clean.txt',
-#           '/Users/Kimberly/Documents/projects/ecoli_promoters/endo/processed_data/expression_pipeline/rLP5_Endo2_expression.txt')
-
 args <- c('../../processed_data/expression_pipeline',
-          '../../processed_data/expression_pipeline/imperfects/endo_mapping_imperfect_barcode_statistics.txt',
-          '../../processed_data/expression_pipeline/imperfects/endo_mapping_imperfect_variant_statistics.txt',
-          '../../processed_data/expression_pipeline/imperfects/endo_lib_imperfects.txt',
-          '../../processed_data/expression_pipeline/imperfects/endo_imperfect_expression.txt')
+          '../../processed_data/expression_pipeline/endo_mapping_imperfect_barcode_statistics.txt',
+          '../../processed_data/expression_pipeline/endo_mapping_imperfect_variant_statistics.txt',
+          '../../processed_data/expression_pipeline/endo_lib_imperfects.txt',
+          '../../processed_data/expression_pipeline/endo_imperfect_expression.txt')
 count_folder <- args[1]
 bc_stats <- args[2]
 var_stats <- args[3]

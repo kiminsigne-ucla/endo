@@ -2,7 +2,7 @@ DATA=../../processed_data/expression_pipeline/imperfects
 
 echo "Generating imperfects..."
 python generate_imperfects.py ../../ref/endo_lib_original_seq.txt tab \
-24 ${DATA}/endo_lib_imperfects.txt txt
+0 ${DATA}/endo_lib_imperfects.txt txt
 
 # set cutoff, otherwise randomly choosing sequences in bootstrapping from large
 # library takes way too long
