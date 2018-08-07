@@ -134,12 +134,9 @@ if __name__ == '__main__':
 			outfile.write(str(fpr[i]) + ',' + str(tpr[i]) + ',' + str(thresholds[i]) + '\n')
 
 	precision, recall, thresholds = precision_recall_curve(y_test, predictions)
+#	print(len(precision), len(recall), len(thresholds))
 	with open(output_name + '_pr_info.txt', 'w') as outfile:
-		for i in range(len(precision)):
+		for i in range(len(thresholds)):
 			outfile.write(str(precision[i]) + ',' + str(recall[i]) + ',' + str(thresholds[i]) + '\n')
-
-
-
-
 
 
