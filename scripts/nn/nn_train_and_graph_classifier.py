@@ -8,7 +8,7 @@ try:
     from sklearn.model_selection import train_test_split  # sklearn >= 0.18
 except ImportError:
     from sklearn.cross_validation import train_test_split  # sklearn < 0.18
-from sklearn.metrics import roc_curve
+from sklearn.metrics import roc_curve, precision_recall_curve
 import sys
 import argparse
 import matplotlib.pyplot as plt
@@ -132,6 +132,11 @@ if __name__ == '__main__':
 	with open(output_name + '_roc_info.txt', 'w') as outfile:
 		for i in range(len(fpr)):
 			outfile.write(str(fpr[i]) + ',' + str(tpr[i]) + ',' + str(thresholds[i]) + '\n')
+
+	precision, recall, thresholds = precision_recall_curve(y_test, predictions)
+	with open(output_name + '_pr_info.txt', 'w') as outfile:
+		for i in range(len(precision)):
+			outfile.write(str(precision[i]) + ',' + str(recall[i]) + ',' + str(thrsholds[i]) + '\n')
 
 
 
