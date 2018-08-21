@@ -59,3 +59,27 @@ Frag_LB %>%
     select(fragment, RNA_exp_ave) %>% 
     write.table('../../processed_data/frag_peak_calling/frag_expression.txt', sep = '\t',
                 quote = F, row.names = F, col.names = F)
+
+Frag_LB <- read.table('../../processed_data/frag_peak_calling/U00096.2_frag-rLP5_LB_expression.txt',
+                      header = T) %>% 
+    mutate(frag_length = end - start)
+
+ggplot(Frag_LB, aes(frag_length)) + geom_histogram(binwidth = 1) +
+    geom_vline(xintercept = median(Frag_LB$frag_length), linetype = 'dashed') +
+    labs(x = 'fragment length')
+
+corr <- cor(Frag_LB$RNA_exp_1, Frag_LB$RNA_exp_2)
+ggplot(Frag_LB, aes(RNA_exp_1, RNA_exp_2)) + geom_point(alpha = 0.50) +
+    scale_x_log10() + scale_y_log10() + annotation_logticks(sides = 'bl') +
+    labs(x = 'replicate 1', y = 'replicate 2') +
+    annotate('text', x = 100, y = 0.5, label = paste0('r = ', signif(corr, 3)),
+             size = 6)
+
+peaks <- read.table('../../processed_data/frag_peak_calling/U00096.2_plus_minus_called_peaks_threshold1.1_merge40_min60.bed',
+                    col.names = c('chrom', 'start', 'end', 'name', 'total_exp', 'strand'))
+peaks <- peaks %>% 
+    mutate(length = end - start)
+
+ggplot(peaks, aes(length)) + geom_histogram(binwidth = 10) +
+    geom_vline(xintercept = median(peaks$length), linetype = 'dashed') +
+    labs(x = 'peak length')
