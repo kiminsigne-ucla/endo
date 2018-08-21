@@ -4,7 +4,7 @@ DATA=../../processed_data/endo_tss/lb
 LIB=../../processed_data/lib_gen
 DATE=$(shell date +%Y%m%d)
 
-all: expression
+all: map expression
 	
 expression: $(DATA)/rLP5_Endo2_lb_expression.txt
 
@@ -16,7 +16,7 @@ barcode_counts: $(DATA)/counts_rLP5_Endo2_DNA1.txt
 
 active_tss_lib: $(LIB)/$(DATE)_active_tss_scrambled10_stride5.txt
 
-
+# mapping
 $(MERGE_DEST)/pEndo2_84.paired.assembled.fastq: $(RAW_DATA)/bc_map/pEndo2_84_R1.fastq \
 	$(RAW_DATA)/bc_map/pEndo2_84_R2.fastq pearallel.sh
 	./pearallel.sh $(RAW_DATA)/bc_map/pEndo2_84 $(MERGE_DEST)
@@ -36,6 +36,7 @@ $(DATA)/endo_lb_mapping_barcode_statistics.txt: $(MERGE_DEST)/endo_lb_merged.fas
 	tab 150 24 end 20 $(DATA)/endo_lb_mapping --controls ../../ref/synthetic_promoter_pos_controls_formatted.txt \
 	--controls_primer_len 0
 
+# RNA barcode counting
 
 # use one FASTQ file to trigger barcode counting for all FASTQ files
 $(DATA)/counts_rLP5_Endo2_DNA1.txt: | $(RAW_DATA)/DNA_RNA/rLP5_Endo2_DNA1.fastq
