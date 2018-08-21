@@ -1,4 +1,5 @@
 *.fastq
+processed_data/endo_tss/old/
 processed_data/frag_peak_calling/sam_stats.txt
 processed_data/frag_peak_calling/frag_stats.txt
 processed_data/frag_peak_calling/3prime.txt
