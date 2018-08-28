@@ -99,6 +99,11 @@ Total time 16.94 mins
 
 ```
 
+- Lose 62.7% of barcodes when filtering for barcodes with at least 5 reads. I changed it to 
+3 reads and gained 696062
+- Next step, lose 7.8% to contaminated barcodes
+
+
 ```{r}
 bc_map <- read.table('bc-map_results.txt', sep = ',', header = F)
 colnames(bc_map) <- c('barcode', 'variant', 'count')
