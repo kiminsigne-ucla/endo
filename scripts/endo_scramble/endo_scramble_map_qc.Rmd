@@ -1,0 +1,145 @@
+---
+title: "Endogenous TSS scramble library mapping"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r, echo = F, include = F}
+setwd("~/Documents/projects/ecoli_promoters/endo/scripts/endo_scramble")
+options(stringsAsFactors = F)
+options(scipen = 10000)
+library(dplyr)
+library(tidyr)
+library(cowplot)
+library(ggplot2)
+
+bc_stats <- read.table('../../processed_data/endo_scramble/endo_scramble_mapping_barcode_statistics.txt',
+                       sep = '\t', header = T)
+
+var_stats <- read.table('../../processed_data/endo_scramble/endo_scramble_mapping_variant_statistics.txt',
+                       sep = '\t', header = T)
+
+ref <- read.table('../../ref/20180507_active_tss_scrambled10_stride5.txt', sep = '\t',
+                  col.names = c('name', 'sequence'))
+```
+
+Mapping results:
+```
+Number of reads: 29997877
+Reading in library reference...
+Extracting perfect reads...
+Percent perfect: 0.169511329085
+Number of unique barcodes for perfect reads:  1632913
+Filter by barcode frequency...
+Number of barcodes > 2: 749914
+Mapping...
+Bootstrapping reference sequences to obtain cutoff... cutoff is Levenshtein distance  74.0
+Filtering and writing results...
+Percent of library represented by final barcodes: 0.990981449387
+Number of final barcodes:  744936
+```
+
+
+How many unique barcodes per variant?
+```{r, echo = F}
+ggplot(var_stats, aes(num_barcodes_unique)) + geom_histogram(binwidth = 1) +
+    geom_vline(xintercept = median(var_stats$num_barcodes_unique), linetype = 'dashed') +
+    labs(x = 'number of unique barcodes per variant')
+```
+
+```{r, echo = F}
+summary(var_stats$num_barcodes_unique)
+```
+
+
+What is the number of reads per variant (aka number of non-unique barcodes)?
+```{r, echo = F}
+ggplot(var_stats, aes(num_barcodes)) + geom_histogram(binwidth = 1) +
+    labs(x = 'number of reads per variant')
+```
+
+
+```{r, echo = F}
+summary(var_stats$num_barcodes)
+```
+
+How many reads per barcode?
+
+```{r, echo = F}
+ggplot(bc_stats, aes(num_reads)) + geom_histogram(binwidth = 1) + 
+    geom_vline(xintercept = median(bc_stats$num_reads), linetype = 'dashed') +
+    scale_x_continuous(limits = c(0, 100)) +
+    labs(x = 'number of reads per barcode')
+```
+
+```{r, echo = F}
+summary(bc_stats$num_reads)
+```
+
+Let's read in the results of barcode mapping using Nate's mapper, which generates a consensus
+read for each barcode instead of just looking at perfects.
+
+```
+python bc-map.py ../../processed_data/endo_scramble/endo_scramble_merged.fastq ../../ref/20180507_active_tss_scrambled10_stride5.txt --bc-start -20 --bc-length 20 --proc 30 --verbose --bbma
+p-procs 30 --var_start 1 --var_length 150 > bc-map_results.txt
+
+Mapping BCs...
+Mapped 6017579 barcodes in 204.11 seconds
+Filtering BCs without a consensus of < 5 reads
+Found 3773884 BCs with < 5 reads in 18.10 secs
+Using BBMap to find contaminated barcodes at 5 away
+Mapped barcodes in 555.72 secs
+Found 175543 barcodes that map too far away in 21.42 secs
+Found 7 truncated barcodes in 48.71 secs
+Found 186 barcodes with at least one sequence at dist 4 with at least 2 reads in 19.36 secs
+Merged reads in 148.70 seconds
+Total BCs remaining after filters 2067959
+Total time 16.94 mins
+
+```
+
+```{r}
+bc_map <- read.table('bc-map_results.txt', sep = ',', header = F)
+colnames(bc_map) <- c('barcode', 'variant', 'count')
+```
+
+```{r}
+ggplot(bc_map, aes(count)) + geom_histogram(binwidth = 1) +
+    labs(x = 'number of reads per barcode')
+```
+
+```{r}
+summary(bc_map$count)
+```
+
+```{r}
+var_stats_new <- bc_map %>% 
+    group_by(variant) %>% 
+    summarise(num_barcode = n())
+
+var_stats_new %>% 
+    ggplot(aes(num_barcode)) + geom_histogram(binwidth = 1) +
+    labs(x = 'number of barcodes per variant')
+```
+
+```{r}
+summary(var_stats_new$num_barcode)
+```
+
+```{r}
+bc_map <- bc_map %>% 
+    mutate(var_length = nchar(variant))
+
+summary(bc_map$var_length)
+```
+
+```{r}
+var_stats_new <- var_stats_new %>% 
+    mutate(var_length = nchar(variant))
+
+ref <- ref %>% 
+    mutate(variant = substr(sequence, 25, 174))
+var_stats_in_ref <- semi_join(var_stats_new, ref, by = 'variant')
+```
+

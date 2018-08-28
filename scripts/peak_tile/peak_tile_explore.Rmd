@@ -1,0 +1,547 @@
+---
+title: "Peak Tiling Initial Explorations"
+output: html_notebook
+---
+
+```{r, include = F, echo = F}
+setwd("~/Documents/projects/ecoli_promoters/endo/scripts/peak_tile")
+library("ggplot2")
+library("dplyr")
+library("tidyr")
+require("cowplot")
+
+options(stringsAsFactors = F)
+options(scipen = 10000)
+
+data_all <- read.table('../../processed_data/peak_tile/peak_tile_expression.txt', header = T)
+```
+
+Let's create a new column that indicates which position within the peak is being 
+scrambled.
+
+```{r}
+data_all  <- data_all  %>% 
+    mutate(name = gsub('_flipped', '', name),
+           name = gsub('_rc', '', name))
+
+
+data_all <- data_all %>% 
+    mutate(category = case_when(grepl('random', .$name) ~ 'random',
+                                grepl('neg', .$name) ~ 'negative',
+                                TRUE ~ 'tile'))
+
+data <- data_all %>% filter(category == 'tile')
+data <- data %>% 
+    separate(name, into = c('peak_start', 'peak_end', 'strand', 'tile_loc'), 
+             sep = '_', remove = F, convert = T)
+
+data <- data %>% 
+    mutate(tile_loc = gsub('pos', '', tile_loc)) %>% 
+    separate(tile_loc, into = c('tile_start', 'tile_end'),
+             sep = '-', convert = T)
+```
+
+```{r, echo = F}
+ggplot(data_all, aes(RNA_exp_ave)) + geom_density(aes(color = category)) +
+    scale_x_log10() + annotation_logticks(sides = 'b') + 
+    labs(x = 'average RNA/DNA expression', color = '') +
+    theme(legend.position = 'top')
+```
+
+```{r}
+ggplot(data_all, aes(category, RNA_exp_ave)) + geom_boxplot() +
+    scale_y_log10()
+```
+
+
+```{r}
+negatives <- data_all %>% filter(category == 'negative')
+neg_median <- median(negatives$RNA_exp_ave, na.rm = T)
+```
+
+```{r}
+ggplot(data, aes(tile_start, RNA_exp_ave)) + geom_point(alpha = 0.5) +
+    scale_y_log10() + annotation_logticks(sides = 'l') +
+    labs(x = 'tile start position', y = 'average RNA/DNA expression')
+```
+
+```{r}
+data %>% 
+    mutate(peak_length = peak_end - peak_start) %>% 
+    ggplot(aes(peak_length)) + geom_histogram(binwidth = 10)
+```
+
+Let's create a new tile start that is relative to the peak length
+
+```{r}
+data <- data %>%
+    mutate(peak_length = peak_end - peak_start,
+           tile_start_relative = tile_start / peak_length)
+```
+
+```{r}
+ggplot(data, aes(tile_start_relative, RNA_exp_ave)) + geom_point(alpha = 0.5) +
+    scale_y_log10() + annotation_logticks(sides = 'l') +
+    labs(x = 'relative tile start position', y = 'expression')
+```
+
+Let's pick an example an just look at the individual tiles for a given peak.
+
+```{r}
+example <- data %>% filter(grepl('1702291_1703839', name))
+
+ggplot(example, aes(tile_start, RNA_exp_ave)) + geom_point() +
+    labs(x = 'tile start position', y = 'expression',
+         title = 'Example tiles for individual peak, length = 1,548bp')
+```
+
+The peaks in expression look interesting, need a way to call enriched/significant points. Let's
+try using 2-fold greater than median negative control.
+
+```{r}
+threshold <- 2 * neg_median
+
+example <- example %>% 
+    mutate(active = ifelse(RNA_exp_ave >= threshold, 'active', 'inactive'))
+
+ggplot(example, aes(tile_start, RNA_exp_ave)) + geom_point(aes(color = active)) +
+    geom_hline(yintercept = threshold, linetype = 'dashed') +
+    scale_color_manual(values = c('red', 'black')) +
+    labs(x = 'tile start position', y = 'expression', color = '',
+         title = 'Example tiles for individual peak, length = 1,548bp') +
+    theme(legend.position = 'top')
+```
+
+Seems to work pretty well here!
+
+```{r}
+data <- data %>% 
+    mutate(active = ifelse(RNA_exp_ave >= threshold, 'active', 'inactive'))
+```
+
+```{r}
+data %>% 
+    filter(grepl('2990884_2992196', name)) %>% 
+    ggplot(aes(tile_start, RNA_exp_ave)) + geom_point(aes(color = active)) +
+    geom_hline(yintercept = threshold, linetype = 'dashed') +
+    scale_color_manual(values = c('red', 'black')) +
+    labs(x = 'tile start position', y = 'expression', color = '')
+```
+
+```{r}
+data_all <- data_all %>% 
+    mutate(active = ifelse(RNA_exp_ave >= threshold, 'active', 'inactive'))
+
+data_all %>% 
+    group_by(category, active) %>% 
+    tally()
+```
+
+```{r}
+corr <- cor(data_all$RNA_exp_1, data_all$RNA_exp_2)
+ggplot(data_all, aes(RNA_exp_1, RNA_exp_2)) + geom_point(alpha = 0.50) +
+    scale_x_log10() + scale_y_log10() + annotation_logticks(sides = 'bl') +
+    labs(x = 'replicate 1', y = 'replicate 2') + 
+    geom_vline(xintercept = threshold, linetype = 'dashed') +
+    annotate('text', x = 70, y = 0.1, label = paste0('r = ', signif(corr, 3)),
+             size = 6)
+```
+
+```{r}
+data_all %>% 
+    group_by(category, active) %>% 
+    tally() %>% 
+    mutate(percent = (n / sum(n)) * 100) %>% 
+    ggplot(aes(category, percent)) + 
+    geom_bar(aes(fill = active), stat = 'identity', position = 'dodge') +
+    scale_fill_manual(values = c('red', 'black')) +
+    labs(x = '', fill = '') +
+    theme(legend.position = 'top')
+```
+
+Can we predict if a tile is active? We could use gapped k-mer SVM. 
+
+```{r, include = F, echo = F}
+library('gkmSVM')
+library('kernlab')
+library('ROCR')
+library('seqinr')
+```
+
+```{r}
+# get unique entries
+data_unique <- data %>% 
+    group_by(name) %>% 
+    filter(n() == 1) %>% 
+    ungroup()
+
+active <- filter(data_unique, active == 'active') 
+inactive <- filter(data_unique, active == 'inactive') 
+
+# split active into train and test
+train_size = 0.75
+train_index <- base::sample(seq(1:nrow(active)), 
+                            size = nrow(active) * train_size, 
+                            replace = F)
+
+write.fasta(as.list(active$variant[train_index]), 
+            names = active$name[train_index], nbchar = 150,
+            file.out = '../../processed_data/peak_tile/gkmsvm_active_train.fasta')
+
+write.fasta(as.list(active$variant[-train_index]), 
+            names = active$name[!train_index], nbchar = 150,
+            file.out = '../../processed_data/peak_tile/gkmsvm_active_test.fasta')
+
+write.fasta(as.list(active$variant),
+            names = active$name,
+            nbchar = 150,
+            file.out = '../../processed_data/peak_tile/peak_tile_active.fasta')
+
+# split negative into train and test
+inactive_train_size = 0.75
+inactive_train_index <- base::sample(seq(1:nrow(inactive)), 
+                            size = nrow(inactive) * inactive_train_size, 
+                            replace = F)
+
+write.fasta(as.list(inactive$variant[inactive_train_index]), 
+            names = inactive$name[inactive_train_index], nbchar = 150,
+            file.out = '../../processed_data/peak_tile/gkmsvm_inactive_train.fasta')
+
+write.fasta(as.list(inactive$variant[-inactive_train_index]), 
+            names = inactive$name[!inactive_train_index], nbchar = 150,
+            file.out = '../../processed_data/peak_tile/gkmsvm_inactive_test.fasta')
+
+write.fasta(as.list(inactive$variant),
+            names = inactive$name,
+            nbchar = 150,
+            file.out = '../../processed_data/peak_tile/peak_tile_inactive.fasta')
+
+# this takes an entire day to run, so let's not do this
+# gkmsvm_kernel(posfile = "../../processed_data/peak_tile/gkmsvm_active_train.fasta", 
+#               negfile = "../../processed_data/peak_tile/gkmsvm_inactive_train.fasta", 
+#               outfile = '../../processed_data/peak_tile/gkmsvm_kernel_10mer_8ungapped.out', 
+#               L = 10, K = 8)
+```
+
+```{r}
+# # perform SVM training with cross-validation
+# gkmsvm_trainCV(kernelfn = '../../processed_data/peak_tile/gkmsvm_kernel_10mer_8ungapped.out',
+#                posfn= "../../processed_data/peak_tile/gkmsvm_active_train.fasta", 
+#                negfn = "../../processed_data/peak_tile/gkmsvm_inactive_train.fasta",
+#                svmfnprfx='../../processed_data/peak_tile/tile_svm_10mer_8ungapped', 
+#                outputCVpredfn='../../processed_data/peak_tile/tile_svm_10mer_8ungapped_cvpred',
+#                outputROCfn='../../processed_data/peak_tile/tile_svm_10mer_8ungapped_roc', 
+#                L = 10, K = 8)
+```
+
+
+gkmSVM was taking way too long, so decided to use neural network to classify
+active and inactive peaks. I ran the hyperparameter tuning for 100 trials,
+4 layers, minimum of 5 and maximum of 100 layers.
+
+Results:
+
+```
+Best hyperparameters: {'dropout': 0.43898735908905606, 'pool_width': 9, 'conv_width': array([14, 11,  5, 13]), 'num_filters': array([85, 81, 49, 52])}
+Test results: Loss: 0.4146      Balanced Accuracy: 66.88%        auROC: 0.913    auPRC: 0.830
+        Recall at 5%|10%|20% FDR: 32.8%|52.4%|70.1%      Num Positives: 2171     Num Negatives: 6154
+```
+
+I re-trained the model with the exact same parameters and got these results:
+
+```
+Finished training after 49 epochs.
+Test results: Loss: 0.5336      Balanced Accuracy: 83.02%        auROC: 0.904    auPRC: 0.808
+        Recall at 5%|10%|20% FDR: 23.5%|39.8%|64.1%      Num Positives: 2171     Num Negatives: 6154
+```
+
+Let's look at the curves.
+```{r}
+roc_info <- read.table('../../processed_data/peak_tile/hyperparam_tuned_best_retrain_roc_info.txt',
+                       sep = ',', col.names = c('fpr', 'tpr', 'threshold'))
+
+auc <- pracma::trapz(roc_info$fpr, roc_info$tpr)
+
+ggplot(roc_info, aes(fpr, tpr)) + geom_line() +
+    labs(x = 'false positive rate', y = 'true positive rate',
+         title = 'Neural network performance for\nclassifying active/inactive peak tiles') +
+    annotate('text', x = 0.85, y = 0.10, label = paste('AUC = ', signif(auc, 3)))
+```
+
+```{r}
+pr_info <- read.table('../../processed_data/peak_tile/hyperparam_tuned_best_retrain_pr_info.txt',
+                      sep = ',', col.names = c('precision', 'recall', 'threshold'))
+
+auprc <- pracma::trapz(pr_info$precision, pr_info$recall)
+
+ggplot(pr_info, aes(precision, recall)) + geom_line() +
+    scale_x_continuous(labels = seq(0, 1, 0.25)) +
+    annotate('text', x = 0.85, y = 0.05, label = 'AUC = 0.808') +
+    labs(title = 'Neural network performance for\nclassifying active/inactive peak tiles')
+```
+
+Let's output the quantitative data and try training neural network for regression.
+
+```{r}
+write.table(select(data_unique, variant, RNA_exp_ave), file = '../../processed_data/peak_tile/peak_tile_expression_only.txt',
+            sep = '\t', col.names = F, row.names = F, quote = F)
+```
+
+Results:
+
+```
+Best hyperparameters: {'dropout': 0.17902804957413876, 'pool_width': 8, 'conv_width': array([19, 17,  3,  3]), 'num_filters': array([50, 76, 19, 79])}
+Test results: 0.89571563407
+```
+
+```{r}
+reg_predictions <- read.table('../../processed_data/peak_tile/hyperparam_tuned_regression_peak_tile_predictions.txt', sep = '\t', col.names = c('sequence', 'predicted', 'observed'))
+
+corr <- cor(reg_predictions$observed, reg_predictions$predicted)
+corr_log <- cor(log(reg_predictions$observed), log(reg_predictions$predicted), use = 'p')
+ggplot(reg_predictions, aes(observed, predicted)) + geom_point() +
+    scale_x_log10(breaks = c(0, 0.01, 0.1, 1, 10, 100)) + scale_y_log10(breaks = c(0, 0.01, 0.1, 1, 10, 100)) +
+    # scale_x_log10(limits = c(0.01, 100)) + scale_y_log10(limits = c(0.01, 100)) +
+    annotation_logticks(sides = 'bl') + 
+    annotate('text', x = 50, y = 0.01, label = paste0('r = ', signif(corr_log, 3))) +
+    labs(x = 'observed expression', y = 'predicted expression',
+         title = 'Neural network regression performance\nfor peak tiling expression')
+```
+
+Let's see which motifs are enriched between active and inactive tiles.
+
+```{r, include = F}
+# source("https://bioconductor.org/biocLite.R")
+# biocLite("PWMEnrich")
+library(PWMEnrich)
+library(BSgenome)
+library(BiocInstaller)
+biocLite("BSgenome.Ecoli.NCBI.20080805")
+
+# download E. coli motifs from SwissRegulon: http://swissregulon.unibas.ch/data/escherichia_coli/e.coli_WMs.txt
+# to properly format for TRANSFAC:
+# replace all NA with ID (can be done in text editor)
+# add 'BF Escherichia coli' after ID line:
+# add 'XX' before '//' line
+# add dummy AC line
+# awk '/ID/{print;print "BF Escherichia coli";next}1' swiss_regulon_ecoli_wms.txt | awk '/\/\//{print "XX"}1' | awk '/ID/{print "AC MA0000.0"}1' > swiss_regulon_ecoli_wms_formatted.txt
+
+motifs <- readMotifs('../../ref/motifs/swiss_regulon_ecoli_wms_formatted.txt', remove.acc = T)
+# genomic background
+genome <- getBSgenome("BSgenome.Ecoli.NCBI.20080805")
+# we can't retrieve promoters from this genome, set let's load in the E. coli genome manually
+genome <- readDNAStringSet('../../ref/Escherichia_coli_K-12_MG1655.fasta')
+genomic.acgt = getBackgroundFrequencies(genome)
+pwms <- toPWM(motifs, prior = genomic.acgt)
+bg <- makeBackground(motifs=pwms, bg.seq=genome, type = 'logn')
+# find enrichment
+active_set <- DNAStringSet(active$variant)
+# will correct for background
+enrich_result <- motifEnrichment(sequences = active_set, pwms = bg)
+```
+
+Write PWMs to file
+```{r}
+just_pwms <- lapply(pwms, function(x) x$pwm)
+MASS::write.matrix(just_pwms, '../../processed_data/peak_tile/just_pwms.txt')
+write.table(names(just_pwms), '../../processed_data/peak_tile/names_pwms.txt',
+            quote = F, row.names = F, col.names = F)
+```
+
+
+```{r}
+options(scipen = 0)
+report <- groupReport(enrich_result)
+report
+```
+
+```{r}
+signif <- report[p.adjust(report$p.value, 'fdr') <= 0.05]
+print(length(report$pwms))
+print(length(signif$pwms))
+```
+
+Let's look at the inactive tiles.
+```{r, include = F}
+# find enrichment
+inactive_set <- DNAStringSet(inactive$variant)
+# will correct for background
+inactive_enrich_result <- motifEnrichment(sequences = inactive_set, pwms = bg)
+```
+
+```{r}
+inactive_report <- groupReport(inactive_enrich_result)
+inactive_report
+```
+
+```{r}
+inactive_signif <- inactive_report[p.adjust(inactive_report$p.value, 'fdr') <= 0.05]
+print(length(inactive_signif$pwms))
+```
+
+```{r}
+active_motifs <- names(signif$pwms)
+inactive_motifs <- names(inactive_signif$pwms)
+only_active <- active_motifs[! active_motifs %in% inactive_motifs]
+only_active
+```
+
+How many active tiles overlap with the previous "active" TSS from endogenous library?
+
+First, let's collapse overlapping active tiles into larger tiles.
+
+```{r}
+overlap <- function(x1, y1, x2, y2) {
+    if( (x1 < x2) & (x2 < y1) ) { return(TRUE) }
+    if( (x2 < x1) & (x1 < y2) ) { return(TRUE) }
+    else{ return(FALSE) }
+}
+
+collapse_tiles <- function(df) {
+    collapsed <- data.frame()
+    if(nrow(df) == 1){
+        return(df)
+    }
+    for(i in 2:nrow(df)){
+        # same peak
+        if(df$peak_start[i] == df$peak_start[i-1]){
+            if(overlap(df$tile_start[i - 1], df$tile_end[i - 1],
+                       df$tile_start[i], df$tile_end[i])) {
+                new_entry <- c(df$peak_start[i], df$peak_end[i],
+                               df$tile_start[i - 1], df$tile_end[i])
+                collapsed <- rbind(collapsed, new_entry)
+            }
+        }
+        # different peak
+        else{
+            add_entry <- FALSE
+            if(nrow(collapsed) == 0) {
+                add_entry <- TRUE
+            }
+            # only include if peak not already included in collapsed
+            else if(! df$peak_start[i - 1] %in% collapsed[,1]) {
+                add_entry <- TRUE
+            }
+            if(add_entry) {
+                new_entry <- c(df$peak_start[i - 1], df$peak_end[i - 1],
+                               df$tile_start[i - 1], df$tile_end[i - 1])
+                collapsed <- rbind(collapsed, new_entry)
+            }
+        }
+    }
+    names(collapsed) <- c('peak_start', 'peak_end', 'tile_start', 'tile_end')
+    # check if the last peak in df is not present in collapsed
+    if(! df$peak_start[i] %in% collapsed$peak_start){
+        new_entry <- c(df$peak_start[i], df$peak_end[i],
+                       df$tile_start[i], df$tile_end[i])
+        collapsed <- rbind(collapsed, new_entry)
+    }
+    return(collapsed)
+}
+```
+
+```{r}
+active <- arrange(active, peak_start, tile_start)
+
+current <- active
+curr_count <- nrow(current)
+collapsed_count <- 0
+while(collapsed_count != curr_count) {
+    curr_count <- nrow(current)
+    collapsed <- collapse_tiles(current)
+    collapsed_count <- nrow(collapsed)
+    current <- collapsed
+    # print(c(curr_count, collapsed_count))
+}
+print(nrow(active))
+print(nrow(collapsed))
+```
+
+```{r}
+collapsed <- collapsed %>% 
+    mutate(length = tile_end - tile_start)
+
+summary(collapsed$length)
+```
+
+```{r}
+collapsed %>% 
+    ggplot(aes(length)) + geom_histogram(binwidth = 10) +
+    labs(x = 'collapsed active tile length')
+```
+
+Let's load in the previous endo TSS library
+
+```{r}
+endo <- read.table('../../processed_data/expression_pipeline/rLP5_Endo2_expression.txt',
+                   header = T)
+
+neg <- subset(endo, grepl("neg_control",endo$name))
+neg_median <- median(neg$RNA_exp_ave)
+neg_sd <- sd(neg$RNA_exp_ave)
+threshold <- neg_median+3*(neg_sd)
+
+endo_active <- filter(endo, RNA_exp_ave >= threshold)
+
+num_overlaps <- numeric()
+for(i in 1:nrow(collapsed)){
+    overlaps <- 0
+    x1 <- collapsed$tile_start[i]
+    y1 <- collapsed$tile_end[i]
+    for(j in 1:nrow(endo_active)){
+        tss_overlap <- overlap(x1, y1, endo_active$start[j], endo_active$end[j])
+        if(tss_overlap) { overlaps = overlaps + 1}
+    }
+    num_overlaps <- append(num_overlaps, overlaps)
+}
+
+collapsed$num_active_tss_overlap <- num_overlaps
+table(collapsed$num_active_tss_overlap)
+```
+
+```{r}
+length(which(collapsed$num_active_tss_overlap > 0)) / nrow(collapsed)
+```
+ 93% of the active peak tiles also overlap at least one active endogenous TSS.
+ 
+ How about the inactive ones?
+ 
+```{r}
+inactive <- arrange(inactive, peak_start, tile_start)
+
+current <- inactive
+curr_count <- nrow(current)
+collapsed_count <- 0
+while(collapsed_count != curr_count) {
+    curr_count <- nrow(current)
+    collapsed_inactive <- collapse_tiles(current)
+    collapsed_count <- nrow(collapsed_inactive)
+    current <- collapsed_inactive
+    # print(c(curr_count, collapsed_count))
+}
+print(nrow(inactive))
+print(nrow(collapsed_inactive))
+```
+ 
+```{r}
+num_overlaps <- numeric()
+for(i in 1:nrow(collapsed_inactive)){
+    overlaps <- 0
+    x1 <- collapsed_inactive$tile_start[i]
+    y1 <- collapsed_inactive$tile_end[i]
+    for(j in 1:nrow(endo_active)){
+        tss_overlap <- overlap(x1, y1, endo_active$start[j], endo_active$end[j])
+        if(tss_overlap) { overlaps = overlaps + 1 }
+    }
+    num_overlaps <- append(num_overlaps, overlaps)
+}
+
+collapsed_inactive$num_active_tss_overlap <- num_overlaps
+table(collapsed_inactive$num_active_tss_overlap)
+```
+
+```{r}
+length(which(collapsed_inactive$num_active_tss_overlap > 0)) / nrow(collapsed_inactive)
+```
+ 
+Hmm okay a lot of these inactive peak tiles also overlap with active TSS tiles.

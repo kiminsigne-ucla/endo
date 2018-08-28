@@ -1,0 +1,78 @@
+---
+title: "Quality Control for Peak Tiling Barcode Mapping"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r, include = F, echo = F}
+options(stringsAsFactors = F)
+options(scipen = 10000)
+library(dplyr)
+library(tidyr)
+library(cowplot)
+library(ggplot2)
+setwd("~/Documents/projects/ecoli_promoters/endo/scripts/peak_tile")
+
+bc_stats <- read.table('../../processed_data/peak_tile/peak_tile_mapping_barcode_statistics.txt',
+                       sep = '\t', header = T)
+
+var_stats <- read.table('../../processed_data/peak_tile/peak_tile_mapping_variant_statistics.txt',
+                       sep = '\t', header = T)
+
+ref <- read.table('../../ref/20180508_lb_peak_tile_lib.txt', sep = '\t',
+                  col.names = c('name', 'sequence'))
+```
+
+Mapping results:
+```
+Number of reads: 42985175
+Reading in library reference...
+Extracting perfect reads...
+Percent perfect: 0.173709028752
+Number of unique barcodes for perfect reads:  1235317
+Filter by barcode frequency...
+Number of barcodes > 2: 807898
+Mapping...
+Bootstrapping reference sequences to obtain cutoff... cutoff is Levenshtein distance  74.0
+Filtering and writing results...
+Percent of library represented by final barcodes: 0.98002821443
+Number of final barcodes:  788822
+```
+
+
+How many unique barcodes per variant?
+```{r, echo = F}
+ggplot(var_stats, aes(num_barcodes_unique)) + geom_histogram(binwidth = 1) +
+    geom_vline(xintercept = median(var_stats$num_barcodes_unique), linetype = 'dashed') +
+    labs(x = 'number of unique barcodes per variant')
+```
+
+```{r, echo = F}
+summary(var_stats$num_barcodes_unique)
+```
+
+What is the number of reads per variant (aka number of non-unique barcodes)?
+```{r, echo = F}
+ggplot(var_stats, aes(num_barcodes)) + geom_histogram(binwidth = 1) +
+    geom_vline(xintercept = median(var_stats$num_barcodes), linetype = 'dashed') +
+    labs(x = 'number of reads per variant')
+```
+
+```{r, echo = F}
+summary(var_stats$num_barcodes)
+```
+
+How many reads per barcode?
+```{r, echo = F}
+ggplot(bc_stats, aes(num_reads)) + geom_histogram(binwidth = 1) + 
+    scale_x_continuous(limits = c(0, 100)) +
+    geom_vline(xintercept = median(bc_stats$num_reads), linetype = 'dashed') +
+    labs(x = 'number of reads per barcode')
+```
+
+```{r, echo = F}
+summary(bc_stats$num_reads)
+```
+

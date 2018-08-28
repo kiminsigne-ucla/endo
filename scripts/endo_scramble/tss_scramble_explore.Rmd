@@ -1,0 +1,240 @@
+---
+title: "Endo TSS scramble exploration"
+output: html_notebook
+---
+
+```{r, include = F, mesage = F}
+options(scipen = 10000)
+options(stringsAsFactors = F)
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(cowplot)
+
+setwd("~/Documents/projects/ecoli_promoters/endo/scripts/endo_scramble")
+
+data_all <- read.table('../../processed_data/endo_scramble/endo_scramble_expression.txt',
+                       header = T)
+```
+
+Let's format the names
+
+```{r}
+data_all  <- data_all  %>% 
+    mutate(name = gsub('_flipped', '', name),
+           name = gsub('_rc', '', name))
+
+data_all <- data_all %>% 
+    mutate(category = case_when(grepl('unscrambled', .$name) ~ 'unscramble',
+                                grepl('neg', .$name) ~ 'negative',
+                                TRUE ~ 'scramble'))
+
+table(data_all$category)
+
+data <- filter(data_all, category != 'negative')
+data <- data %>% 
+    separate(name, into = c('tss_name', 'tss_position', 'strand_scramble_loc'), sep = ',',
+             convert = T, remove = F) %>% 
+    separate(strand_scramble_loc, into = c('strand', 'scramble_loc'), sep = '_') %>% 
+    mutate(scramble_loc = gsub('unscrambled', NA, scramble_loc),
+           scramble_loc = gsub('scrambled', '', scramble_loc)) %>% 
+    separate(scramble_loc, into = c('scramble_start', 'scramble_end'),
+             sep = '-', convert = T)
+```
+
+```{r}
+example <- filter(data, tss_name == 'TSS_2716_regulondb')
+ggplot(example, aes(scramble_start, RNA_exp_ave)) + geom_point()+
+    labs(x = 'scramble start position (length 10bp)', y = 'expression')
+```
+
+```{r}
+negatives <- filter(data_all, category == 'negative')
+neg_median <- median(negatives$RNA_exp_ave)
+threshold <- 2 * neg_median
+
+example <- example %>% 
+    mutate(active = ifelse(RNA_exp_ave >= threshold, 'active', 'inactive'))
+
+ggplot(example, aes(scramble_start, RNA_exp_ave)) + geom_point(aes(color = active)) +
+    scale_color_manual(values = c('red', 'black')) +
+    labs(x = 'scramble start position (length 10bp)', y = 'expression', color = '')
+```
+
+```{r}
+ggplot(data, aes(scramble_start, RNA_exp_ave)) + geom_point() +
+    labs(x = 'scramble start position (length 10bp)', 'expression') +
+    scale_y_log10()
+```
+
+Let's calculate the expression of each scrambled sequence relative to the unscrambled sequence
+```{r}
+data <- data %>% 
+    group_by(tss_name) %>% 
+    mutate(unscrambled_exp = ifelse(any(category == 'unscramble'),
+                                 RNA_exp_ave[category == 'unscramble'],
+                                 NA),
+           relative_exp = RNA_exp_ave / unscrambled_exp)
+
+data <- data %>% 
+    mutate(active = ifelse(RNA_exp_ave >= threshold, 'active', 'inactive'))
+```
+
+```{r}
+data %>% 
+    ggplot(aes(scramble_start, relative_exp)) + geom_point(aes(color = active)) +
+    scale_color_manual(values = c('red', 'black')) +
+    scale_y_log10() +
+    labs(x = 'scramble start', y= 'relative expression', color = '')
+```
+
+```{r}
+data %>% 
+    filter(tss_name == 'TSS_2716_regulondb') %>% 
+    ggplot(aes(scramble_start, relative_exp)) + geom_point(aes(color = active)) +
+    scale_color_manual(values = c('red', 'black')) +
+    scale_y_log10() + geom_hline(yintercept = 1, linetype = 'dashed') +
+    labs(x = 'scramble start', y= 'relative expression', color = '')
+```
+
+```{r}
+data %>%
+    mutate(active_relative = ifelse(relative_exp >= 1, 'active', 'inactive')) %>% 
+    group_by(active_relative) %>% 
+    tally()
+```
+
+Only 68% of the library was mapped, so it seems many sequences are missing their unscrambled counterpart. After the next mapping run, we should get most of the library mapped. It's probably best to classify each sequence as inactive/active relative to their unscrambled sequence. Anything with less expression than unscrambled will be "inactive"
+and anything higher as "active".
+
+```{r}
+corr <- cor(data$RNA_exp_1, data$RNA_exp_2)
+ggplot(data, aes(RNA_exp_1, RNA_exp_2)) + geom_point() + 
+    scale_x_log10() + scale_y_log10() + annotation_logticks(sides = 'bl') +
+    labs(x = 'biological replicate 1', y = 'biological replicate 2') +
+    annotate('text', x = 10, y = 0.1, label = paste0('r = ', signif(corr, 3)), size = 6)
+```
+
+
+Which k-mers are enriched in the active vs. inactive sequences?
+If the scrambled sequence has increased expression relative to unscrambled, we assume it is
+disrupting a repressive element. If the scrambled sequence has decreased expression
+relative to unscrambled, we assume it is disrupting an activating element. 
+
+```{r, include = F}
+library(Biostrings)
+increased_set <- DNAStringSet(filter(data, relative_exp > 1)$variant)
+decreased_set <- DNAStringSet(filter(data, relative_exp < 1)$variant)
+
+k <- 7
+# collapse to get counts for the entire set, not just by sequence
+increased_kmer_freq <- colSums(oligonucleotideFrequency(increased_set, width = k))
+decreased_kmer_freq <- colSums(oligonucleotideFrequency(decreased_set, width = k))
+```
+
+```{r}
+bases <- c('A', 'T', 'G', 'C')
+possible_kmers <- gtools::permutations(n = length(bases),
+                                       v = bases, 
+                                       r = k,
+                                       repeats.allowed = T)
+possible_kmers <- apply(possible_kmers, 1, paste, collapse='')
+
+total_kmers_increased <- (150 - k + 1) * length(increased_set)
+total_kmers_decreased <- (150 - k + 1) * length(decreased_set)
+
+kmer_fisher <- function(kmer, df1, df2, df1_total, df2_total) {
+    df1_count <- df1[kmer]
+    df2_count <- df2[kmer]
+    mat <-matrix(c(df1_count, df2_count,
+                   df1_total - df1_count, 
+                   df2_total - df2_count), nrow = 2)
+    test <- fisher.test(mat)
+    return(test)
+}
+
+tests <- mapply(kmer_fisher,
+                kmer = possible_kmers,
+                MoreArgs = list(
+                    df1 = increased_kmer_freq,
+                    df2 = decreased_kmer_freq,
+                    df1_total = total_kmers_increased,
+                    df2_total = total_kmers_decreased))
+tests <- as.data.frame(t(tests))
+tests$kmer <- rownames(tests)
+tests <- tests %>% 
+    mutate(p.value = as.numeric(p.value),
+           estimate = as.numeric(estimate),
+           p.value.adjusted = p.adjust(tests$p.value, method = 'fdr'))
+
+signif_kmers_fdr <- tests %>% 
+    filter(p.value.adjusted <= 0.05) %>% 
+    arrange(p.value.adjusted) %>% 
+    select(kmer, p.value, p.value.adjusted, estimate)
+
+signif_kmers_fdr <- signif_kmers_fdr %>% 
+    mutate(kmer_rc =
+               as.character(Biostrings::reverseComplement(
+                   DNAStringSet(signif_kmers_fdr$kmer)))) %>% 
+    select(kmer, kmer_rc, p.value:estimate)
+
+signif_kmers_fdr %>% 
+    filter(estimate < 1) %>% nrow()
+
+signif_kmers_fdr %>% 
+    filter(estimate > 1) %>% nrow
+```
+
+Do these k-mer match any TF PWMs for E. coli?
+
+```{r}
+# http://regulondb.ccg.unam.mx/menu/download/datasets/files/BindingSiteSet.txt
+tf_sites <- read.table('../../ref/regulondb_tfbs.txt', comment.char = '#',
+                       header = F, sep = '\t',
+                       col.names = c('tf_id', 'tf_name', 'tfbs_id', 'tfbs_left',
+                                     'tfbs_right', 'strand', 'tf_gene_id', 'tx_unit',
+                                     'expression_effect', 'promoter_name',
+                                     'center_pos_relative_tss', 'tfbs_sequence',
+                                     'evidence', 'evidence_confidence'))
+
+signif_kmers_fdr <- signif_kmers_fdr %>% 
+    group_by(kmer) %>% 
+    mutate(tf_match_most_common = ifelse(any(grep(kmer, tf_sites$tfbs_sequence)),
+                                         names(which.max(table(tf_sites$tf_name[grep(kmer, tf_sites$tfbs_sequence)]))),
+                                         NA),
+           num_tf_match_most_common = ifelse(any(grep(kmer, tf_sites$tfbs_sequence)),
+                                             max(table(tf_sites$tf_name[grep(kmer, tf_sites$tfbs_sequence)])),
+                                             NA)) %>% 
+    ungroup()
+
+signif_kmers_fdr <- signif_kmers_fdr %>% 
+    mutate(kmer_type = ifelse(estimate > 1, 'enriched', 'depleted'))
+
+tf_counts <- signif_kmers_fdr %>% 
+    group_by(kmer_type, tf_match_most_common) %>% 
+    tally() %>% 
+    arrange(desc(n))
+```
+
+```{r}
+tf_counts %>% 
+    filter(n >= 10) %>% 
+    arrange(n) %>% 
+    ggplot(aes(tf_match_most_common, n)) + 
+    geom_bar(aes(fill = kmer_type), stat = 'identity', position = 'dodge') +
+    scale_fill_manual(values = c('darkred', 'darkgreen')) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(x = 'TF', y = 'number of matching k-mers', fill = '')
+    
+```
+
+Most common TF is CRP, cAMP-activated global transcriptional regulator, which makes sense. Directly regulates transcription
+of ~300 genes in about 200 operons, indirectly regulates expression of about half the genome.
+
+Next most common is Fis, DNA-binding protein Fis. Activates ribosomal RNA transcription, as well as other genes. Plays
+direct role in upstream activation of rRNA promoters. 
+
+Lrp, leucine-responsive regulatory protein. Mediates global response to leucine. 
+
+NarL, nitrate/nitrite response regulator protein, activates the expression of the nitrate reductase (narGHJI) and formate dehydrogenase-N (fdnGHI) operons and represses the transcription of the fumarate reductase (frdABCD) operon in response to a nitrate/nitrite induction signal transmitted by either the NarX or NarQ proteins.
