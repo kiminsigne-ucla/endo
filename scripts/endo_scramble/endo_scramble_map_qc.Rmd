@@ -21,7 +21,8 @@ var_stats <- read.table('../../processed_data/endo_scramble/endo_scramble_mappin
                        sep = '\t', header = T)
 
 ref <- read.table('../../ref/20180507_active_tss_scrambled10_stride5.txt', sep = '\t',
-                  col.names = c('name', 'sequence'))
+                  col.names = c('name', 'sequence')) %>% 
+    mutate(variant = substr(sequence, 25, 174))
 ```
 
 Mapping results:
@@ -81,21 +82,21 @@ Let's read in the results of barcode mapping using Nate's mapper, which generate
 read for each barcode instead of just looking at perfects.
 
 ```
-python bc-map.py ../../processed_data/endo_scramble/endo_scramble_merged.fastq ../../ref/20180507_active_tss_scrambled10_stride5.txt --bc-start -20 --bc-length 20 --proc 30 --verbose --bbma
-p-procs 30 --var_start 1 --var_length 150 > bc-map_results.txt
-
+python bc-map.py ../../processed_data/endo_scramble/endo_scramble_merged.fastq ../../ref/20180507_active_tss_scrambled10_stride5_trimmed.fasta --bc-start -20 --bc-length 20 --proc 30 --ver
+bose --bbmap-procs 30 --var_start 1 --var_length 150 --min-reads 3 --bad-bcs bc-map_bad_bcs.txt > bc-map_results.txt                                                                                                                                
 Mapping BCs...
-Mapped 6017579 barcodes in 204.11 seconds
-Filtering BCs without a consensus of < 5 reads
-Found 3773884 BCs with < 5 reads in 18.10 secs
+Mapped 6017579 barcodes in 252.71 seconds
+Filtering BCs without a consensus of < 3 reads
+Found 3077822 BCs with < 3 reads in 20.69 secs
 Using BBMap to find contaminated barcodes at 5 away
-Mapped barcodes in 555.72 secs
-Found 175543 barcodes that map too far away in 21.42 secs
-Found 7 truncated barcodes in 48.71 secs
-Found 186 barcodes with at least one sequence at dist 4 with at least 2 reads in 19.36 secs
-Merged reads in 148.70 seconds
-Total BCs remaining after filters 2067959
-Total time 16.94 mins
+Mapped barcodes in 439.58 secs
+Found 9543 barcodes that map too far away in 13.88 secs
+Found 933 truncated barcodes in 60.15 secs
+Found 453 barcodes with at least one sequence at dist 4 with at least 2 reads in 23.17 secs
+Merged reads in 149.79 seconds
+Total BCs remaining after filters 2928828
+Total time 16.00 mins
+Wrote 3088751 barcodes in 11.78 secs
 
 ```
 
@@ -105,8 +106,8 @@ Total time 16.94 mins
 
 
 ```{r}
-bc_map <- read.table('bc-map_results.txt', sep = ',', header = F)
-colnames(bc_map) <- c('barcode', 'variant', 'count')
+bc_map <- read.table('bc-map_results.txt', sep = ',', header = F,
+                     col.names = c('barcode', 'variant', 'count'))
 ```
 
 ```{r}
@@ -140,11 +141,128 @@ summary(bc_map$var_length)
 ```
 
 ```{r}
+library(Biostrings)
+
 var_stats_new <- var_stats_new %>% 
     mutate(var_length = nchar(variant))
 
 ref <- ref %>% 
-    mutate(variant = substr(sequence, 25, 174))
+    mutate(original_seq = ifelse(grepl('flipped', name),
+                                 as.character(reverseComplement(DNAStringSet(sequence))),
+                                 sequence)) %>% 
+    mutate(variant = substr(original_seq, 25, 174))
+
+
 var_stats_in_ref <- semi_join(var_stats_new, ref, by = 'variant')
+```
+
+```{r}
+ggplot(var_stats_in_ref, aes(num_barcode)) + geom_histogram(binwidth = 1) +
+    labs(x = 'number of barcodes',
+         title = 'consensus barcode mapper')
+```
+
+```{r}
+summary(var_stats_in_ref$num_barcode)
+```
+
+```{r}
+nrow(var_stats_in_ref) / nrow(ref)
+```
+
+```{r}
+full_join(select(var_stats, variant, num_barcodes),
+                 select(var_stats_in_ref, variant, num_consensus_barcodes = num_barcode),
+                 by = 'variant') %>% 
+    ggplot(aes(num_barcodes, num_consensus_barcodes)) + geom_point(alpha = 0.1) +
+    geom_abline(slope = 1, intercept = 0) + 
+    # scale_x_log10() + scale_y_log10() +
+    coord_fixed() + theme(aspect.ratio=1) + xlim(c(0, 400)) + ylim(c(0, 400))
+```
+
+Let's see what the bad barcodes are from the consensus barcodes to see why there is such
+discrepancy between the two mappers. Is my mapper mapping "bad" barcodes?
+
+```{r}
+bad_bcs <- read.table('bc-map_bad_bcs.txt', header = T, sep = ',')
+```
+
+```{r}
+table(bad_bcs$reason)
+```
+
+```{r}
+bad_overlap <- semi_join(bc_stats, bad_bcs, by = c('barcode' = 'bc'))
+nrow(bad_overlap)
+```
+
+```{r}
+bc_overlap <- semi_join(bc_stats, bc_map, by = 'barcode') %>% 
+    left_join(select(bc_map, barcode, variant), by = 'barcode')
+
+nrow(bc_overlap) / nrow(bc_stats)
+```
+ 
+ Hmm so most of the barcodes that I map also appear in the consensus mapper.
+ 
+```{r}
+(filter(bc_overlap, variant == most_common) %>% nrow() ) / nrow(bc_overlap)
+```
+
+Hmm so it seems the consensus mapper is getting most of the reference sequences 
+since it has overlap with my mapper, which captures 99% of the library. I must
+be joining with the reference incorrectly.
+
+```{r}
+semi_join(var_stats, ref, by ='variant') %>% nrow()
+```
+
+Hmm yea definitely checking wrong. In my mapper I check if the mapped variant
+or the reverse complement is in the library. Let's just duplicate the library with
+both versions of the sequence.
+
+```{r}
+ref_dup <- ref %>% 
+    mutate(name = paste0(name, '_rc'),
+           sequence = as.character(reverseComplement(DNAStringSet(sequence)))) %>% 
+    select(name, sequence) %>% 
+    bind_rows(select(ref, name, sequence)) %>% 
+    mutate(variant = toupper(substr(sequence, 25, 174)))
+```
+
+```{r}
+tmp <- anti_join(var_stats_new, ref_dup, by = 'variant') %>% 
+    semi_join(bc_overlap, by = 'variant')
+```
+
+Realized my reference sequence has a mix of upper and lowercase!!
+
+```{r}
+var_stats_in_ref <- semi_join(var_stats_new, ref_dup, by = 'variant')
+nrow(var_stats_in_ref) / nrow(ref)
+```
+
+Yay! 
+
+```{r}
+ggplot(var_stats_in_ref, aes(num_barcode)) + geom_histogram(binwidth = 1)
+```
+
+```{r}
+summary(var_stats_in_ref$num_barcode)
+```
+
+```{r}
+summary(var_stats$num_barcodes_unique)
+```
+
+Barcode distribution looks much better with consensus mapper than with my mapper.
+
+Let's save the barcode map that only includes variants that are in the reference.
+
+```{r}
+bc_map_ref <- semi_join(bc_map, ref_dup, by = 'variant')
+write.table(select(bc_map_ref, -var_length), '../../processed_data/endo_scramble/bc_map_consensus.txt',
+            row.names = F, sep = '\t', quote = F)
 ```
 
