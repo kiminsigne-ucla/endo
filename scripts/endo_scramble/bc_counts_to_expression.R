@@ -14,7 +14,7 @@ options(scipen = 10000)
 
 args = commandArgs(trailingOnly=TRUE)
 args <- c('../../processed_data/endo_scramble',
-          '../../processed_data/endo_scramble/endo_scramble_mapping_barcode_statistics.txt',
+          '../../processed_data/endo_scramble/bc_map_consensus.txt',
           '../../processed_data/endo_scramble/endo_scramble_mapping_variant_statistics.txt',
           '../../processed_data/endo_scramble/endo_lib_imperfects.txt',
           '../../processed_data/endo_scramble/endo_scramble_expression.txt')
@@ -66,11 +66,18 @@ rm(x)
 
 
 #Combine barcode counts with their promoter identity
-bc_stats <- read.table(bc_stats, header = T)
+bc_stats_old <- read.table('../../processed_data/endo_scramble/endo_scramble_mapping_barcode_statistics.txt',
+                           header = T)
+# Remove unmapped barcodes
+mapped_barcodes <- filter(bc_stats_old, !is.na(most_common))
+Compare_barcode_Reps_old <- inner_join(mapped_barcodes, rLP5_EndoScramble , by ='barcode') 
+Compare_barcode_Reps_old[is.na(Compare_barcode_Reps_old)] <- 0
 
-mapped_barcodes <- bc_stats[!is.na(bc_stats$most_common),] #Remove unmapped barcodes
-Compare_barcode_Reps <- inner_join(mapped_barcodes, rLP5_EndoScramble , by ='barcode') 
+bc_stats <- read.table(bc_stats, header = T)
+Compare_barcode_Reps <- inner_join(bc_stats, rLP5_EndoScramble , by ='barcode') 
 Compare_barcode_Reps[is.na(Compare_barcode_Reps)] <- 0
+
+# old 462,353 vs new 744,936
 
 
 # #Evaluate how many barcodes appear in integrated sequencing reads
@@ -83,7 +90,7 @@ Compare_barcode_Reps[is.na(Compare_barcode_Reps)] <- 0
 #temp <- filter(Compare_barcode_Reps, rLP5_EndoScramble_LB_DNA1 > 0 | rLP5_EndoScramble_LB_DNA2 > 0) #Remove barcodes with no DNA counts
 
 EndoScramble <- Compare_barcode_Reps %>% 
-    group_by(most_common) %>% 
+    group_by(variant) %>% 
     mutate(num_barcodes_mapped = n()) %>%
     filter(DNA1_1 > 0, DNA1_2 > 0, DNA2_1 > 0, DNA2_2 > 0) %>%
     mutate(num_barcodes_integrated = n()) %>%
@@ -99,26 +106,38 @@ EndoScramble <- Compare_barcode_Reps %>%
            DNA_2 = (sum(DNA2_1)+sum(DNA2_2)),  
            DNA_ave = ((DNA_1 + DNA_2)/2)) %>%
     ungroup() %>%
-    select(most_common, RNA_exp_1_1, RNA_exp_1_2, RNA_exp_2_1, RNA_exp_2_2,
+    select(variant, RNA_exp_1_1, RNA_exp_1_2, RNA_exp_2_1, RNA_exp_2_2,
            RNA_exp_1, RNA_exp_2, RNA_exp_ave, DNA_1, DNA_2, DNA_ave, 
            num_barcodes_mapped, num_barcodes_integrated) %>% 
     distinct() 
 
-rLP5_EndoScramble_Expression <- read.table("./endo_scramble_mapping_variant_statistics.txt", header = T, sep = '\t') %>%
-            select(name, most_common = variant) %>% inner_join(., EndoScramble, by = 'most_common')
+# rLP5_EndoScramble_Expression <- read.table("./endo_scramble_mapping_variant_statistics.txt", header = T, sep = '\t') %>%
+#             select(name, most_common = variant) %>% inner_join(., EndoScramble, by = 'most_common')
+# 
+# # rename
+# names(EndoScramble)[1] <- 'variant'
+# # match sequence to name
+# var_stats <- read.table(var_stats, header = T, sep = '\t')
+# EndoScramble <- left_join(EndoScramble, select(var_stats, variant, name), by = 'variant') %>% 
+#     select(name, variant, RNA_exp_1_1:num_barcodes_integrated)
 
-# rename
-names(EndoScramble)[1] <- 'variant'
-# match sequence to name
-var_stats <- read.table(var_stats, header = T, sep = '\t')
-EndoScramble <- left_join(EndoScramble, select(var_stats, variant, name), by = 'variant') %>% 
+ref <- read.table('../../ref/20180507_active_tss_scrambled10_stride5.txt', sep = '\t',
+                  col.names = c('name', 'sequence'))
+ref_dup <- ref %>% 
+    mutate(name = paste0(name, '_rc'),
+           sequence = as.character(reverseComplement(DNAStringSet(sequence)))) %>% 
+    select(name, sequence) %>% 
+    bind_rows(select(ref, name, sequence)) %>% 
+    mutate(variant = toupper(substr(sequence, 25, 174)))
+
+EndoScramble <- left_join(EndoScramble, select(ref_dup, variant, name), by = 'variant') %>% 
     select(name, variant, RNA_exp_1_1:num_barcodes_integrated)
 
 write.table(EndoScramble, output_name, quote = F, row.names = F)
 
 
-percent_covered <- nrow(EndoScramble) / nrow(var_stats)
-# roughly 68% when requiring reads in all four DNA replicates
+percent_covered <- nrow(EndoScramble) / nrow(ref)
+# roughly 68% when requiring reads in all four DNA replicates, went up to 85% with consensus mapping
 
 
 #distribution of the number of mapped and integrated barcodes
@@ -129,8 +148,6 @@ EndoScramble %>%
     # geom_density(aes(fill = type), alpha = 0.5) +
     geom_histogram(binwidth = 1, alpha = 0.5, position = 'identity', aes(fill = type)) + 
     labs(x = 'number of barcodes', fill = '')
-
-
 
 #Figure 2E
 #Plot expression correlations with negative controls and consensus promoters highlighted
