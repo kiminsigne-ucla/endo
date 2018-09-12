@@ -258,11 +258,47 @@ summary(var_stats$num_barcodes_unique)
 
 Barcode distribution looks much better with consensus mapper than with my mapper.
 
-Let's save the barcode map that only includes variants that are in the reference.
+Let's load the consensus mapping from the two combined mapping runs.
+
+```
+Mapping BCs...
+Mapped 6675541 barcodes in 218.84 seconds
+Filtering BCs without a consensus of < 3 reads
+Found 3545853 BCs with < 3 reads in 17.84 secs
+Using BBMap to find contaminated barcodes at 5 away
+Mapped barcodes in 411.63 secs
+Found 10840 barcodes that map too far away in 13.11 secs
+Found 1114 truncated barcodes in 62.78 secs
+Found 481 barcodes with at least one sequence at dist 4 with at least 2 reads in 24.31 secs
+Merged reads in 222.29 seconds
+Total BCs remaining after filters 3117253
+Total time 16.18 mins
+```
 
 ```{r}
-bc_map_ref <- semi_join(bc_map, ref_dup, by = 'variant')
-write.table(select(bc_map_ref, -var_length), '../../processed_data/endo_scramble/bc_map_consensus.txt',
+bc_map_combined <- read.table('../../processed_data/endo_scramble/endo_scramble_combined_bc_map_consensus.txt',
+                              header = F, sep = ',', col.names = c('barcode', 'variant', 'count'))
+bc_map_combined %>% 
+    group_by(variant) %>% 
+    summarise(num_barcode = n()) %>% 
+    semi_join(ref_dup, by = 'variant') %>% 
+    summary(.$num_barcode)
+```
+
+Okay we got the median barcode up by 2 from combining runs!
+
+Let's save the barcode map that only includes variants that are in the reference.
+
+
+```{r}
+# bc_map_ref <- semi_join(bc_map, ref_dup, by = 'variant')
+bc_map_ref <- semi_join(bc_map_combined, ref_dup, by = 'variant')
+bc_map_ref <- left_join(bc_map_ref, select(ref_dup, name, variant), by = 'variant')
+
+write.table(bc_map_ref, '../../processed_data/endo_scramble/endo_scramble_combined_bc_map_consensus_ref.txt',
             row.names = F, sep = '\t', quote = F)
 ```
 
+```{r}
+length(unique(bc_map_ref$variant)) / nrow(ref)
+```

@@ -1,6 +1,6 @@
 library(dplyr)
 
-Endo2 <- read.table("../../processed_data/expression_pipeline/rLP5_Endo2_expression.txt", 
+Endo2 <- read.table("../../processed_data/endo_tss/lb/rLP5_Endo2_lb_expression.txt", 
                     header = T)
 
 # identify two standard deviations greater than median of negatives
@@ -17,25 +17,25 @@ positive_Endo2 %>%
     mutate(chrom = 'U00096.2') %>%
     select(chrom, start, end, name, RNA_exp_ave, strand) %>%
     filter(start > 0) %>%
-    write.table('../../processed_data/expression_pipeline/tss_positives.bed', 
+    write.table('../../processed_data/endo_tss/lb/tss_positives.bed', 
                 sep = '\t', col.names = F, row.names = F, quote = F)
 
 negative_Endo2 %>%
     mutate(chrom = 'U00096.2') %>%
     select(chrom, start, end, name, RNA_exp_ave, strand) %>%
     filter(start > 0) %>%
-    write.table('../../processed_data/expression_pipeline/tss_negatives.bed', 
+    write.table('../../processed_data/endo_tss/lb/tss_negatives.bed', 
                 sep = '\t', col.names = F, row.names = F, quote = F)
 
 # convert to FASTA
 system(paste('bedtools getfasta',
              '-fi ../../ref/U00096.2.fasta',
-             '-bed ../../processed_data/expression_pipeline/tss_positives.bed',
-             '-fo ../../processed_data/expression_pipeline/tss_positives.fasta',
+             '-bed ../../processed_data/endo_tss/lb/tss_positives.bed',
+             '-fo ../../processed_data/endo_tss/lb/tss_positives.fasta',
              '-name -s'))
 
 system(paste('bedtools getfasta',
              '-fi ../../ref/U00096.2.fasta',
-             '-bed ../../processed_data/expression_pipeline/tss_negatives.bed',
-             '-fo ../../processed_data/expression_pipeline/tss_negatives.fasta',
+             '-bed ../../processed_data/endo_tss/lb/tss_negatives.bed',
+             '-fo ../../processed_data/endo_tss/lb/tss_negatives.fasta',
              '-name -s'))

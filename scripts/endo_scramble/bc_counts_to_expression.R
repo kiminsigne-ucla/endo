@@ -14,7 +14,7 @@ options(scipen = 10000)
 
 args = commandArgs(trailingOnly=TRUE)
 args <- c('../../processed_data/endo_scramble',
-          '../../processed_data/endo_scramble/bc_map_consensus.txt',
+          '../../processed_data/endo_scramble/endo_scramble_combined_bc_map_consensus_ref.txt',
           '../../processed_data/endo_scramble/endo_scramble_mapping_variant_statistics.txt',
           '../../processed_data/endo_scramble/endo_lib_imperfects.txt',
           '../../processed_data/endo_scramble/endo_scramble_expression.txt')
@@ -77,7 +77,7 @@ bc_stats <- read.table(bc_stats, header = T)
 Compare_barcode_Reps <- inner_join(bc_stats, rLP5_EndoScramble , by ='barcode') 
 Compare_barcode_Reps[is.na(Compare_barcode_Reps)] <- 0
 
-# old 462,353 vs new 744,936
+# old 462,353 vs new 744,936. With combined, 786064
 
 
 # #Evaluate how many barcodes appear in integrated sequencing reads
@@ -137,7 +137,8 @@ write.table(EndoScramble, output_name, quote = F, row.names = F)
 
 
 percent_covered <- nrow(EndoScramble) / nrow(ref)
-# roughly 68% when requiring reads in all four DNA replicates, went up to 85% with consensus mapping
+# roughly 68% when requiring reads in all four DNA replicates, went up to 85% with consensus mapping.
+# up to 86% with combined
 
 
 #distribution of the number of mapped and integrated barcodes
