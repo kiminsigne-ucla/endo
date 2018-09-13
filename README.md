@@ -2,6 +2,8 @@
 
 Github repo: https://github.com/kinsigne/endo
 
+Please do not hesitate to email me with any questions! kinsigne@ucla.edu
+
 ### Controls used in all datasets ###
 
 - Positive controls (n = 97): short synthetic promoter sequences (~50-100bp) that span a range of expression from Sri's earlier work. Originally n = 112, sequences removed due to incompatibility with cloning restriction sites.
