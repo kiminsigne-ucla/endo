@@ -35,6 +35,37 @@ def merge_regions(called_regions, merge_dist):
 
 		return curr_regions
 
+# wig = open('../../processed_data/frag_peak_calling/plus_frag_pileup.wig')
+def find_max(regions, wig):
+	# find max within a given region. Assumes regions are ordered and non-overlapping
+	# find max by walking through wig file
+	# Let's also calculate a new score sum just to be extra sure it's right. The
+	# old score sum was done during merging regions, so it could have been messed up
+	regions_with_max = []
+
+	start, end, score_sum = regions.pop(0)
+	max_value = -1
+	max_position = None
+	new_score_sum = 0
+	for chrom, position, value in fill(walk(wig)):
+		if start <= position and position <= end:
+			new_score_sum += value
+			if value >= max_value:
+				max_value = value
+				max_position = position
+		if position >= end and max_value != -1:
+			# position is past region and max_value has been recorded
+			region_with_max = (start, end, new_score_sum, max_value, max_position)
+			regions_with_max.append(region_with_max)
+			# grab new region and reset max
+			if len(regions) == 0: # break when there are no more regions
+				break
+			start, end, score_sum = regions.pop(0)
+			max_value = -1
+			max_position = None
+
+	return regions_with_max
+
 
 def write_bed(called_regions, strand, outfile):
 	chrom = 'U00096.2'
@@ -56,6 +87,7 @@ def main(infile, threshold, merge_dist, min_width, strand, outfile):
 
 	# fill function steps through every position, returns None if position not 
 	# in original wig file
+	print("Calling preliminary regions...")
 	wig = open(infile)
 	for region, position, value in fill(walk(wig)):
 		if start is None:
@@ -78,17 +110,25 @@ def main(infile, threshold, merge_dist, min_width, strand, outfile):
 		elif value >= threshold: # value exceeds threshold, continue region
 			total_exp += value
 			end = position
-		
+	
+	wig.close()	
 
 	if total_exp != 0: # finished iterating but one last region
 		called_regions.append((start, end, total_exp))
 
+	priunt("Filtering out regions smaller than minimum width...")
 	# filter out regions that are below minimum width
 	filtered_regions = [x for x in called_regions if x[1] - x[0] + 1 >= min_width]
 	
+	print("Merging regions...")
 	merged_regions = merge_regions(filtered_regions, merge_dist)
 
-	write_bed(merged_regions, strand, outfile)
+	# find max region and re-do score sum
+	# open wig file again
+	print("Finding region max and calculating total score...")
+	regions_with_max = find_max(merged_regions, open(infile))
+
+	write_bed(regions_with_max, strand, outfile)
 
 
 if __name__ == '__main__':
