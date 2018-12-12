@@ -116,7 +116,7 @@ def main(infile, threshold, merge_dist, min_width, strand, outfile):
 	if total_exp != 0: # finished iterating but one last region
 		called_regions.append((start, end, total_exp))
 
-	priunt("Filtering out regions smaller than minimum width...")
+	print("Filtering out regions smaller than minimum width...")
 	# filter out regions that are below minimum width
 	filtered_regions = [x for x in called_regions if x[1] - x[0] + 1 >= min_width]
 	
