@@ -71,9 +71,10 @@ def write_bed(called_regions, strand, outfile):
 	chrom = 'U00096.2'
 	with open(outfile, 'w') as output:
 		for x in called_regions:
+			x_str = map(str, x)
 			# format: chrom, start, end, name, score
-			name = '_'.join([str(x[0]), str(x[1]), strand])
-			output.write('\t'.join([chrom, str(x[0]), str(x[1]), name, str(x[2]), strand]))
+			name = '_'.join([x_str[0], x_str[1], strand])
+			output.write('\t'.join([chrom, x_str[0], x_str[1], name, x_str[2], strand, x_str[3], x_str[4]]))
 			output.write('\n')
 
 
