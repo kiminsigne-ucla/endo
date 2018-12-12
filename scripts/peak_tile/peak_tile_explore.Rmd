@@ -24,7 +24,6 @@ data_all  <- data_all  %>%
     mutate(name = gsub('_flipped', '', name),
            name = gsub('_rc', '', name))
 
-
 data_all <- data_all %>% 
     mutate(category = case_when(grepl('random', .$name) ~ 'random',
                                 grepl('neg', .$name) ~ 'negative',
@@ -177,7 +176,9 @@ data_unique <- data %>%
 
 active <- filter(data_unique, active == 'active') 
 inactive <- filter(data_unique, active == 'inactive') 
+```
 
+```{r}
 # split active into train and test
 train_size = 0.75
 train_index <- base::sample(seq(1:nrow(active)), 
@@ -468,18 +469,15 @@ summary(collapsed$length)
 ```
 
 ```{r}
-collapsed_bed <- collapsed %>% 
-    mutate(chrom = 'U00096.2',
-           name = '',
-           score = '',
-           collapse_start = peak_start + tile_start,
-           collapse_end = peak_start + tile_end) %>% 
-    select(chrom, collapse_start, collapse_end, name, score, strand)
+collapsed <- collapsed %>% 
+    mutate(collapse_start = peak_start + tile_start,
+           collapse_end = peak_start + tile_end)
 ```
 
 ```{r}
 # grab mean and median expression for collapsed tiles
-extract_expression <- function(collapse_start, collapse_end, collapse_tile_start, collapse_tile_end, buffer, df) {
+extract_expression <- function(collapse_start, collapse_end, collapse_tile_start,
+                               collapse_tile_end, buffer, df) {
     in_peak <- filter(df, peak_start <= collapse_start, collapse_start <= peak_end,
                       tile_start >= collapse_tile_start, tile_end <= collapse_tile_end)
     mean_exp <- mean(in_peak$RNA_exp_ave)
@@ -487,18 +485,26 @@ extract_expression <- function(collapse_start, collapse_end, collapse_tile_start
     return(c(mean_exp, median_exp))
 }
 
-summary_exp <- apply(collapsed_bed, 1, function(x) extract_expression(collapse_start=as.numeric(x[10]),
-                                                                      collapse_end=as.numeric(x[11]),
-                                                                      collapse_tile_start=as.numeric(x[3]),
-                                                                      collapse_tile_end=as.numeric(x[4]),
-                                                                      buffer=200,
-                                                                      df=active))
-collapsed_bed$mean_exp <- summary_exp[1,]
-collapsed_bed$median_exp <- summary_exp[2,]
+summary_exp <- apply(collapsed, 1, function(x)
+    extract_expression(collapse_start=as.numeric(x[7]),
+                       collapse_end=as.numeric(x[8]),
+                       collapse_tile_start=as.numeric(x[3]),
+                       collapse_tile_end=as.numeric(x[4]),
+                       buffer=200,
+                       df=active))
+
+collapsed$mean_exp <- summary_exp[1,]
+collapsed$median_exp <- summary_exp[2,]
 ```
 
 ```{r}
-write.table(select(collapsed_bed, chrom, collapse_start, collapse_end, name, median_exp, strand), 
+collapsed_bed <- collapsed %>% 
+    mutate(chrom = 'U00096.2',
+           name = '',
+           score = '')
+
+write.table(select(collapsed_bed, chrom, collapse_start, collapse_end, name, 
+                   median_exp, strand), 
             '../../processed_data/peak_tile/collapsed_tiles.bed',
             sep = '\t', row.names = F, col.names = F, quote = F)
 ```

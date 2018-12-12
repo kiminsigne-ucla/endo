@@ -11,6 +11,8 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(cowplot)
+library(kmer)
+library(aphid)
 
 setwd("~/Documents/projects/ecoli_promoters/endo/scripts/endo_scramble")
 
@@ -127,7 +129,7 @@ library(Biostrings)
 increased_set <- DNAStringSet(filter(data, relative_exp > 1)$variant)
 decreased_set <- DNAStringSet(filter(data, relative_exp < 1)$variant)
 
-k <- 7
+k <- 6
 # collapse to get counts for the entire set, not just by sequence
 increased_kmer_freq <- colSums(oligonucleotideFrequency(increased_set, width = k))
 decreased_kmer_freq <- colSums(oligonucleotideFrequency(decreased_set, width = k))
@@ -198,13 +200,29 @@ tf_sites <- read.table('../../ref/regulondb_tfbs.txt', comment.char = '#',
                                      'center_pos_relative_tss', 'tfbs_sequence',
                                      'evidence', 'evidence_confidence'))
 
+# extract TFBS from sequence, in upper case
+# grab upper case part of site corresponding to binding site
+extract_upper <- function(string, toString) {
+    replace_lower <- strsplit(string, "[[:lower:]]*")[[1]]
+    only_upper <- replace_lower[replace_lower != ""]
+    if(toString == T) {
+        return(paste(only_upper, collapse = ''))
+    }
+    else{
+        return(only_upper)
+    }
+}
+
+tf_sites$tfbs <- unlist(lapply(tf_sites$tfbs_sequence, extract_upper, toString = T))
+
 signif_kmers_fdr <- signif_kmers_fdr %>% 
     group_by(kmer) %>% 
-    mutate(tf_match_most_common = ifelse(any(grep(kmer, tf_sites$tfbs_sequence)),
-                                         names(which.max(table(tf_sites$tf_name[grep(kmer, tf_sites$tfbs_sequence)]))),
+    mutate(tf_match_most_common = ifelse(any(grep(kmer, tf_sites$tfbs)),
+                                         names(which.max(table(tf_sites$tf_name[grep(kmer,
+                                                                                     tf_sites$tfbs)]))),
                                          NA),
-           num_tf_match_most_common = ifelse(any(grep(kmer, tf_sites$tfbs_sequence)),
-                                             max(table(tf_sites$tf_name[grep(kmer, tf_sites$tfbs_sequence)])),
+           num_tf_match_most_common = ifelse(any(grep(kmer, tf_sites$tfbs)),
+                                             max(table(tf_sites$tf_name[grep(kmer, tf_sites$tfbs)])),
                                              NA)) %>% 
     ungroup()
 
@@ -217,14 +235,15 @@ tf_counts <- signif_kmers_fdr %>%
     arrange(desc(n))
 ```
 
+
+
 ```{r}
 tf_counts %>% 
-    filter(n >= 10) %>% 
-    arrange(n) %>% 
-    ggplot(aes(tf_match_most_common, n)) + 
+    filter(n >= 10, !is.na(tf_match_most_common)) %>% 
+    ggplot(aes(reorder(tf_match_most_common, n), n)) + 
     geom_bar(aes(fill = kmer_type), stat = 'identity', position = 'dodge') +
     scale_fill_manual(values = c('darkred', 'darkgreen')) +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) +
     labs(x = 'TF', y = 'number of matching k-mers', fill = '')
     
 ```
@@ -238,3 +257,781 @@ direct role in upstream activation of rRNA promoters.
 Lrp, leucine-responsive regulatory protein. Mediates global response to leucine. 
 
 NarL, nitrate/nitrite response regulator protein, activates the expression of the nitrate reductase (narGHJI) and formate dehydrogenase-N (fdnGHI) operons and represses the transcription of the fumarate reductase (frdABCD) operon in response to a nitrate/nitrite induction signal transmitted by either the NarX or NarQ proteins.
+
+Instead of doing an exact match between the k-mer and the TFBS, let's create an HMM for each
+TF and use that to score each k-mer.
+
+```{r}
+create_phmm <- function(df, tf, n_iter = 10, verbose = F) {
+    seq_list <- strsplit(toupper(filter(df, tf_name == tf)$tfbs), split = '')
+    # for some reason, maybe the way the sequences are randomly aligned, the same
+    # exact command will fail multiple times and then suceed. So, just keep trying
+    # until it works
+    phmm <- NULL
+    attempt <- 0
+    while(is.null(phmm) && attempt < n_iter) {
+        attempt <- attempt + 1
+        try (
+            phmm <- derivePHMM(seq_list, maxsize = max(unlist(lapply(seq_list, length))), quiet = !verbose),
+            silent = T
+        )
+    }
+    if(attempt > 1) {
+        print(paste("Number of attempts for", tf, ":", attempt))
+    }
+    if(is.null(phmm)) {
+        return(NA)
+    }
+    else{
+        return(phmm)
+    }
+}
+
+tf_sites_with_sequence <- filter(tf_sites, tfbs != '')
+tf_list <- as.list(unique(tf_sites_with_sequence$tf_name))
+tf_phmms <- lapply(tf_list, create_phmm, df = tf_sites_with_sequence)
+names(tf_phmms) <- unlist(tf_list)
+```
+
+```{r}
+# let's try to get missing TF
+missing_tfs <- tf_list[is.na(tf_phmms)]
+missing_phmms <- lapply(missing_tfs, create_phmm, df = tf_sites_with_sequence, n_iter = 20)
+```
+
+Why is this happening? Let's take Fis as an example.
+
+```{r}
+fis_sites <- filter(tf_sites_with_sequence, tf_name == 'Fis')$tfbs
+fis_seq_list <- strsplit(toupper(fis_sites), split = '')
+derivePHMM(fis_seq_list)
+```
+
+The initial alignment attempt has 52 columns, and maybe the multiple
+sequence alignment is just too unstable. Is there varying binding site lengths?
+
+```{r}
+fis_site_lengths <- unlist(lapply(fis_seq_list, length))
+table(fis_site_lengths)
+```
+
+Let's only keep sites that are the predominant 15bp and see if this helps.
+
+```{r}
+fis_seq_list_trimmed <- fis_seq_list[fis_site_lengths == 15]
+derivePHMM(fis_seq_list_trimmed)
+```
+
+If you trim the binding sites to only include 15bp, it works perfectly fine.
+
+```{r}
+filter(tf_sites_with_sequence, tf_name %in% missing_tfs) %>% 
+    mutate(tfbs_length = nchar(tfbs)) %>% 
+    group_by(tf_name) %>% 
+    mutate(num_lengths = n_distinct(tfbs_length)) %>% 
+    distinct(tf_name, num_lengths) %>% 
+    ggplot(aes(x = tf_name, y = num_lengths)) + geom_bar(stat = 'identity') +
+    labs(x = 'TF', y = 'number of distinct binding site lengths',
+         title = 'TFs that failed to generate PHMMs') +
+    scale_y_continuous(breaks = seq(1:10))
+```
+
+Hmm at least for the TFs that we couldn't generate PHMMs, they all have at least two
+different binding site lengths. How true is this for all TFs?
+
+```{r}
+tf_sites_with_sequence %>% 
+    mutate(tfbs_length = nchar(tfbs),
+           missing_phmm = ifelse(tf_name %in% missing_tfs, T, F)) %>% 
+    group_by(tf_name) %>% 
+    mutate(num_lengths = n_distinct(tfbs_length)) %>% 
+    distinct(tf_name, num_lengths, missing_phmm) %>% 
+    ggplot(aes(num_lengths, fill = missing_phmm)) + geom_histogram(binwidth = 1) +
+    labs(x = 'number of distinct binding site lengths', title = 'All TFs',
+         fill = 'missing PHMM') +
+    scale_x_continuous(breaks = seq(1:10))
+```
+
+Let's see if there's a way to tweak the alignment parameters before we just start
+eliminating sites.
+
+```{r}
+index_trimmed <- fis_site_lengths[fis_site_lengths == 15]
+derivePHMM(fis_seq_list, progressive = T, seeds = which(fis_site_lengths == 15)[1:25], maxsize=15)
+```
+
+
+Actually, let's just use the position specific scoring matrices from RegulonDBs, 
+then convert to PWMs.
+
+```{bash}
+python parse_regulondb_pssm.py ../../ref/regulondb_tf_pssm.txt regulondb_tf_pssm_parsed.txt
+```
+
+```{r}
+library(PWMEnrich)
+tf_pssm_raw <- read.table('regulondb_tf_pssm_parsed.txt',
+                      col.names = c('tf_name', 'position', 'A', 'C', 'G', 'T'))
+
+create_pfm <- function(df, tf) {
+    pfm <- data.matrix(filter(df, tf_name == tf) %>% select(-tf_name, -position))
+    pfm <- t(pfm)
+    return(pfm)
+}
+
+tf_names <- as.list(unique(tf_pssm_raw$tf_name))
+pfm_list <- lapply(tf_names, create_pfm, df = tf_pssm_raw)
+pwm_list <- PFMtoPWM(pfm_list, id = as.character(tf_names))
+```
+
+This actually won't work because PWMs require the k-mer is at least as long as the PWM.
+Since we're using 6-kmers and most PWMs are longer, this is a problem. Back to using PHMMs!
+
+
+Let's look at what k-mers are associated with relative expression, using simple linear regression.
+We only care about the significant ones.
+
+```{r}
+kmer_counts <- kcount(x = strsplit(data$variant, split = ''), k = 6, residues = 'DNA')
+kmer_counts_df <- data.frame(kmer_counts)
+kmer_counts_df$expression <- data$relative_exp
+```
+
+Let's first try individual linear regression for each k-mer and see how many are significant.
+
+```{r}
+individ_kmer_reg <- function(kmer, kmer_counts_df) {
+    counts <- select(kmer_counts_df, kmer, expression)
+    model <- lm(log(expression) ~ ., counts)
+    summary <- summary(model)
+    # if k-mer count is too low, lm will return NA for coefficient
+    if(nrow(summary$coefficients) == 2) {
+        # get coefficient
+        coeff <- summary$coefficients[2, 1]
+        # get p-value of coefficient
+        pval <- summary$coefficients[2, 4]
+        return(list(c(coeff, pval)))
+    }
+    else {
+        return(list(c(NA, NA)))
+    }
+}
+
+# all_kmers <- as.list(colnames(kmer_counts))
+# kmer_regression <- lapply(all_kmers, individ_kmer_reg, kmer_counts_df = kmer_counts_df)
+# kmer_regression <- data.frame(matrix(unlist(kmer_regression), nrow = length(kmer_regression), byrow=T))
+# colnames(kmer_regression) <- c('coeff', 'pval')
+# kmer_regression$kmer <- unlist(all_kmers)
+# save(kmer_regression, file = 'kmer_regression.rda')
+load('kmer_regression.rda')
+```
+
+```{r}
+ggplot(kmer_regression, aes(log(pval))) + geom_histogram() +
+    geom_vline(xintercept = log(0.05), col = 'red') +
+    labs(x = 'log10(p-value) of linear regression coefficient',
+         title = 'Individual linear regression between\n k-mer and expression')
+```
+
+```{r}
+signif_kmers_lm_fdr <- kmer_regression %>% 
+    mutate(pval_fdr  = p.adjust(pval, method = 'fdr')) %>% 
+    filter(pval_fdr <= 0.05)
+
+print(nrow(signif_kmers_lm_fdr))
+```
+ 
+ K-mers to the left are significant.
+
+```{r}
+# model_all_kmers <- lm(log(expression) ~ . , kmer_counts_df)
+# saveRDS(model_all_kmers, file = 'model_all_kmers.rds', compress = T)
+model_all_kmers <- readRDS('model_all_kmers.rds')
+summary(model_all_kmers)
+```
+
+Let's see how many significant k-mers from individual linear regression
+compared to those from Fisher test enrichments.
+
+```{r}
+coeff <- summary(model_all_kmers)$coefficients
+coeff <- coeff[-1,]
+signif_kmers_multiple_lm <- unlist(dimnames(coeff)[1][coeff[,4] <= 0.05])
+# how many significant in both?
+signif_kmers_overlap <- signif_kmers_fdr %>% 
+    left_join(data.frame(kmer = signif_kmers_multiple_lm, lm_coeff = coeff[,1], lm_pval = coeff[,4]), 
+              by = 'kmer') %>% 
+    filter(!is.na(lm_coeff))
+print(nrow(signif_kmers_overlap) / nrow(signif_kmers_fdr))
+```
+
+Good, most of them. How do the direction of their effects compare?
+
+```{r}
+ggplot(signif_kmers_overlap, aes(estimate, lm_coeff)) + geom_point() + 
+    labs(x = 'Fisher test estimate', y = 'lm coefficient') + 
+    geom_hline(yintercept = 0, linetype = 'dashed') + 
+    geom_vline(xintercept = 1, linetype = 'dashed')
+```
+
+Hmm they don't always match up, I'll go with the linear regression more than the Fisher
+because it doesn't have any classification into "active" or "inactive" and is just based
+on the relative expression value.
+
+Let's take a quick look at the coefficients.
+
+```{r}
+ggplot(signif_kmers_lm_fdr, aes(coeff)) + geom_density() +
+    labs(x = 'linear regression coefficient',
+         title = 'All significant k-mers FDR 5%')
+```
+
+
+What are these k-mers? Do they hit TFs?
+
+```{r}
+signif_kmers_lm_fdr <- signif_kmers_lm_fdr %>% 
+    group_by(kmer) %>% 
+    mutate(tf_match_most_common = ifelse(any(grep(kmer, tf_sites$tfbs)),
+                                         names(which.max(
+                                             table(
+                                                 tf_sites$tf_name[
+                                                     grep(kmer, tf_sites$tfbs)])
+                                             )), 
+                                         NA)
+    )
+```
+
+```{r}
+signif_kmers_lm_fdr %>% 
+    group_by(tf_match_most_common) %>% 
+    tally() %>% 
+    arrange(desc(n)) %>% 
+    filter(n >= 10, !is.na(tf_match_most_common)) %>%
+    ggplot(aes(reorder(tf_match_most_common, n), n)) + 
+    geom_bar(stat = 'identity', position = 'dodge') +
+    scale_fill_manual(values = c('darkred', 'darkgreen')) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) +
+    labs(x = 'TF', y = 'number of matching\n significant k-mers', 
+         title = 'Significant k-mers from individual linear regression\n matched to TFBSs')
+```
+
+What are the range of coefficients for each TF?
+
+```{r}
+signif_kmers_lm_fdr %>% 
+    group_by(tf_match_most_common) %>% 
+    summarise(num_kmers = n(),
+              mean_coeff = mean(coeff)) %>% 
+    ungroup() %>% 
+    left_join(signif_kmers_lm_fdr, ., by = 'tf_match_most_common') %>% 
+    filter(num_kmers >= 3, !is.na(tf_match_most_common)) %>% 
+    ggplot(aes(reorder(tf_match_most_common, mean_coeff), coeff)) + geom_boxplot() +
+    geom_hline(yintercept = 0, linetype = 'dashed') +
+        theme(axis.text.x = element_text(angle = 90, size = 8)) +
+        labs(x = 'linear regression coefficient',
+             title = 'All significant k-mers FDR 5% \n(ordered by mean coefficient)')
+```
+
+```{r}
+signif_kmers_lm_fdr %>% 
+    group_by(tf_match_most_common) %>% 
+    summarise(num_kmers = n(),
+              mean_coeff = mean(coeff)) %>% 
+    ungroup() %>% 
+    left_join(signif_kmers_lm_fdr, ., by = 'tf_match_most_common') %>% 
+    filter(num_kmers >= 3, !is.na(tf_match_most_common)) %>% 
+    ggplot(aes(reorder(tf_match_most_common, num_kmers), coeff)) + geom_boxplot() +
+    geom_hline(yintercept = 0, linetype = 'dashed') +
+        theme(axis.text.x = element_text(angle = 90, size = 8)) +
+        labs(x = 'linear regression coefficient',
+             title = 'All significant k-mers FDR 5% \n(ordered by number of significant k-mers)')
+```
+
+Negative coefficients means that fewer counts of a k-mer corresponds to an increase in expression,
+implying that k-mer is part of a repressive site. Positive coefficients means that higher counts
+of a k-mer correspons to an increase in expression, impying k-mer is part of an activating site.
+
+Let's run multiple regression again but with only the significant k-mers.
+
+```{r}
+kmer_counts_signif <- select_(kmer_counts_df, .dots = signif_kmers_lm_fdr$kmer)
+kmer_counts_signif$expression <- kmer_counts_df$expression
+model_signif_kmers <- lm(log(expression) ~ . , kmer_counts_signif)
+summary(model_signif_kmers)
+```
+
+Hmm, the model does worse, which isn't too surprising since we remove a lot of variables.
+
+```{r}
+signif_kmers_lm_fdr %>% 
+    group_by(tf_match_most_common) %>% 
+    summarise(n = n()) %>% 
+    arrange(desc(n))
+```
+
+Let's take k-mers that match to top 5 TFs and see what this small model looks like.
+
+```{r}
+top_tfs <- signif_kmers_lm_fdr %>% 
+    group_by(tf_match_most_common) %>% 
+    summarise(n = n()) %>% 
+    arrange(desc(n)) %>% 
+    top_n(5) %>% .$tf_match_most_common
+
+
+kmer_tf_subset <- select_(kmer_counts_df, .dots = 
+                              filter(signif_kmers_lm_fdr, tf_match_most_common %in% top_tfs) %>% .$kmer)
+kmer_tf_subset$expression <- kmer_counts_df$expression
+model_tf_subset <- lm(expression ~ . , kmer_tf_subset)
+summary(model_tf_subset)
+```
+
+Maybe we can just focus on CRP and try to make a position-specific model. The change in 
+CRP score (let's say we use an HMM) at each position can be weighted by the average
+change in expression at the position across the entire library. Or learn the appropriate weights and see how they compare to the average expression change. To do so, compare scrambled to wild-type and note all the k-mers that are different in the scramble and the relative position in the sequence. Link this to change in expression. This input set (position, change in CRP score) and output set (change in expression) can be used for models. Regression?
+
+```{r}
+library(aphid)
+
+crp_sites_raw <- filter(tf_sites, tf_name == 'CRP', tfbs_sequence != '') %>% .$tfbs_sequence
+crp_sites <- lapply(crp_sites_raw, extract_upper, toString = F)
+crp_phmm <- derivePHMM(crp_sites, k = 5)
+```
+
+We can view the k-mer change between wild-type and scramble as either a k-mer destroyed
+in wild-type or a k-mer created in scramble. Let's go with k-mers that are destroyed in the wild-type.
+
+```{r}
+df <- filter(data, tss_name == 'TSS_10021_storz_wanner_regulondb')
+# set wild-type
+wt <- filter(df, category == 'unscramble')
+wt_seq <- as.character(wt$variant)
+vars <- filter(df, category == 'scramble') %>% arrange(scramble_start)
+```
+
+```{r}
+total_phmm_score <- function(seq_list, phmm) {
+    forward_path <- lapply(seq_list, forward, x = phmm)
+    log_odds <- unlist(lapply(forward_path, `[[`, 1))
+    return(sum(log_odds))
+}
+
+
+highest_phmm_match <- function(seq_list, phmm) {
+    forward_path <- lapply(seq_list, forward, x = phmm)
+    log_odds <- unlist(lapply(forward_path, `[[`, 1))
+    index <- which.max(log_odds)
+    max_log_odds <- log_odds[index]
+    # best_match <- paste(seq_list[[index]], collapse = '')
+    return(c(max_log_odds, index))
+}
+
+scan_phmms <- function(sequence, phmms, score_type) {
+    # generate tiles
+    n <- phmms[[1]]$size
+    starts <- seq(nchar(sequence) - n + 1)
+    tiles <- mapply(substr, start =  starts, stop = starts + n - 1, 
+                    MoreArgs = list(x = sequence))
+    tiles_list <- strsplit(tiles, split = '')
+    if(score_type == 'sum') {
+        score <- lapply(phmms, total_phmm_score, seq_list = tiles_list)
+    }
+    else if(score_type == 'max') {
+        score <- lapply(phmms, highest_phmm_match, seq_list = tiles_list)
+    }
+    return(score)
+}
+
+phmms <- list(crp_phmm)
+vars <- vars %>% 
+    rowwise() %>% 
+    mutate(total_crp_phmm_score = unlist(scan_phmms(variant, 
+                                                    phmms = phmms, 
+                                                    score_type = 'sum')))
+
+wt_score <- unlist(scan_phmms(wt_seq, phmms, score_type = 'sum'))
+vars$delta_phmm_score <- vars$total_crp_phmm_score - wt_score
+```
+
+Let's look at this test example and see how the change in CRP score compares with
+relative expression (scrambled expression / wild-type expression)
+
+```{r}
+ggplot(vars, aes(delta_phmm_score, relative_exp)) + geom_point()
+```
+
+
+```{r}
+cor.test(vars$relative_exp, vars$delta_phmm_score)
+```
+
+Hmm there does seem to be a connection. If the scramble increases the score, expression goes up.
+The correlation is mild, but it's not significant here.
+
+```{r}
+vars <- vars %>% 
+    mutate(delta_expression = RNA_exp_ave - unscrambled_exp)
+
+ggplot(vars, aes(delta_phmm_score, delta_expression)) + geom_point()
+```
+
+```{r}
+cor.test(log(vars$delta_expression), vars$delta_phmm_score)
+```
+
+Correlation is better with log.
+
+Let's wrap this all into one function that can be executed on data grouped by TSS name
+
+```{r}
+phmms <- list(crp_phmm)
+
+data <- data %>% 
+    rowwise() %>% 
+    mutate(total_crp_phmm_score = unlist(scan_phmms(variant, 
+                                                    phmms = phmms, 
+                                                    score_type = 'sum'))) %>% 
+    ungroup()
+
+# calculate difference between scramble and wild-type
+data <- data %>% 
+    group_by(tss_name) %>% 
+    mutate(wt_total_crp_phmm_score = ifelse(any(category == 'unscramble'),
+                                            total_crp_phmm_score[category == 'unscramble'],
+                                            NA),
+           delta_phmm_score = total_crp_phmm_score - wt_total_crp_phmm_score) %>% 
+    ungroup()
+
+data <- data %>% 
+    mutate(delta_expression = RNA_exp_ave - unscrambled_exp)
+```
+
+```{r}
+ggplot(data, aes(delta_phmm_score, delta_expression)) + geom_point(alpha = 0.25)
+```
+
+```{r}
+cor.test(data$delta_expression, data$delta_phmm_score)
+```
+
+What if we looked at the difference in the log transformed expression?
+```{r}
+tmp <- data %>% 
+    mutate(log_exp = log(RNA_exp_ave),
+           wt_log_exp = log(unscrambled_exp),
+           delta_log_exp = log_exp - wt_log_exp)
+
+cor.test(tmp$delta_log_exp, tmp$delta_phmm_score)
+```
+
+Hmm, interesting the correlation does improve and is significant now, even though it's really small.
+
+```{r}
+ggplot(data, aes(as.character(scramble_start), delta_phmm_score)) + geom_boxplot() +
+    labs(x = 'scramble start position', y = 'change in CRP score') + 
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+data %>% 
+    filter(category == 'scramble') %>% 
+    select(scramble_start, delta_phmm_score, delta_expression) %>% 
+    lm(delta_expression ~ . , data = .) %>% 
+    summary()
+```
+
+```{r}
+data %>% 
+    filter(category == 'scramble') %>% 
+    mutate(log_exp = log(RNA_exp_ave),
+           wt_log_exp = log(unscrambled_exp),
+           delta_log_exp = log_exp - wt_log_exp) %>% 
+    select(scramble_start, delta_phmm_score, delta_log_exp) %>% 
+    lm(delta_log_exp ~ . , data = .) %>% 
+    summary()
+```
+
+Model is marginally better using log transformed data, which is interesting.
+
+```{r, echo = F}
+# cleanup
+rm(decreased_set, increased_set, kmer_counts, model_tf_subset)
+rm(model_all_kmers, model_signif_kmers)
+```
+
+Let's find the location of the best CRP match for each wild-type sequence.
+
+```{r}
+wt_sequences <- as.list(filter(data, category == 'unscramble') %>% .$variant)
+wt_phmm_hits <- lapply(wt_sequences, scan_phmms, phmms = phmms, score_type = 'max')
+# unlist the sublists
+wt_phmm_hits <- lapply(wt_phmm_hits, unlist)
+```
+
+Now that we know where the best CRP site is for each WT, let's create a new data frame
+that lists, for each WT sequence, the scrambled variants that overlap the site and the change
+in expression between WT and scrambled.
+
+```{r}
+# source("http://bioconductor.org/biocLite.R")
+# biocLite("IRanges")
+library(IRanges)
+
+wt_df <- left_join(data, 
+                   data.frame(tss_name = filter(data, category == 'unscramble') %>% .$tss_name, 
+                              wt_best_crp_score = unlist(lapply(wt_phmm_hits, `[[`, 1)),
+                              wt_best_crp_score_pos = unlist(lapply(wt_phmm_hits, `[[`, 2))),
+                   by = 'tss_name')
+
+# overlap <- function(x, start, stop) {
+#     if(any(is.na(c(x, start, stop)))) {
+#         return(FALSE)
+#     }
+#     if( (start <= x) & (x <= stop) ) {
+#         return(TRUE)
+#     }
+#     else { return(FALSE) }
+# }
+
+overlap <- function(start1, width, start2, stop2, overlap_fraction) {
+    if(any(is.na(c(start1, start2, stop2)))) { return(FALSE) }
+    min_overlap <- floor(overlap_fraction * width)
+    range1 <- IRanges(start = start1, width = width)
+    range2 <- IRanges(start = start2, end = stop2)
+    common <- findOverlaps(range1, range2, minoverlap = min_overlap)
+    if(length(common) != 0) {
+        return(TRUE)
+    }
+    else {
+        return(FALSE)
+    }
+}
+
+
+# check if scramble overlaps with best CRP site
+wt_df <- wt_df %>% 
+    rowwise() %>% 
+    mutate(overlap_best_crp = ifelse(category == 'scramble',
+                                     overlap(wt_best_crp_score_pos, 
+                                             crp_phmm$size,
+                                             scramble_start + 1, 
+                                             scramble_end,
+                                             0.3),
+                                     TRUE)) %>% 
+    ungroup()
+
+# only keep ones that overlap
+wt_df <- wt_df %>% 
+    filter(overlap_best_crp == T) %>% 
+    arrange(tss_name, scramble_start) %>% 
+    mutate(log_exp = log(RNA_exp_ave),
+           wt_log_exp = log(unscrambled_exp),
+           delta_log_exp = log_exp - wt_log_exp)
+```
+
+
+```{r}
+# assign position relative to TSS and with respect to strand
+wt_df <- wt_df %>% 
+    mutate(wt_best_crp_score_pos_relative = case_when(.$strand == '+' ~ wt_best_crp_score_pos - 121,
+                                                      .$strand == '-' ~ 150 - wt_best_crp_score_pos - 120,
+                                                      TRUE ~ NaN))
+```
+
+```{r}
+ggplot(wt_df, aes(factor(wt_best_crp_score_pos_relative), delta_log_exp)) + geom_boxplot() +
+    theme(axis.text.x = element_text(angle = 90, size = 8)) +
+    labs(x = 'start position of best WT CRP site',
+         y = 'log expression scramble - \n log expression WT')
+```
+
+```{r}
+cor.test(wt_df$wt_best_crp_score_pos_relative, wt_df$delta_log_exp)
+```
+
+Not all of the WT sequences are actually regulated by CRP and could be contributing noise.
+Let's assign a significance to each CRP score and to filter out sequences that do not have
+strong sites. Let's take a random sample of the genome and plot the distribution of CRP HMM scores.
+
+```{bash}
+bedtools random -l 22 -n 10000 -seed 123 -g ../../ref/Escherichia_coli_K-12_MG1655_genomeFile.txt > ecoli_genome_random_22bp.bed
+bedtools getfasta -fi ../../ref/Escherichia_coli_K-12_MG1655.fasta -bed ecoli_genome_random_22bp.bed -fo ecoli_genome_random_22bp.txt -tab -s
+```
+
+```{r}
+genome_random <- read.table('ecoli_genome_random_22bp.txt', header = F,
+                            col.names = c('name', 'sequence'))
+random_sequences <- strsplit(genome_random$sequence, '')
+random_phmm_hits <- lapply(random_sequences, forward, x = crp_phmm)
+# extract just score
+random_phmm_hits <- unlist(lapply(random_phmm_hits, `[[`, 1))
+```
+
+```{r}
+ggplot(data.frame(score = random_phmm_hits), aes(score)) + geom_density() +
+    labs(x = 'CRP HMM score', title = '100,000 random genomic sequences 22bp')
+```
+
+Calculate permutation p-value: B / m
+B : how many observations from the random genomic distribution have a value at least as extreme 
+m: number of tests
+
+This can also be thought of as 1 - percentile. Example, 20% percentile is value below which
+20% of observations may be found.
+
+```{r}
+random_hits_ecdf <- ecdf(random_phmm_hits)
+wt_df <- wt_df %>% 
+    mutate(emp_pval = 1 - random_hits_ecdf(wt_best_crp_score))
+```
+
+```{r}
+ggplot(wt_df, aes(wt_best_crp_score)) + geom_density()
+```
+
+```{r}
+ggplot(wt_df, aes(emp_pval)) + geom_density() + 
+    geom_vline(xintercept = 0.05, color = 'red')
+```
+
+It seems like the distribution of CRP scores for our library is much different than the genomic distribution.
+Maybe promoters in general are more likely to have at least one high scoring CRP site compared to random
+genomic sequence (which would fall in genes too). So, most of these WT sequences would have a significant CRP site
+with this current "null" genomic distribution. Or, maybe scanning the 150bp chunks with the 22bp HMM is just much more sampling,
+so more likely to get a higher score. Let's grab 150bp random chunks from the genome and
+see if it changes anything.
+
+```{bash}
+bedtools random -l 150 -n 10000 -seed 123 -g ../../ref/Escherichia_coli_K-12_MG1655_genomeFile.txt > ecoli_genome_random_150bp.bed
+bedtools getfasta -fi ../../ref/Escherichia_coli_K-12_MG1655.fasta -bed ecoli_genome_random_150bp.bed -fo ecoli_genome_random_150bp.txt -tab -s
+```
+
+```{r}
+genome_random150 <- read.table('ecoli_genome_random_150bp.txt', header = F,
+                            col.names = c('name', 'sequence'))
+random150_sequences <- as.list(genome_random150$sequence)
+random150_phmm_hits <- lapply(random150_sequences, scan_phmms, phmms = phmms, score_type = 'max')
+# unlist
+random150_phmm_hits <- lapply(random150_phmm_hits, `[[`, 1)
+random150_phmm_hits_score <- unlist(lapply(random150_phmm_hits, `[[`, 1))
+```
+
+```{r}
+ggplot(data.frame(score = random150_phmm_hits_score), aes(score)) + geom_density() +
+    labs(x = 'CRP HMM score', title = '100,000 random genomic sequences 150bp') +
+    geom_density(data = wt_df, aes(wt_best_crp_score), color = 'red')
+```
+
+```{r}
+random_hits_ecdf <- ecdf(random150_phmm_hits_score)
+wt_df <- wt_df %>% 
+    mutate(emp_pval = 1 - random_hits_ecdf(wt_best_crp_score))
+```
+
+```{r}
+ggplot(wt_df, aes(emp_pval)) + geom_density() + 
+    geom_vline(xintercept = 0.05, color = 'red')
+```
+
+Much better!
+
+```{r}
+wt_df_crp <- filter(wt_df, emp_pval <= .05)
+table(wt_df_crp$category)
+```
+
+```{r}
+table(data$category)
+```
+
+About 15% of WT (unscrambled) sequences contain a CRP site with an empirical 
+p-value of 0.05.
+
+Let's look at the start position of the WT best CRP score vs. change in logged expression for only
+the WTs (and their overlapping scrambled variants) with significant CRP sites.
+
+```{r}
+ggplot(wt_df_crp, aes(factor(wt_best_crp_score_pos_relative), delta_log_exp)) + geom_boxplot() +
+    theme(axis.text.x = element_text(angle = 90, size = 10)) +
+    geom_hline(yintercept = 0, linetype = 'dashed') +
+    labs(x = 'start position of best WT CRP site',
+         y = 'log expression scramble - \n log expression WT',
+         title = 'WT with significant CRP site')
+```
+
+
+```{r}
+wt_df_crp %>% 
+    mutate(score_fact = factor(wt_best_crp_score_pos_relative)) %>% 
+    group_by(score_fact) %>% 
+    summarise(mean_delta = mean(delta_log_exp),
+              n = n()) %>% 
+    ggplot(aes(score_fact, mean_delta)) + geom_bar(stat = 'identity') +
+    theme(axis.text.x = element_text(angle = 90, size = 10)) +
+    labs(x = 'start position of best WT CRP site',
+         y = 'mean(log expression scramble - \n log expression WT)')
+```
+
+
+```{r}
+wt_df_crp %>% 
+    mutate(score_fact = factor(wt_best_crp_score_pos_relative)) %>% 
+    group_by(score_fact) %>% 
+    summarise(mean_delta = mean(delta_log_exp)) %>% 
+    mutate(pos = as.numeric(levels(score_fact))) %>% 
+    ggplot(aes(pos, mean_delta)) + geom_point() + 
+    # geom_smooth(span = 0.1) + 
+    geom_line() +
+    geom_hline(yintercept = 0, linetype = 'dashed')
+```
+
+Let's get the mean change in log expression at each position, before we filter out for CRP
+significance. Then, we can normalize to this number to account for any positions that
+are sensitive to scrambling in general.
+
+```{r}
+wt_df_mean_pos <- wt_df %>% 
+    mutate(score_fact = factor(wt_best_crp_score_pos_relative)) %>% 
+    group_by(score_fact) %>% 
+    summarise(mean_delta_all = mean(delta_log_exp))
+
+wt_df_crp_mean_pos <- wt_df_crp %>% 
+    mutate(score_fact = factor(wt_best_crp_score_pos_relative)) %>% 
+    group_by(score_fact) %>% 
+    summarise(mean_delta = mean(delta_log_exp))
+
+wt_df_mean_pos_all <- full_join(wt_df_mean_pos, wt_df_crp_mean_pos, by = 'score_fact') %>% 
+    mutate(mean_delta_norm = mean_delta - mean_delta_all,
+           score_fact = factor(score_fact))
+```
+
+```{r}
+ggplot(wt_df_mean_pos_all, aes(reorder(score_fact, sort(as.numeric(score_fact))), mean_delta_norm)) + geom_bar(stat = 'identity') +
+    theme(axis.text.x = element_text(angle = 90, size = 10)) +
+    labs(x = 'start position of best WT CRP site',
+         y = 'normalized mean(log expression scramble - \n log expression WT)')
+```
+ 
+ Looks almost the same, even after subtracting the average expression change for all WT sequences
+ (including those that didn't pass CRP filter).
+ 
+ 
+ Let's generate a graph that shows the average change in expression for all scrambled sequences.
+ 
+```{r}
+data %>% 
+    mutate(scramble_start_relative = case_when(.$strand == '+' ~ scramble_start + 1 - 121,
+                                               .$strand == '-' ~ 150 - scramble_start - 120,
+                                               TRUE ~ NaN),
+           scramble_start_relative_fct = factor(scramble_start_relative)) %>% 
+    group_by(scramble_start_relative_fct) %>% 
+    summarise(mean_delta_exp = mean(delta_expression, na.rm = T)) %>% 
+    ggplot(aes(scramble_start_relative_fct, mean_delta_exp)) + geom_bar(stat = 'identity') +
+    theme(axis.text.x = element_text(angle = 90, size = 10)) +
+    labs(x = 'start position of scrambled site',
+         y = 'mean(log expression scramble - \n log expression WT)')
+
+
+```
+ 

@@ -8,19 +8,21 @@ library("ggplot2")
 library("dplyr")
 library("tidyr")
 require("cowplot")
+source("http://bioconductor.org/biocLite.R")
+library('PWMEnrich')
 
 options(stringsAsFactors = F)
 options(scipen = 10000)
 
 args = commandArgs(trailingOnly=TRUE)
 args <- c('../../processed_data/peak_tile',
-          '../../processed_data/peak_tile/peak_tile_mapping_barcode_statistics.txt',
-          '../../processed_data/peak_tile/peak_tile_mapping_variant_statistics.txt',
-          '../../ref/20180508_lb_peak_tile_lib.txt',
+          '../../processed_data/peak_tile/peak_tile_combined_all_bc_map.txt',
+          '../../processed_data/peak_tile/peak_tile_controls_barcode_statistics.txt',
+          '../../ref/20180508_lb_peak_tile_lib_trimmed.txt',
           '../../processed_data/peak_tile/peak_tile_expression.txt')
 count_folder <- args[1]
-bc_stats <- args[2]
-var_stats <- args[3]
+bc_stats_file <- args[2]
+bc_stats_control_file <- args[3]
 lib_file <- args[4]
 output_name <- args[5]
 
@@ -52,6 +54,7 @@ names(rLP5_peak_tile) = c('DNA1_1', 'barcode', 'DNA1_2',
                              'DNA2_1', 'DNA2_2', 
                              'RNA1_1', 'RNA1_2',
                              'RNA2_1', 'RNA2_2')
+
 rLP5_peak_tile <- select(rLP5_peak_tile, barcode, DNA1_1, DNA1_2:RNA2_2)
 
 rm(list = c('rLP5_PeakTiling_LB_DNA1_1_S5_R1_001',
@@ -66,9 +69,23 @@ rm(x)
 
 
 #Combine barcode counts with their promoter identity
-bc_stats <- read.table(bc_stats, header = T)
+bc_stats <- read.table(bc_stats_file, header = F, sep = ',', fill=T,
+                       col.names = c('barcode', 'variant', 'count'))
+bc_stats_controls <- read.table(bc_stats_control_file, header = T, sep = '\t')
 
-mapped_barcodes <- bc_stats[!is.na(bc_stats$most_common),] #Remove unmapped barcodes
+# read in reference and add names to bc_stats variant
+ref <- read.table(lib_file, header = F,
+                  col.names = c('name', 'variant')) %>% 
+    mutate(variant = toupper(variant))
+ref_dup <- ref %>% 
+    mutate(name = paste0(name, '_rc'),
+           variant = as.character(reverseComplement(DNAStringSet(variant)))) %>% 
+    select(name, variant) %>% 
+    bind_rows(select(ref, name, variant))
+
+bc_stats <- left_join(bc_stats, ref_dup, by = 'variant')
+mapped_barcodes <- filter(bc_stats, !is.na(name))
+
 Compare_barcode_Reps <- inner_join(mapped_barcodes, rLP5_peak_tile , by ='barcode') 
 Compare_barcode_Reps[is.na(Compare_barcode_Reps)] <- 0
 
@@ -84,7 +101,8 @@ nrow(filter(Compare_barcode_Reps, DNA1_1 > 0 | DNA2_1 > 0))
 #temp <- filter(Compare_barcode_Reps, rLP5_peak_tile_LB_DNA1 > 0 | rLP5_peak_tile_LB_DNA2 > 0) #Remove barcodes with no DNA counts
 
 peak_tile <- Compare_barcode_Reps %>% 
-    group_by(most_common) %>% 
+    # mutate(name = gsub('_rc', '', name)) %>% 
+    group_by(name) %>% 
     mutate(num_barcodes_mapped = n()) %>%
     filter(DNA1_1 > 0, DNA1_2 > 0, DNA2_1 > 0, DNA2_2 > 0) %>%
     mutate(num_barcodes_integrated = n()) %>%
@@ -100,20 +118,22 @@ peak_tile <- Compare_barcode_Reps %>%
            DNA_2 = (sum(DNA2_1)+sum(DNA2_2)),  
            DNA_ave = ((DNA_1 + DNA_2)/2)) %>%
     ungroup() %>%
-    select(most_common, RNA_exp_1_1, RNA_exp_1_2, RNA_exp_2_1, RNA_exp_2_2,
+    select(name, RNA_exp_1_1, RNA_exp_1_2, RNA_exp_2_1, RNA_exp_2_2,
            RNA_exp_1, RNA_exp_2, RNA_exp_ave, DNA_1, DNA_2, DNA_ave, 
            num_barcodes_mapped, num_barcodes_integrated) %>% 
     distinct() 
 
-var_stats <- read.table(var_stats, header = T, sep = '\t')
-peak_tile <- var_stats %>%
-    select(name, variant) %>% 
-    inner_join(., peak_tile, by = c('variant' = 'most_common'))
+# rename
+names(peak_tile)[1] <- 'name'
+# add in sequence
+peak_tile <- left_join(peak_tile, 
+                 select(Compare_barcode_Reps, name, variant) %>% distinct(),
+                       by = 'name')
 
 write.table(peak_tile, output_name, quote = F, row.names = F)
 
-percent_covered <- nrow(peak_tile) / nrow(var_stats)
-# roughly 88% when requiring reads in all four DNA replicates
+percent_covered <- nrow(peak_tile) / nrow(ref)
+# roughly 89% when requiring reads in all four DNA replicates
 
 
 #distribution of the number of mapped and integrated barcodes

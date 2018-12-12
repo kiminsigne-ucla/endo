@@ -36,7 +36,11 @@ We classified sequences into active and inactive based on the negative controls.
 
 ## Endo TSS scramble library ##
 
-The purpose of this library is to determine which motifs in the active sequences from the endogenous TSS library are driving expression. We took the active promoters and scrambled 10bp regions at 5bp intervals. Including the positive and negative controls, final library size n = 62,322. After integration, we recovered 87% (54051/62322) of the library. The expression data lives here: `processed_data/endo_scramble/endo_scramble_expression.txt`
+The purpose of this library is to determine which motifs in the active sequences from the endogenous TSS library are driving expression. We took the active promoters and scrambled 10bp regions at 5bp intervals. Including the positive and negative controls, final library size n = 62,322. After integration, we recovered 87% (54051/62322) of the library. The expression data lives here: `processed_data/endo_scramble/endo_scramble_expression.txt`.
+
+There are three separate mapping runs, and one RNA barcode run.
+
+
 
 ## Genome fragmentation library ##
 
@@ -53,12 +57,16 @@ Distribution of fragment length:
 
 The data lives here: `processed_data/frag_peak_calling/U00096.2_frag-rLP5_LB_expression.txt`
 
+There is one mapping run, and two RNA runs in LB and M9.
+
 
 ## Peak tiling library ##
 
 In our genome fragmentation library, we defined contiguous stretches of the genome that were above a certain empirically/arbitrarily chosen cutoff of expression 1.1 - this cutoff covered the majority of active TSS from the endo library. We called "peaks" with a basic algorithm which required a minimum size of 60bp and merged adjacent peaks within 40bp. We used these defined "active" peaks and generated a peak tiling library. We tiled the peaks with tiles of length 150bp, in 10bp increments. There were 3,480 active peaks. Additionally, we included 1000 randomly generated 150bp sequences. Total library size, with controls, n = 49,991. After integration, 86% (43449/49991) of the library was recovered.
 
 The data lives here: `processed_data/peak_tile/peak_tile_expression.txt`
+
+There are three separate mapping runs, and one RNA barcode run.
 
 
 
