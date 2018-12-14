@@ -14,6 +14,7 @@ import numpy
 import random
 import argparse
 import subprocess
+import shlex
 
 
 def fastq_reader(filename):
@@ -44,6 +45,7 @@ def fasta_reader(filename):
 		for line in infile:
 			if line.startswith('>'):
 				if len(seq) != 0:
+					# print name, seq
 					seqs[name] = seq
 				
 				name = line.strip()[1:] # remove leading '>'
@@ -53,9 +55,41 @@ def fasta_reader(filename):
 
 		# catch last sequence
 		if len(seq) != 0:
+			# print name, seq
 			seqs[name] = seq
 
 	return seqs
+
+
+def sam_parser(filename):
+	infile  = open(filename)
+	aligned_reads = []
+	alignments = {}
+	for line in infile:
+		fields = line.strip().split('\t')
+		if fields[1] != '4': # read is mapped
+			read = fields[9]
+			name = fields[2]
+			# # don't know why it reports 'null' even though
+			# # > 50bp map to a reference sequence, just parse separately
+			# if name == 'null':
+			# 	# check cigar string to grab portion that matches, see if it
+			# 	# matches
+			# 	cigar = fields[5]
+			# 	if cigar[2] == '=':
+			# 		match_len = int(cigar[:2])
+			# 		variant = read[:match_len]
+			# 		if variant in controls:
+			# 			# assign alignment proper name
+			# 			alignments[read] = controls[variant]
+			# 			aligned_reads.append(read)
+			# else:
+				
+			alignments[read] = name
+			aligned_reads.append(read)
+
+	return aligned_reads, alignments
+
 
 
 def library_reader(filename, primer_len, rev_complement=True, format = 'csv'):
@@ -67,8 +101,8 @@ def library_reader(filename, primer_len, rev_complement=True, format = 'csv'):
 	lib = {}
 
 	with open(filename) as infile:
-		# read through first line
-		infile.readline()
+		# # read through first line
+		# infile.readline()
 		for line in infile:
 			if format == 'csv':
 				name, seq = line.strip().split(',')[:2]
@@ -98,21 +132,13 @@ def reverse_complement(seq):
 	return rc
 
 
-def find_perfect_controls(reads, controls):
-	perfect_reads = []
-	for read in reads:
-		for x in controls:
-			match = read.find(x)
-			if match > -1:
-				perfect_reads.append(read)
-				break
-	return perfect_reads
-
-
-def mapping(barcodes, perfect_reads, reads, bc_loc, bc_len):
+def mapping(barcodes, aligned_reads, reads, alignments, controls, bc_loc, bc_len):
 
 	variant_map = defaultdict(list)
 	barcode_map = defaultdict(list)
+
+	# create reverse dictionary of controls where names are keys
+	controls_flipped = {controls[x] : x for x in controls}
 
 	# for each barcode that passes filters, look at all reads and see what
 	# it maps to
@@ -126,25 +152,25 @@ def mapping(barcodes, perfect_reads, reads, bc_loc, bc_len):
 		if barcodes.get(barcode, 0) > 0:
 			barcode_map[barcode].append(read)
 
-	# in the perfect reads, keep track of how many barcodes go to each variant
-	for read in perfect_reads:
+	# in the aligned reads, keep track of how many barcodes go to each variant
+	for read in aligned_reads:
+		# look up aligned control
+		name = alignments[read]
+		# find proper variant length
+		var_len = len(controls_flipped[name])
 		if bc_loc == 'start':
 			barcode = read[:bc_len]
+			variant = read[bc_len : bc_len+var_len]
 		elif bc_loc == 'end':
 			variant = read[:var_len]
-
-		# pos controls are not variant length, so check for this
-		for x in controls:
-			match = read.find(x)
-			if match > -1:
-				variant = read[:(match + len(x))]
+			barcode = read[-bc_len:]
 
 		variant_map[variant].append(barcode)
 
 	return [variant_map, barcode_map]
 
 
-def filter_barcodes(barcode_map, cutoff, bc_loc, bc_len, name, controls):
+def filter_barcodes(barcode_map, controls, alignments, cutoff, bc_loc, bc_len, name):
 	'''
 	For each barcode, calculate the Levenshtein distance between its reads
 	and if it is below cutoff (aka barcode maps to similar reads, no cross-talk)
@@ -153,15 +179,15 @@ def filter_barcodes(barcode_map, cutoff, bc_loc, bc_len, name, controls):
 
 	final_barcodes = []
 	covered_sequences = set()
-	lib = set(lib.keys()) # for faster lookup
-	if controls:
-		lib = lib.update(set(controls.keys()))
+	# controls = set(controls.keys()) # for faster lookup
+	# create reverse dictionary of controls where names are keys
+	controls_flipped = {controls[x] : x for x in controls}
 
 	all_dist = []
 
 	outfile = open(name, 'w')
 	headers = ['barcode', 'num_unique', 'num_reads', 'num_reads_most_common', 
-	'most_common']
+	'most_common', 'name']
 	outfile.write('\t'.join(headers)+'\n')
 
 	for barcode in barcode_map:
@@ -169,28 +195,24 @@ def filter_barcodes(barcode_map, cutoff, bc_loc, bc_len, name, controls):
 		# grab most common read as reference
 		most_common = Counter(reads).most_common(1)[0][0]
 
-		# check if most common is a positive control, shorten trimmed reads to appropriate length
-		for x in controls:
-			match = most_common.find(x)
-			if match > -1:
-				new_var_length = match + len(x)
-				most_common = most_common[:new_var_length]
-				trimmed = [read[:new_var_length] for read in reads]
-				break
+		# find positive control, shorten trimmed reads to appropriate length
+		name = alignments.get(most_common, None)
+		if name is not None:
+			var_len = len(controls_flipped[name])
+			trimmed = [read[:var_len] for read in reads]
+			most_common_trimmed = most_common[:var_len]
 
-		# calculate distance between each read and reference
-		distances = [Levenshtein.distance(most_common, read) for read in set(trimmed)]
-		all_dist.append(max(distances))
-		# max distance for set of reads belonging to a barcode must be below cutoff
-		if max(distances) < cutoff:
-			num_unique = len(set(trimmed))
-			num_reads = len(trimmed)
-			num_reads_most_common = Counter(trimmed).most_common(1)[0][1]
-			if most_common in controls:
-				# only accept barcode if the most common read is in the library
+			# calculate distance between each read and reference
+			distances = [Levenshtein.distance(most_common_trimmed, read) for read in set(trimmed)]
+			all_dist.append(max(distances))
+			# max distance for set of reads belonging to a barcode must be below cutoff
+			if max(distances) < cutoff:
+				num_unique = len(set(trimmed))
+				num_reads = len(trimmed)
+				num_reads_most_common = Counter(trimmed).most_common(1)[0][1]
+				covered_sequences.add(name)
 				final_barcodes.append(barcode)
-				covered_sequences.add(most_common)
-				info = [barcode, num_unique, num_reads, num_reads_most_common, most_common]
+				info = [barcode, num_unique, num_reads, num_reads_most_common, most_common_trimmed, name]
 				info = map(str, info)
 				outfile.write('\t'.join(info)+'\n')
 
@@ -232,7 +254,7 @@ if __name__ == '__main__':
 	parser.add_argument('file_type', help='sequence read format, \
 		specify fastq/fasta/txt')
 	parser.add_argument('controls', help='Control library file if length shorter \
-		than variant library, .csv or .txt (tab) format, file type determined from extension')
+		than variant library, fasta format')
 	parser.add_argument('controls_primer_len', type=int, help='primer length for control file')
 	parser.add_argument('bc_loc', help='barcode location, specify start or end')
 	parser.add_argument('bc_len', type=int, help='length of barcode')
@@ -248,7 +270,7 @@ if __name__ == '__main__':
 	bc_len = args.bc_len
 	output_prefix = args.output_prefix
 
-
+	print ("Mapping controls...")
 	if file_type == 'fastq':
 		reads = fastq_reader(reads_file)
 	elif file_type == 'fasta':
@@ -260,32 +282,44 @@ if __name__ == '__main__':
 		raise Exception("Please specify either fastq, fasta or txt (raw one read per line)")
 
 	print "Number of reads:", len(reads)
-
-
-	if args.controls.endswith('txt'):
-			lib_type = 'tab'
-	elif args.controls.endswith('csv'):
-		lib_type = 'csv'
-	else:
-		raise Exception("Please provide control file in .csv or .txt format")
 	
-	controls = library_reader(
-		filename=args.controls,
-		primer_len=args.controls_primer_len,
-		rev_complement=True,
-		format=lib_type)
+	# controls = library_reader(
+	# 	filename=args.controls,
+	# 	primer_len=args.controls_primer_len,
+	# 	rev_complement=True,
+	# 	format='tab')
 
-	print "Extracting perfect reads..."
-	perfect_reads = find_perfect_controls(reads, controls)
+	controls_fasta = fasta_reader(args.controls)
+	# flip mapping so sequence is key and name is value, add reverse complement
+	controls = {controls_fasta[x] : x for x in controls_fasta}
+	controls.update({reverse_complement(controls_fasta[x]) : x for x in controls_fasta})
 
-	# grab barcodes that map to a perfect sequence
+	print "Running bbmap..."
+	# let's use bbmap to align the controls, much faster
+	DEVNULL = open(os.devnull, 'w')
+	command = shlex.split('bbmap.sh in={} ref={} out={} \
+    	maxindel=200 nodisk=t noheader=t minid=0.20 threads=35'.format(
+    		args.reads_file, args.controls, args.output_prefix + '_bbmap.sam'))
+
+	bbmap = subprocess.Popen(command,
+                         stdout=subprocess.PIPE,
+                         stdin=subprocess.PIPE,
+                         stderr=DEVNULL)
+
+	bbmap.communicate()
+
+    # parse SAM file
+	aligned_reads, alignments = sam_parser(args.output_prefix + '_bbmap.sam')
+
+
+	# grab barcodes that map to a aligned sequence
 	if bc_loc == 'start':
-		barcodes = [read[:bc_len] for read in perfect_reads]
+		barcodes = [read[:bc_len] for read in aligned_reads]
 	elif bc_loc == 'end':
-		barcodes = [read[-bc_len:] for read in perfect_reads]
+		barcodes = [read[-bc_len:] for read in aligned_reads]
 
 
-	print "Number of unique barcodes for perfect reads: ", len(set(barcodes))
+	print "Number of unique barcodes for aligned reads: ", len(set(barcodes))
 	print "Filter by barcode frequency..."
 
 	# Count barcodes 
@@ -297,8 +331,10 @@ if __name__ == '__main__':
 
 	variant_map, barcode_map = mapping(
 		barcodes_clean, 
-		perfect_reads, 
-		reads, 
+		aligned_reads, 
+		reads,
+		alignments,
+		controls, 
 		bc_loc, 
 		bc_len)
 
@@ -308,22 +344,17 @@ if __name__ == '__main__':
 		cutoff = args.cutoff
 	else:
 		print "Bootstrapping reference sequences to obtain cutoff...", 
-		cutoff = bootstrap_levenshtein(lib, 10000)
+		cutoff = bootstrap_levenshtein(controls, 10000)
 		print "cutoff is Levenshtein distance ", cutoff
 
-	print "Filtering and writing results..."
+	print "Filtering and writing resultbs..."
 	final_barcodes = filter_barcodes(
 		barcode_map, 
+		controls, 
+		alignments,
 		cutoff,
 		bc_loc,
 		bc_len,
 		output_prefix + '_barcode_statistics.txt')
 
 	print "Number of final barcodes: ", len(final_barcodes)
-	# write final barcodes to file
-	outfile = open(output_prefix + '_mapped_barcodes.txt', 'w')
-	for barcode in final_barcodes:
-		outfile.write(barcode+'\n')
-	outfile.close()
-
-

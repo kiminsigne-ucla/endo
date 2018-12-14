@@ -18,21 +18,22 @@ active_tss_lib: $(LIB)/$(DATE)_active_tss_scrambled10_stride5.txt
 
 # mapping
 $(MERGE_DEST)/pEndo2_84.paired.assembled.fastq: $(RAW_DATA)/bc_map/pEndo2_84_R1.fastq \
-	$(RAW_DATA)/bc_map/pEndo2_84_R2.fastq pearallel.sh
-	./pearallel.sh $(RAW_DATA)/bc_map/pEndo2_84 $(MERGE_DEST)
+	$(RAW_DATA)/bc_map/pEndo2_84_R2.fastq ../pearallel.sh
+	../pearallel.sh $(RAW_DATA)/bc_map/pEndo2_84 $(MERGE_DEST)
 
 
 $(MERGE_DEST)/pEndo2_85.paired.assembled.fastq: $(RAW_DATA)/bc_map/pEndo2_85_R1.fastq \
-	$(RAW_DATA)/bc_map/pEndo2_85_R2.fastq pearallel.sh
-	./pearallel.sh $(RAW_DATA)/bc_map/pEndo2_85 $(MERGE_DEST)
+	$(RAW_DATA)/bc_map/pEndo2_85_R2.fastq ../pearallel.sh
+	../pearallel.sh $(RAW_DATA)/bc_map/pEndo2_85 $(MERGE_DEST)
 
 
 $(MERGE_DEST)/endo_lb_merged.fastq: $(MERGE_DEST)/pEndo2_84.paired.assembled.fastq $(MERGE_DEST)/pEndo2_85.paired.assembled.fastq
 	@ cat $^ > $@
 
 
+# trim reference to remove primer: awk '!/>/{ print substr($1, 25, 150);next}1' ref.fasta
 $(DATA)/endo_lb_mapping_barcode_statistics.txt: $(MERGE_DEST)/endo_lb_merged.fastq
-	@ python barcode_mapping.py $< fastq ../../ref/endo_lib_2016_controls_clean.txt \
+	@ python ../barcode_mapping.py $< fastq ../../ref/endo_lib_2016_controls_clean.txt \
 	tab 150 24 end 20 $(DATA)/endo_lb_mapping --controls ../../ref/synthetic_promoter_pos_controls_formatted.txt \
 	--controls_primer_len 0
 
@@ -40,7 +41,7 @@ $(DATA)/endo_lb_mapping_barcode_statistics.txt: $(MERGE_DEST)/endo_lb_merged.fas
 
 # use one FASTQ file to trigger barcode counting for all FASTQ files
 $(DATA)/counts_rLP5_Endo2_DNA1.txt: | $(RAW_DATA)/DNA_RNA/rLP5_Endo2_DNA1.fastq
-	@ ./endo_barcode_counting.sh $(RAW_DATA)/DNA_RNA
+	@ ../count_barcodes.sh $(RAW_DATA)/DNA_RNA
 	@ mv counts* $(DATA)
 
 # calculate expression

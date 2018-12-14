@@ -3,26 +3,40 @@ RAW_DATA=../../raw_data/peak_tile
 DATA=../../processed_data/peak_tile
 
 
-merge: $(MERGE_DEST)/peak_tile_merged.fastq
+all: merge map map_controls
 
-map: $(DATA)/peak_tile_mapping_barcode_statistics.txt
+merge: $(MERGE_DEST)/peak_tile_combined_merged.fastq
+
+map: $(DATA)/peak_tile_combined_mapping_bc_map_consensus.txt
+
+map_controls: $(DATA)/peak_tile_controls_barcode_statistics.txt
+
+count_barcodes:
+
+# map combined reads
+$(MERGE_DEST)/pPeakTiling_82_combined.paired.assembled.fastq: $(RAW_DATA)/bc_map/pPeakTiling_82_combined_R1.fastq \
+	$(RAW_DATA)/bc_map/pPeakTiling_82_combined_R2.fastq ../pearallel.sh
+	../pearallel.sh $(RAW_DATA)/bc_map/pPeakTiling_82_combined $(MERGE_DEST)
 
 
-$(MERGE_DEST)/pPeakTiling_82.paired.assembled.fastq: $(RAW_DATA)/bc_map/pPeakTiling_82_S3_R1_001.fastq \
-	$(RAW_DATA)/bc_map/pPeakTiling_82_S3_R2_001.fastq ../pearallel.sh
-	../pearallel.sh $(RAW_DATA)/bc_map/pPeakTiling_82 $(MERGE_DEST)
+$(MERGE_DEST)/pPeakTiling_83_combined.paired.assembled.fastq: $(RAW_DATA)/bc_map/pPeakTiling_83_combined_R1.fastq \
+	$(RAW_DATA)/bc_map/pPeakTiling_83_combined_R2.fastq ../pearallel.sh
+	../pearallel.sh $(RAW_DATA)/bc_map/pPeakTiling_83_combined $(MERGE_DEST)
 
 
-$(MERGE_DEST)/pPeakTiling_83.paired.assembled.fastq: $(RAW_DATA)/bc_map/pPeakTiling_83_S4_R1_001.fastq \
-	$(RAW_DATA)/bc_map/pPeakTiling_83_S4_R2_001.fastq ../pearallel.sh
-	../pearallel.sh $(RAW_DATA)/bc_map/pPeakTiling_83 $(MERGE_DEST)
-
-
-$(MERGE_DEST)/peak_tile_merged.fastq: $(MERGE_DEST)/pPeakTiling_82.paired.assembled.fastq $(MERGE_DEST)/pPeakTiling_83.paired.assembled.fastq
+$(MERGE_DEST)/peak_tile_combined_merged.fastq: $(MERGE_DEST)/pPeakTiling_82_combined.paired.assembled.fastq $(MERGE_DEST)/pPeakTiling_83_combined.paired.assembled.fastq
 	@ cat $^ > $@
 
 
-$(DATA)/peak_tile_mapping_barcode_statistics.txt: $(MERGE_DEST)/peak_tile_merged.fastq
-	@ python ../barcode_mapping.py $< fastq ../../ref/20180508_lb_peak_tile_lib.txt \
-	tab 150 24 end 20 $(DATA)/peak_tile_mapping --controls ../../ref/synthetic_promoter_pos_controls_formatted.txt \
-	--controls_primer_len 0 > $(DATA)/mapping_log_peak_tile.txt
+$(DATA)/peak_tile_combined_mapping_bc_map_consensus.txt: $(MERGE_DEST)/peak_tile_combined_merged.fastq
+	@ python ../bc_map_consensus.py $< ../../ref/20180508_lb_peak_tile_lib_trimmed.fasta \
+	--bc-start -20 --bc-length 20 --proc 30 --verbose --bbmap-procs 30 \
+	--var_start 1 --var_length 150 --min-reads 3 --bad-bcs $(DATA)/bc_map_consensus_bad_bcs.txt > $@
+
+
+$(DATA)/peak_tile_controls_barcode_statistics.txt: $(MERGE_DEST)/peak_tile_combined_merged.fastq
+	@ python ../barcode_mapping_ecoli_pos_controls.py $< fastq \
+	../../ref/synthetic_promoter_pos_controls_formatted.fasta 0 end 20 $(DATA)/peak_tile_controls
+	@ rm -f $(DATA)/peak_tile_controls_bbmap.sam
+
+# use one FASTQ file to trigger barcode counting

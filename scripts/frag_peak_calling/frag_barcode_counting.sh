@@ -1,5 +1,8 @@
+#!/bin/bash
+
 DIR=$1
 OUTPUT=$2
+
 echo "Extracting & counting barcodes..."
 
 for i in ${DIR}/rLP5*.fastq; 
@@ -11,7 +14,7 @@ do
 done
 
 # pretty names
-for file in ${DIR}/rLP5*.txt;
+for file in ${OUTPUT}/rLP5*.txt;
 do
 	mv $file ${file/_S*/}.txt;
 done

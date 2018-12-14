@@ -3,28 +3,40 @@ RAW_DATA=../../raw_data/endo_scramble
 DATA=../../processed_data/endo_scramble
 
 
-merge: $(MERGE_DEST)/endo_scramble_merged.fastq
+all: merge map map_controls
 
-map: $(DATA)/endo_scramble_bc_map_consensus.txt
+merge: $(MERGE_DEST)/endo_scramble_combined_merged.fastq
+
+map: $(DATA)/endo_scramble_combined_bc_map_consensus.txt
+
+map_controls: $(DATA)/endo_scramble_controls_barcode_statistics.txt
 
 
+# Data from two separate mapping runs 
 ################################ Read merging ################################
-$(MERGE_DEST)/pEndoScramble_80.paired.assembled.fastq: $(RAW_DATA)/bc_map/pEndoScramble_80_S1_R1_001.fastq \
-	$(RAW_DATA)/bc_map/pEndoScramble_80_S1_R2_001.fastq ../pearallel.sh
-	../pearallel.sh $(RAW_DATA)/bc_map/pEndoScramble_80 $(MERGE_DEST)
+$(MERGE_DEST)/pEndoScramble_80_combined.paired.assembled.fastq: $(RAW_DATA)/bc_map/pEndoScramble_80_combined_R1.fastq \
+	$(RAW_DATA)/bc_map/pEndoScramble_80_combined_R2.fastq ../pearallel.sh
+	../pearallel.sh $(RAW_DATA)/bc_map/pEndoScramble_80_combined $(MERGE_DEST)
 
 
-$(MERGE_DEST)/pEndoScramble_81.paired.assembled.fastq: $(RAW_DATA)/bc_map/pEndoScramble_81_S2_R1_001.fastq \
-	$(RAW_DATA)/bc_map/pEndoScramble_81_S2_R2_001.fastq ../pearallel.sh
-	../pearallel.sh $(RAW_DATA)/bc_map/pEndoScramble_81 $(MERGE_DEST)
+$(MERGE_DEST)/pEndoScramble_81_combined.paired.assembled.fastq: $(RAW_DATA)/bc_map/pEndoScramble_81_combined_R1.fastq \
+	$(RAW_DATA)/bc_map/pEndoScramble_81_combined_R2.fastq ../pearallel.sh
+	../pearallel.sh $(RAW_DATA)/bc_map/pEndoScramble_81_combined $(MERGE_DEST)
 
 
-$(MERGE_DEST)/endo_scramble_merged.fastq: $(MERGE_DEST)/pEndoScramble_80.paired.assembled.fastq $(MERGE_DEST)/pEndoScramble_81.paired.assembled.fastq
+$(MERGE_DEST)/endo_scramble_combined_merged.fastq: $(MERGE_DEST)/pEndoScramble_80_combined.paired.assembled.fastq $(MERGE_DEST)/pEndoScramble_81_combined.paired.assembled.fastq
 	@ cat $^ > $@
 
 
 ################################ Mapping ####################################
-$(DATA)/endo_scramble_bc_map_consensus.txt: $(MERGE_DEST)/endo_scramble_merged.fastq
+$(DATA)/endo_scramble_combined_bc_map_consensus.txt: $(MERGE_DEST)/endo_scramble_combined_merged.fastq
 	@ python ../bc_map_consensus.py $< ../../ref/20180507_active_tss_scrambled10_stride5_trimmed.fasta \
 	--bc-start -20 --bc-length 20 --proc 30 --verbose --bbmap-procs 30 \
 	--var_start 1 --var_length 150 --min-reads 3 --bad-bcs $(DATA)/bc_map_consensus_bad_bcs.txt > $@
+
+
+$(DATA)/endo_scramble_controls_barcode_statistics.txt: $(MERGE_DEST)/endo_scramble_combined_merged.fastq
+	@ python ../barcode_mapping_ecoli_pos_controls.py $< fastq \
+	../../ref/synthetic_promoter_pos_controls_formatted.fasta 0 end 20 $(DATA)/endo_scramble_controls
+	@ rm -f $(DATA)/endo_scramble_controls_bbmap.sam
+	@ rm -fr $(DATA)/ref
