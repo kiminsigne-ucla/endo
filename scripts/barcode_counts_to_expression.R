@@ -6,13 +6,13 @@ library(Biostrings)
 options(stringsAsFactors = F)
 options(scipen = 10000)
 
-args = commandArgs(trailingOnly=TRUE)
+# args = commandArgs(trailingOnly=TRUE)
 
-# args <- c('../../processed_data/endo_scramble',
-#           '../../processed_data/endo_scramble/endo_scramble_combined_bc_map_consensus.txt',
-#           '../../processed_data/endo_scramble/endo_scramble_controls_barcode_statistics.txt',
-#           '../../ref/20180507_active_tss_scrambled10_stride5.txt',
-#           '../../processed_data/endo_scramble/endo_scramble_expression.txt')
+args <- c('../../processed_data/endo_tss/lb',
+          '../../processed_data/endo_tss/lb/endo_lb_bc_map.txt',
+          '../../processed_data/endo_tss/lb/endo_lb_controls_bc_map.txt',
+          '../../ref/endo_lib_2016_controls_clean.txt',
+          '../../processed_data/endo_tss/lb/rLP5_Endo2_lb_expression.txt')
 count_folder <- args[1]
 bc_map_file <- args[2]
 bc_map_file_controls <- args[3]
@@ -133,9 +133,9 @@ if(length(filelist) == 8) {
         mutate(num_barcodes_integrated = n()) %>%
         # filter out promoters with fewer than 3 barcodes integrated
         filter(num_barcodes_integrated >= 3) %>% 
-        mutate(DNA_sum = (sum(rLP5_Endo2_DNA2)+sum(rLP5_Endo2_DNA1)),
-               RNA_exp_1 = sum(rLP5_Endo2_RNA1)/DNA_sum,
-               RNA_exp_2 = sum(rLP5_Endo2_RNA2)/DNA_sum,
+        mutate(DNA_sum = (sum(DNA2)+sum(DNA1)),
+               RNA_exp_1 = sum(RNA1)/DNA_sum,
+               RNA_exp_2 = sum(RNA2)/DNA_sum,
                RNA_exp_ave = ((RNA_exp_1+RNA_exp_2)/2)) %>% 
         select(variant, orig_name = name, RNA_exp_1, RNA_exp_2, RNA_exp_ave, DNA_sum, 
                num_barcodes_mapped, num_barcodes_integrated) %>% 
