@@ -13,6 +13,7 @@ library(ggplot2)
 library(cowplot)
 library(kmer)
 library(aphid)
+library(Biostrings)
 
 setwd("~/Documents/projects/ecoli_promoters/endo/scripts/endo_scramble")
 
@@ -495,8 +496,7 @@ signif_kmers_lm_fdr <- signif_kmers_lm_fdr %>%
     mutate(tf_match_most_common = ifelse(any(grep(kmer, tf_sites$tfbs)),
                                          names(which.max(
                                              table(
-                                                 tf_sites$tf_name[
-                                                     grep(kmer, tf_sites$tfbs)])
+                                                 tf_sites$tf_name[grep(kmer, tf_sites$tfbs)])
                                              )), 
                                          NA)
     )
@@ -548,9 +548,9 @@ signif_kmers_lm_fdr %>%
              title = 'All significant k-mers FDR 5% \n(ordered by number of significant k-mers)')
 ```
 
-Negative coefficients means that fewer counts of a k-mer corresponds to an increase in expression,
-implying that k-mer is part of a repressive site. Positive coefficients means that higher counts
-of a k-mer correspons to an increase in expression, impying k-mer is part of an activating site.
+Negative coefficients implies k-mer count is inversely correlated with expression. 
+Positive coefficeints implies k-mer count is positively correlated with expression. For example,
+
 
 Let's run multiple regression again but with only the significant k-mers.
 
@@ -851,7 +851,7 @@ cor.test(wt_df$wt_best_crp_score_pos_relative, wt_df$delta_log_exp)
 ```
 
 Not all of the WT sequences are actually regulated by CRP and could be contributing noise.
-Let's assign a significance to each CRP score and to filter out sequences that do not have
+Let's assign a significance to each CRP score and filter out sequences that do not have
 strong sites. Let's take a random sample of the genome and plot the distribution of CRP HMM scores.
 
 ```{bash}
@@ -1017,21 +1017,180 @@ ggplot(wt_df_mean_pos_all, aes(reorder(score_fact, sort(as.numeric(score_fact)))
  (including those that didn't pass CRP filter).
  
  
- Let's generate a graph that shows the average change in expression for all scrambled sequences.
+ Let's put all of this functionality in one place, so we can generate these graphs for
+ a TF of our choice. 
  
 ```{r}
-data %>% 
-    mutate(scramble_start_relative = case_when(.$strand == '+' ~ scramble_start + 1 - 121,
-                                               .$strand == '-' ~ 150 - scramble_start - 120,
-                                               TRUE ~ NaN),
-           scramble_start_relative_fct = factor(scramble_start_relative)) %>% 
-    group_by(scramble_start_relative_fct) %>% 
-    summarise(mean_delta_exp = mean(delta_expression, na.rm = T)) %>% 
-    ggplot(aes(scramble_start_relative_fct, mean_delta_exp)) + geom_bar(stat = 'identity') +
-    theme(axis.text.x = element_text(angle = 90, size = 10)) +
-    labs(x = 'start position of scrambled site',
-         y = 'mean(log expression scramble - \n log expression WT)')
+score_tf_phmm <- function(tf, tf_sites, df, random150_sequences) {
+    
+    sites_raw <- filter(tf_sites, tf_name == tf, tfbs_sequence != '') %>% .$tfbs_sequence
+    sites <- lapply(sites_raw, extract_upper, toString = F)
+    # filter sites so they are all one length
+    site_lengths <- unlist(lapply(sites, function(x) length(x)))
+    major_length <- as.numeric(names(sort(table(site_lengths), decreasing=T))[1])
+    sites_filtered <- sites[unlist(lapply(sites, function(x) length(x) == major_length))]
+    phmm <- derivePHMM(sites_filtered, k = 5)
+    
+    wt_sequences <- as.list(filter(df, category == 'unscramble') %>% .$variant)
+    wt_phmm_hits <- lapply(wt_sequences, scan_phmms, phmms = list(phmm), score_type = 'max')
+    # unlist the sublists
+    wt_phmm_hits <- lapply(wt_phmm_hits, unlist)
+    
+    # create new copy of df with just WT information and corresponding scrambles
+    wt_df <- left_join(df, 
+                   data.frame(tss_name = filter(df, category == 'unscramble') %>% .$tss_name, 
+                              wt_best_tf_score = unlist(lapply(wt_phmm_hits, `[[`, 1)),
+                              wt_best_tf_score_pos = unlist(lapply(wt_phmm_hits, `[[`, 2))),
+                   by = 'tss_name')
+    
+        
+    # get genomic distribution of PHMM hits
+    random150_phmm_hits <- lapply(random150_sequences, scan_phmms, 
+                                  phmms = list(phmm), score_type = 'max')
+    # unlist
+    random150_phmm_hits <- lapply(random150_phmm_hits, `[[`, 1)
+    random150_phmm_hits_score <- unlist(lapply(random150_phmm_hits, `[[`, 1))
+    random_hits_ecdf <- ecdf(random150_phmm_hits_score)
+    
+    num_all_hits <- length(sites_raw)
+    # only keep WT with significant TF hit
+    wt_df <- wt_df %>% 
+        mutate(emp_pval = 1 - random_hits_ecdf(wt_best_tf_score)) %>% 
+        filter(emp_pval <= 0.05)
+    num_sig_hits <- nrow(wt_df)
+    
+    print(paste("All TF hits in WT:", num_all_hits))
+    print(paste("All significant TF hits in WT:", num_sig_hits))
+    
+    # check if scramble overlaps with best TF site
+    wt_df <- wt_df %>% 
+        rowwise() %>% 
+        mutate(overlap_best_tf = ifelse(category == 'scramble',
+                                         overlap(wt_best_tf_score_pos, 
+                                                 phmm$size,
+                                                 scramble_start + 1, 
+                                                 scramble_end,
+                                                 0.3),
+                                         TRUE)) %>% 
+        ungroup()
 
-
+    # only keep ones that overlap
+    wt_df <- wt_df %>% 
+        filter(overlap_best_tf == T) %>% 
+        arrange(tss_name, scramble_start) %>% 
+        mutate(log_exp = log(RNA_exp_ave),
+               wt_log_exp = log(unscrambled_exp),
+               delta_log_exp = log_exp - wt_log_exp)
+    
+    # assign position relative to TSS and with respect to strand
+    wt_df <- wt_df %>% 
+        mutate(wt_best_tf_score_pos_relative = case_when(.$strand == '+' ~ wt_best_tf_score_pos - 121,
+                                                          .$strand == '-' ~ 150 - wt_best_tf_score_pos - 120,
+                                                          TRUE ~ NaN))
+    
+    return(wt_df)
+}
 ```
- 
+
+
+```{r}
+tf <- 'Fis'
+wt_df_fis <- score_tf_phmm(tf, tf_sites, data, random150_sequences)
+
+ggplot(wt_df_fis, aes(factor(wt_best_tf_score_pos_relative), delta_log_exp)) + geom_boxplot() +
+    theme(axis.text.x = element_text(angle = 90, size = 8)) +
+    labs(x = paste('start position of best WT', tf, 'site'),
+         y = 'log expression scramble - \n log expression WT')
+```
+
+
+```{r}
+wt_df_fis %>% 
+    mutate(score_fact = factor(wt_best_tf_score_pos_relative)) %>% 
+    group_by(score_fact) %>% 
+    summarise(mean_delta = mean(delta_log_exp)) %>% 
+    mutate(pos = as.numeric(levels(score_fact))) %>% 
+    ggplot(aes(pos, mean_delta)) + geom_point() + 
+    # geom_smooth(span = 0.1) + 
+    geom_line() +
+    geom_hline(yintercept = 0, linetype = 'dashed')
+```
+
+```{r}
+crp_mean_line <- wt_df_crp %>% 
+    mutate(score_fact = factor(wt_best_crp_score_pos_relative)) %>% 
+    group_by(score_fact) %>% 
+    summarise(mean_delta = mean(delta_log_exp)) %>% 
+    mutate(pos = as.numeric(levels(score_fact)))
+
+fis_mean_line <- wt_df_fis %>% 
+    mutate(score_fact = factor(wt_best_tf_score_pos_relative)) %>% 
+    group_by(score_fact) %>% 
+    summarise(mean_delta = mean(delta_log_exp)) %>% 
+    mutate(pos = as.numeric(levels(score_fact)))
+
+
+ggplot(aes(pos, mean_delta), data=crp_mean_line) + geom_point() + 
+    # geom_smooth(span = 0.1) + 
+    geom_line() +
+    geom_hline(yintercept = 0, linetype = 'dashed') +
+    geom_line(aes(pos, mean_delta), data=fis_mean_line, color='blue') +
+    scale_x_continuous(breaks=seq(-120, 30, 10)) +
+    geom_vline(xintercept = seq(-120, 30, 10), linetype='dashed') +
+    labs(x = 'position relative to TSS',
+         y = 'log expression scramble - \n log expression WT')
+```
+
+```{r}
+ggplot(aes(pos, mean_delta), data=crp_mean_line) + 
+    geom_smooth(span = 0.1, color='black') +
+    geom_hline(yintercept = 0, linetype = 'dashed') +
+    scale_x_continuous(breaks=seq(-120, 30, 10)) +
+    geom_vline(xintercept = seq(-120, 30, 10), linetype='dashed') +
+    labs(x = 'position relative to TSS',
+         y = 'mean log expression scramble - \n log expression WT',
+         title = 'WT with significant CRP site')
+```
+
+
+```{r}
+ggplot(aes(pos, mean_delta), data=crp_mean_line) + 
+    geom_smooth(span = 0.1, color='black') +
+    geom_hline(yintercept = 0, linetype = 'dashed') +
+    geom_smooth(aes(pos, mean_delta), data=fis_mean_line, color='blue', span=0.1) +
+    scale_x_continuous(breaks=seq(-120, 30, 10)) +
+    geom_vline(xintercept = seq(-120, 30, 10), linetype='dashed') +
+    labs(x = 'position relative to TSS',
+         y = 'mean log expression scramble - \n log expression WT')
+```
+
+
+```{r}
+tf <- 'ArcA'
+wt_df_arca <- score_tf_phmm(tf, tf_sites, data, random150_sequences)
+
+ggplot(wt_df_arca, aes(factor(wt_best_tf_score_pos_relative), delta_log_exp)) + geom_boxplot() +
+    theme(axis.text.x = element_text(angle = 90, size = 8)) +
+    labs(x = paste('start position of best WT', tf, 'site'),
+         y = 'log expression scramble - \n log expression WT')
+```
+
+```{r}
+arca_mean_line <- wt_df_arca %>% 
+    mutate(score_fact = factor(wt_best_tf_score_pos_relative)) %>% 
+    group_by(score_fact) %>% 
+    summarise(mean_delta = mean(delta_log_exp)) %>% 
+    mutate(pos = as.numeric(levels(score_fact)))
+
+ggplot(aes(pos, mean_delta), data=fis_mean_line)  + 
+    geom_smooth(span = 0.1, color='blue') +
+    geom_hline(yintercept = 0, linetype = 'dashed') +
+    geom_smooth(aes(pos, mean_delta), data=arca_mean_line, color='red', span=0.1) +
+    scale_x_continuous(breaks=seq(-120, 30, 10)) +
+    geom_vline(xintercept = seq(-120, 30, 10), linetype='dashed') +
+    labs(x = 'position relative to TSS',
+         y = 'log expression scramble - \n log expression WT')
+```
+
+
+
