@@ -6,13 +6,13 @@ library(Biostrings)
 options(stringsAsFactors = F)
 options(scipen = 10000)
 
-# args = commandArgs(trailingOnly=TRUE)
+args = commandArgs(trailingOnly=TRUE)
 
-args <- c('../../processed_data/endo_scramble',
-          '../../processed_data/endo_scramble/endo_scramble_combined_bc_map_consensus.txt',
-          '../../processed_data/endo_scramble/endo_scramble_controls_barcode_statistics.txt',
-          '../../ref/20180507_active_tss_scrambled10_stride5.txt',
-          '../../processed_data/endo_scramble/endo_scramble_expression.txt')
+# args <- c('../../processed_data/endo_scramble',
+#           '../../processed_data/endo_scramble/endo_scramble_combined_bc_map_consensus.txt',
+#           '../../processed_data/endo_scramble/endo_scramble_controls_barcode_statistics.txt',
+#           '../../ref/20180507_active_tss_scrambled10_stride5.txt',
+#           '../../processed_data/endo_scramble/endo_scramble_expression.txt')
 count_folder <- args[1]
 bc_map_file <- args[2]
 bc_map_file_controls <- args[3]
