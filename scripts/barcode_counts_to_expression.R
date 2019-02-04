@@ -57,8 +57,8 @@ if(length(filelist) == 8) {
 all_counts <- count_list %>% purrr::reduce(full_join, by = "barcode")
 print(paste("Number of unique sequenced barcodes, all replicates in DNA and RNA:", nrow(all_counts)))
 
-# rearrange columns
-all_counts <- select(all_counts, barcode, DNA1_1, DNA1_2:RNA2_2)
+# # rearrange columns
+# all_counts <- select(all_counts, barcode, DNA1_1, DNA1_2:RNA2_2)
 
 # remove individual sample files
 rm(count_list, x)
