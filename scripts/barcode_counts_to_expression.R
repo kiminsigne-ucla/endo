@@ -19,6 +19,12 @@ bc_map_file_controls <- args[3]
 ref_file <- args[4]
 output_name <- args[5]
 
+print(paste("Count folder:", count_folder))
+print(paste("Barcode map file:", bc_map_file))
+print(paste("Barcode map control file", bc_map_file_controls))
+print(paste("Reference file:", ref_file))
+print(paste("Output name:", output_name))
+
 # read in barcode count files
 filelist = list.files(path = count_folder,
                       pattern = '^counts_*',
