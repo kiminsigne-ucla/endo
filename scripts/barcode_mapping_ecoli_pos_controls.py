@@ -355,6 +355,6 @@ if __name__ == '__main__':
 		cutoff,
 		bc_loc,
 		bc_len,
-		output_prefix + '_barcode_statistics.txt')
+		output_prefix + '_bc_map.txt')
 
 	print "Number of final barcodes: ", len(final_barcodes)

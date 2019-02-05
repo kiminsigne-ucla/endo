@@ -39,6 +39,10 @@ demultiplex: $(MERGE_DEST)/s_2_1.fastq $(MERGE_DEST)/s_2_2.fastq ../../ref/index
 	@ python $(SCRIPTS)/demultiplex.py $^ 6 -rev
 	@ mv *.fastq $(MERGE_DEST)
 
+# merge
+$(MERGE_DEST)/endo_m9_merged.fastq: $(MERGE_DEST)/endo_m9_techrep1.fastq $(MERGE_DEST)/endo_m9_techrep2.fastq
+	@ cat $^ > $@
+	
 
 $(DATA)/endo_m9_mapping_barcode_statistics.txt: $(MERGE_DEST)/endo_m9_merged.fastq
 	@ python ../barcode_mapping.py $< fastq ../../ref/endo_lib_2016_controls_clean.txt \
@@ -46,15 +50,15 @@ $(DATA)/endo_m9_mapping_barcode_statistics.txt: $(MERGE_DEST)/endo_m9_merged.fas
 	--controls_primer_len 0
 
 
-# # use one FASTQ file to trigger barcode counting for all FASTQ files
-# $(DATA)/counts_rLP5_Endo2_DNA1.txt: | $(RAW_DATA)/DNA_RNA/rLP5_Endo2_DNA1.fastq
-# 	@ ../count_barcodes.sh $(RAW_DATA)/DNA_RNA
-# 	@ mv counts* $(DATA)
+# use one FASTQ file to trigger barcode counting for all FASTQ files
+$(DATA)/counts_rLP5_Endo2_DNA1.txt: | $(RAW_DATA)/DNA_RNA/rLP5_Endo2_DNA1.fastq
+	@ ../count_barcodes.sh $(RAW_DATA)/DNA_RNA
+	@ mv counts* $(DATA)
 
-# # calculate expression
-# $(DATA)/rLP5_Endo2_m9_expression.txt: $(DATA)/counts_rLP5_Endo2_DNA1.txt \
-# 	$(DATA)/endo_m9_mapping_barcode_statistics.txt
-# 	@ Rscript bc_counts2expression.R $(DATA) $(DATA)/endo_m9_mapping_barcode_statistics.txt \
-# 	$(DATA)/endo_m9_mapping_variant_statistics.txt ../../ref/endo_lib_2016_controls_clean.txt \
-# 	$@
+# calculate expression
+$(DATA)/rLP5_Endo2_m9_expression.txt: $(DATA)/counts_rLP5_Endo2_DNA1.txt \
+	$(DATA)/endo_m9_mapping_barcode_statistics.txt
+	@ Rscript bc_counts2expression.R $(DATA) $(DATA)/endo_m9_mapping_barcode_statistics.txt \
+	$(DATA)/endo_m9_mapping_variant_statistics.txt ../../ref/endo_lib_2016_controls_clean.txt \
+	$@
 
