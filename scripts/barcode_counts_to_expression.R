@@ -6,7 +6,7 @@ library(Biostrings)
 options(stringsAsFactors = F)
 options(scipen = 10000)
 
-# args = commandArgs(trailingOnly=TRUE)
+args = commandArgs(trailingOnly=TRUE)
 
 # args <- c('../../processed_data/endo_tss/lb',
 #           '../../processed_data/endo_tss/lb/endo_lb_bc_map.txt',
