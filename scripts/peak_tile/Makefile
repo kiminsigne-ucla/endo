@@ -7,9 +7,11 @@ all: merge map map_controls
 
 merge: $(MERGE_DEST)/peak_tile_combined_merged.fastq
 
-map: $(DATA)/peak_tile_combined_mapping_bc_map_consensus.txt
+map: $(DATA)/peak_tile_combined_bc_map.txt
 
-map_controls: $(DATA)/peak_tile_controls_barcode_statistics.txt
+map_controls: $(DATA)/peak_tile_combined_controls_bc_map.txt
+
+barcode_counts: $(DATA)/counts_rLP5_PeakTiling_LB_DNA1_1_S5_R1_001.txt
 
 expression: $(DATA)/peak_tile_expression.txt
 
@@ -40,6 +42,9 @@ $(DATA)/peak_tile_combined_controls_bc_map.txt: $(MERGE_DEST)/peak_tile_combined
 	@ rm -f $(DATA)/peak_tile_controls_bbmap.sam
 
 # use one FASTQ file to trigger barcode counting
+$(DATA)/counts_rLP5_PeakTiling_LB_DNA1_1_S5_R1_001.txt: $(RAW_DATA)/DNA_RNA/rLP5_PeakTiling_LB_DNA1_1_S5_R1_001.fastq
+	@ ../count_barcodes.sh $(RAW_DATA)/RNA_DNA
+	@ mv counts* $(DATA)
 
 
 $(DATA)/peak_tile_expression.txt: $(DATA)/peak_tile_combined_bc_map.txt $(DATA)/peak_tile_combined_controls_bc_map.txt
