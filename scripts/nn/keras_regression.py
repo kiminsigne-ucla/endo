@@ -236,6 +236,7 @@ class SequenceDNN(Model):
         self.valid_metrics = []
         if keras_model is not None and seq_length is None:
             self.model = keras_model
+            self.name = 'Sequential'
             self.num_tasks = keras_model.layers[-1].output_shape[-1]
         elif seq_length is not None and keras_model is None:
             self.model = Sequential()
