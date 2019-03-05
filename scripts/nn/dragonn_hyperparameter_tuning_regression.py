@@ -131,8 +131,8 @@ if __name__ == '__main__':
 	searcher.search(num_hyperparameter_trials)
 	print('Best hyperparameters: {}'.format(searcher.best_hyperparameters))
 	model = searcher.best_model
-	# Test model
-	print('Test results: {}'.format(model.score(X_test, y_test)))
+	# # Test model
+	# print('Test results: {}'.format(model.score(X_test, y_test)))
 	# save model
 	model.save('hyperparam_tuned_model')
 
