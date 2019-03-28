@@ -56,6 +56,15 @@ def pad_sequence(seq, max_length):
 	return seq
 
 
+def process_sequences(filename, seq_length):
+
+	seqs = [line.split('\t')[0] for line in open(filename)]
+	padded_seqs = [pad_sequence(x, seq_length) for x in seqs]
+	X = one_hot_encode(np.array(padded_seqs))
+	y = np.array([float(line.strip().split('\t')[1]) for line in open(filename)])
+	return X, y
+
+
 if __name__ == '__main__':
 
 	parser = argparse.ArgumentParser()
@@ -68,6 +77,9 @@ if __name__ == '__main__':
 	parser.add_argument('validation_fraction', type=float)
 	parser.add_argument('num_trials', type=int, 
 		help='number of hyperparameter trials')
+	parser.add_argument('--train', help='pre-defined training set. Test fraction will be ignored but\
+		validation fraction still applies to training set.')
+	parser.add_argument('--test', help='pre-defined test set')
 	args = parser.parse_args()
 
 	sequences = args.sequences
@@ -79,26 +91,27 @@ if __name__ == '__main__':
 	validation_fraction = args.validation_fraction
 	num_hyperparameter_trials = args.num_trials
 
-# sequences = '../processed_data/tss_all.txt'
-# seq_length = 150
-# num_layers = 3
-# min_filter = 5
-# max_filter = 50
-# test_fraction = 0.2
-# validation_fraction = 0.2
-# num_hyperparameter_trials = 50
+	if args.train:
+		# check test exists
+		if not args.test:
+			raise Exception("Please provide test set.")
+		else:
+			# load in pre-defined splits
+			print("loading training set...")
+			X_train, y_train = process_seqs(args.train, seq_length)
+			print("loading test set...")
+			X_test, y_test = process_seqs(args.test, seq_length)
 
-	# read in sequences and labels
-	print("loading sequence data...")
-	seqs = [line.split('\t')[0] for line in open(sequences)]
-	padded_seqs = [pad_sequence(x, seq_length) for x in seqs]
-	# X = one_hot_encode(np.array(seqs))
-	X = one_hot_encode(np.array(padded_seqs))
-	y = np.array([float(line.strip().split('\t')[1]) for line in open(sequences)])
+	else:
+		# read in sequences and labels
+		print("loading sequence data...")
+		X, y = process_seqs(sequences, seq_length)
 
-	print('Partitioning data into training, validation and test sets...')
-	X_train, X_test, y_train, y_test = train_test_split(X, y, 
-		test_size=test_fraction)
+		print('Partitioning data into training, validation and test sets...')
+		X_train, X_test, y_train, y_test = train_test_split(X, y, 
+			test_size=test_fraction)
+
+	# split training into validation set
 	X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, 
 		test_size=validation_fraction)
 
