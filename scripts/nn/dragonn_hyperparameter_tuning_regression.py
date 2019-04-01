@@ -56,7 +56,7 @@ def pad_sequence(seq, max_length):
 	return seq
 
 
-def process_sequences(filename, seq_length):
+def process_seqs(filename, seq_length):
 
 	seqs = [line.split('\t')[0] for line in open(filename)]
 	padded_seqs = [pad_sequence(x, seq_length) for x in seqs]
@@ -144,8 +144,8 @@ if __name__ == '__main__':
 	searcher.search(num_hyperparameter_trials)
 	print('Best hyperparameters: {}'.format(searcher.best_hyperparameters))
 	model = searcher.best_model
-	# # Test model
-	# print('Test results: {}'.format(model.score(X_test, y_test)))
+	# Test model
+	print('Test results: {}'.format(model.score(X_test, y_test)))
 	# save model
 	model.save('hyperparam_tuned_model')
 
