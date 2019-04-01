@@ -95,6 +95,9 @@ if __name__ == '__main__':
 	parser.add_argument('test_fraction', type=float, default=0.2, help='fraction used for testing')
 	parser.add_argument('validation_fraction', type=float, default=0.2, help='fraction used for valdation')
 	parser.add_argument('output_prefix', help='prefix of output graph')
+	parser.add_argument('--train', help='pre-defined training set. Test fraction will be ignored but\
+		validation fraction still applies to training set.')
+	parser.add_argument('--test', help='pre-defined test set')
 	parser.add_argument('--uncertain', action='store_true', default=False, help='predict with uncertainty')
 	args = parser.parse_args()
  	
@@ -110,33 +113,62 @@ if __name__ == '__main__':
 	validation_fraction = args.validation_fraction
 	uncertain = args.uncertain
 
-	print("loading sequence data...")
-	seqs = [line.split('\t')[0] for line in open(sequences)]
-	padded_seqs = [pad_sequence(x, seq_length) for x in seqs]
-	X = one_hot_encode(np.array(padded_seqs))
-	# X = encode_trim_pad_fasta_sequences(sequences, seq_length)
-	y = np.array([float(line.strip().split('\t')[1]) for line in open(sequences)])
 
-	# need test index so we can grab these sequences later and output them for 
-	# downstream analysis
-	random_test_index = random.sample(
-		list(range(len(seqs))), 
-		int(round(test_fraction * len(seqs)))
-		)
-	random_test_index = sorted(random_test_index)
-	train_index = [i for i in range(len(seqs)) if i not in random_test_index]
+	if args.train:
+		# check test exists
+		if not args.test:
+			raise Exception("Please provide test set.")
+		else:
+			# load in pre-defined splits
+			print("loading training set...")
+			X_train, y_train = process_seqs(args.train, seq_length)
+			print("loading test set...")
+			X_test, y_test = process_seqs(args.test, seq_length)
 
-	X_test = np.take(X, random_test_index, axis=0)
-	y_test = np.take(y, random_test_index, axis=0)
-	X_train = np.take(X, train_index, axis=0)
-	y_train = np.take(y, train_index, axis=0)
+	else:
+		# read in sequences and labels
+		print("loading sequence data...")
+		X, y = process_seqs(sequences, seq_length)
 
+		# need test index so we can grab these sequences later and output them for 
+		# downstream analysis
+		random_test_index = random.sample(
+			list(range(len(seqs))), 
+			int(round(test_fraction * len(seqs)))
+			)
+		random_test_index = sorted(random_test_index)
+		train_index = [i for i in range(len(seqs)) if i not in random_test_index]
 
-	print('Partitioning data into training, validation and test sets...')
-	# X_train, X_test, y_train, y_test = train_test_split(X, y, 
-	# 	test_size=test_fraction)
+		X_test = np.take(X, random_test_index, axis=0)
+		y_test = np.take(y, random_test_index, axis=0)
+		X_train = np.take(X, train_index, axis=0)
+		y_train = np.take(y, train_index, axis=0)
+
+	# split training into validation set
 	X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, 
 		test_size=validation_fraction)
+
+	# print("loading sequence data...")
+	# seqs = [line.split('\t')[0] for line in open(sequences)]
+	# padded_seqs = [pad_sequence(x, seq_length) for x in seqs]
+	# X = one_hot_encode(np.array(padded_seqs))
+	# # X = encode_trim_pad_fasta_sequences(sequences, seq_length)
+	# y = np.array([float(line.strip().split('\t')[1]) for line in open(sequences)])
+
+	# # need test index so we can grab these sequences later and output them for 
+	# # downstream analysis
+	# random_test_index = random.sample(
+	# 	list(range(len(seqs))), 
+	# 	int(round(test_fraction * len(seqs)))
+	# 	)
+	# random_test_index = sorted(random_test_index)
+	# train_index = [i for i in range(len(seqs)) if i not in random_test_index]
+
+	# X_test = np.take(X, random_test_index, axis=0)
+	# y_test = np.take(y, random_test_index, axis=0)
+	# X_train = np.take(X, train_index, axis=0)
+	# y_train = np.take(y, train_index, axis=0)
+
 
 	if uncertain:
 		model = SequenceDNN_dropout(
