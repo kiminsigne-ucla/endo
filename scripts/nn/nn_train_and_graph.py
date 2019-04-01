@@ -41,6 +41,7 @@ def pad_sequence(seq, max_length):
 
 	return seq
 
+
 def encode_trim_pad_fasta_sequences(fname, max_length):
     """
     One hot encodes sequences in fasta file. If sequences are too long, they will
@@ -81,6 +82,15 @@ def encode_trim_pad_fasta_sequences(fname, max_length):
     return one_hot_encode(np.array(sequences))
 
 
+def process_sequences(filename, seq_length):
+
+	seqs = [line.split('\t')[0] for line in open(filename)]
+	padded_seqs = [pad_sequence(x, seq_length) for x in seqs]
+	X = one_hot_encode(np.array(padded_seqs))
+	y = np.array([float(line.strip().split('\t')[1]) for line in open(filename)])
+	return X, y
+
+	
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser('Train keras sequential CNN with regression and plot correlation')
 	parser.add_argument('sequences', help='tab-separated, two columns. First is sequence, second is continuous value')
