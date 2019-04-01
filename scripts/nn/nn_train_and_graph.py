@@ -82,7 +82,7 @@ def encode_trim_pad_fasta_sequences(fname, max_length):
     return one_hot_encode(np.array(sequences))
 
 
-def process_sequences(filename, seq_length):
+def process_seqs(filename, seq_length):
 
 	seqs = [line.split('\t')[0] for line in open(filename)]
 	padded_seqs = [pad_sequence(x, seq_length) for x in seqs]
