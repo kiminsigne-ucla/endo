@@ -142,6 +142,7 @@ if __name__ == '__main__':
 
 		# need test index so we can grab these sequences later and output them for 
 		# downstream analysis
+		seqs = [line.split('\t')[0] for line in open(sequences)]
 		random_test_index = random.sample(
 			list(range(len(seqs))), 
 			int(round(test_fraction * len(seqs)))
@@ -213,7 +214,10 @@ if __name__ == '__main__':
 	print('Test results: {}'.format(corr))
 	model.save(output_name + '_trained_model')
 
-	test_sequences = [seqs[i] for i in random_test_index]
+	if args.test:
+		test_sequences = [line.split('\t')[0] for line in open(args.test)]
+	else:
+		test_sequences = [seqs[i] for i in random_test_index]
 	
 	if uncertain:
 		with open(output_name + '_predictions.txt', 'w') as outfile:
